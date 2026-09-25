@@ -92,6 +92,37 @@
       .replace(/"/g, "&quot;");
   }
 
+
+  function lettersFor(n) {
+    return LETTERS.slice(0, n);
+  }
+
+  /** Build HTML for overall explain + per-option paragraphs (trusted JSON → escapeHtml). */
+  function buildExplainHtml(q) {
+    const letters = lettersFor((q.options || []).length || 4);
+    let html = `<h4>解釋</h4><p>${escapeHtml(q.explain || "")}</p>`;
+    const oes = q.optionExplains;
+    if (Array.isArray(oes) && oes.length) {
+      html += `<div class="option-explains">`;
+      oes.forEach((text, i) => {
+        if (text == null || text === "") return;
+        const ok = i === q.answer;
+        html += `<div class="opt-exp ${ok ? "is-correct" : "is-wrong"}">`;
+        html += `<span class="opt-exp-label">${letters[i] || i} · ${ok ? "正確" : "錯項"}</span>`;
+        html += `<p>${escapeHtml(text)}</p></div>`;
+      });
+      html += `</div>`;
+    }
+    return html;
+  }
+
+  function fillExplainPanel(panel, q) {
+    if (!panel) return;
+    panel.innerHTML = buildExplainHtml(q);
+    panel.classList.add("show");
+  }
+
+
   function uid() {
     return "w_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
   }
@@ -422,6 +453,7 @@
                 userAnswer: oi,
                 correctAnswer: q.answer,
                 explanation: q.explain,
+                optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
                 tag: "知識小練",
                 passageTitle: topic.title,
                 passageFullText: "",
@@ -431,7 +463,7 @@
             const exp = document.createElement("div");
             exp.className = "explain-panel show";
             exp.style.marginTop = "8px";
-            exp.innerHTML = `<h4>解釋</h4><p>${escapeHtml(q.explain)}</p>`;
+            exp.innerHTML = buildExplainHtml(q);
             wrap.appendChild(exp);
           });
           opts.appendChild(btn);
@@ -565,6 +597,7 @@
         userAnswer: oi,
         correctAnswer: q.answer,
         explanation: q.explain,
+        optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
         tag: q.tag || "練習",
         passageTitle: p.title,
         passageFullText: p.text,
@@ -572,8 +605,7 @@
       });
     }
 
-    $("#explain-text").textContent = q.explain;
-    $("#explain-panel").classList.add("show");
+    fillExplainPanel($("#explain-panel"), q);
     $("#quiz-footer").classList.remove("hidden");
   }
 
@@ -783,8 +815,12 @@
       );
     }
 
-    $("#retest-explain-text").textContent = item.explanation || "";
-    $("#retest-explain").classList.add("show");
+    fillExplainPanel($("#retest-explain"), {
+      explain: item.explanation || "",
+      options: item.options || [],
+      answer: item.correctAnswer,
+      optionExplains: item.optionExplains || null,
+    });
     $("#retest-footer").classList.remove("hidden");
   }
 

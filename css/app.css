@@ -1059,3 +1059,129 @@ html[data-font="xl"] {
   cursor: default;
   pointer-events: none;
 }
+
+/* R2 P1 — knowledge tables / charts */
+.reader .level-badge {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #EEF6F2;
+  color: var(--accent, #2F6F5E);
+  font-size: 12px;
+  font-weight: 600;
+}
+.reader .know-lead {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444;
+}
+.reader .know-card {
+  margin: 12px 0 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: #FAFBFA;
+}
+.reader .know-card h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.reader .know-chart {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: #fff;
+}
+.reader .know-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 8px 0 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: #fff;
+}
+.reader .know-table {
+  width: 100%;
+  min-width: 280px;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.reader .know-table th,
+.reader .know-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border-soft);
+  word-break: break-word;
+}
+.reader .know-table th {
+  background: #F3F7F5;
+  color: var(--accent, #2F6F5E);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.reader .know-table tr:last-child td { border-bottom: none; }
+.reader .know-table td:first-child { font-weight: 600; white-space: nowrap; }
+.reader .know-bullets {
+  margin: 8px 0 4px;
+  padding-left: 1.2em;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #444;
+}
+.reader .know-bullets li { margin: 4px 0; }
+.reader .know-tip {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--accent, #2F6F5E);
+  background: #F7FAF8;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #444;
+}
+
+/* R2 P1 — per-option explains */
+.option-explains {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.opt-exp {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: #F7F7F7;
+}
+.opt-exp p {
+  margin: 4px 0 0;
+  font-size: var(--fs-explain, 14px);
+  line-height: 1.65;
+  color: #555;
+}
+.opt-exp-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.opt-exp.is-correct {
+  background: #F1F8F4;
+  border-color: #B7D9C4;
+}
+.opt-exp.is-correct .opt-exp-label { color: #2E7D4F; }
+.opt-exp.is-correct p { color: #2A4A36; }
+.opt-exp.is-wrong {
+  background: #FAF6F6;
+  border-color: #E8D0D0;
+}
+.opt-exp.is-wrong .opt-exp-label { color: #A05A5A; }
+.opt-exp.is-wrong p { color: #666; }
