@@ -110,19 +110,86 @@
     return LETTERS.slice(0, n);
   }
 
+  /** Strip leftover 「選「…」不符／正確」 formulas (R2.7). */
+  function stripXuanFormula(s) {
+    let t = String(s || "");
+    // 應選「X」→應判斷為「X」 first
+    t = t.replace(/應選「([^」]*)」/g, "應判斷為「$1」");
+    let out = "";
+    let i = 0;
+    while (i < t.length) {
+      if (t.startsWith("選「", i)) {
+        let j = i + 1; // at 「
+        let depth = 0;
+        while (j < t.length) {
+          if (t[j] === "「") depth++;
+          else if (t[j] === "」") {
+            depth--;
+            j++;
+            if (depth === 0) break;
+            continue;
+          }
+          j++;
+        }
+        const rest = t.slice(j);
+        const m = rest.match(/^(不符|正確|不像)[。．]?/);
+        if (m) {
+          i = j + m[0].length;
+          continue;
+        }
+        if (i === 0 || /[。．；;\n]/.test(t[i - 1] || "")) {
+          i = j;
+          continue;
+        }
+      }
+      out += t[i];
+      i++;
+    }
+    return out.replace(/[。．]{2,}/g, "。").trim();
+  }
+
+  /** Ensure rationale cites 原文 + 語譯 when context is available (R2.7). */
+  function enrichRationale(text, q, optIndex) {
+    let body = stripXuanFormula(text);
+    if (!body) body = optIndex === q.answer ? "此項正確。" : "此項與文意不符。";
+    const hasOrig = body.indexOf("原文") >= 0;
+    const hasTrans = body.indexOf("語譯") >= 0 || body.indexOf("今釋") >= 0;
+    if (hasOrig && hasTrans) return body;
+    const full = q.passageFullText || q.sentence || "";
+    const trans = q.passageTranslation || "";
+    let quote = "";
+    const qm = body.match(/「([^」]{2,30})」/);
+    if (qm) quote = qm[1];
+    if (!quote && full) {
+      const sent = full.split(/[。！？]/).find((s) => s && s.trim().length >= 4);
+      quote = sent ? sent.trim().slice(0, 28) : full.slice(0, 24);
+    }
+    const parts = [];
+    if (!hasOrig && quote) parts.push("原文：「" + quote + "」。");
+    if (!hasTrans && trans) {
+      let tr = String(trans).trim();
+      if (tr.length > 48) tr = tr.slice(0, 48) + "……";
+      parts.push("語譯：「" + tr + "」。");
+    }
+    parts.push(body);
+    return parts.join("");
+  }
+
   /** Build HTML for overall explain + per-option paragraphs (trusted JSON → escapeHtml). */
   function buildExplainHtml(q) {
     const letters = lettersFor((q.options || []).length || 4);
-    let html = `<h4>解釋</h4><p>${escapeHtml(q.explain || "")}</p>`;
+    const overall = enrichRationale(q.explain || "", q, q.answer);
+    let html = `<h4>解釋</h4><p>${escapeHtml(overall)}</p>`;
     const oes = q.optionExplains;
     if (Array.isArray(oes) && oes.length) {
       html += `<div class="option-explains">`;
       oes.forEach((text, i) => {
         if (text == null || text === "") return;
         const ok = i === q.answer;
+        const body = enrichRationale(text, q, i);
         html += `<div class="opt-exp ${ok ? "is-correct" : "is-wrong"}">`;
         html += `<span class="opt-exp-label">${letters[i] || i} · ${ok ? "正確" : "錯項"}</span>`;
-        html += `<p>${escapeHtml(text)}</p></div>`;
+        html += `<p>${escapeHtml(body)}</p></div>`;
       });
       html += `</div>`;
     }
@@ -499,6 +566,7 @@
         const kind = matched.kind || "shi";
         const t = matched.text;
         const gloss = matched.gloss || "";
+        const pos = matched.pos || "";
         out +=
           '<button type="button" class="hl hl-' +
           escapeHtml(kind) +
@@ -508,6 +576,8 @@
           escapeHtml(kind) +
           '" data-gloss="' +
           escapeHtml(gloss) +
+          '" data-pos="' +
+          escapeHtml(pos) +
           '">' +
           escapeHtml(t) +
           "</button>";
@@ -532,6 +602,7 @@
           text: btn.dataset.hl,
           kind: btn.dataset.kind,
           gloss: btn.dataset.gloss || "",
+          pos: btn.dataset.pos || "",
         });
       });
     });
@@ -621,6 +692,26 @@
     }
   }
 
+  function resolvePos(hl, passage) {
+    if (hl && hl.pos) return hl.pos;
+    const word = (hl && hl.text) || "";
+    const words = (passage && passage.guide && passage.guide.words) || [];
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] && words[i].word === word && words[i].pos) return words[i].pos;
+    }
+    const kind = (hl && hl.kind) || "";
+    return HL_KIND_LABEL[kind] || "—";
+  }
+
+  function resolveWordMeaning(hl, passage) {
+    const word = (hl && hl.text) || "";
+    const words = (passage && passage.guide && passage.guide.words) || [];
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] && words[i].word === word && words[i].meaning) return words[i].meaning;
+    }
+    return resolveGloss(hl, passage);
+  }
+
   function openWordSheet(hl) {
     const sheet = $("#word-sheet");
     if (!sheet) return;
@@ -629,7 +720,9 @@
     $("#ws-source").textContent = (p && p.source) || "本課注釋";
     $("#ws-word").textContent = word;
     $("#ws-jyut").textContent = lookupJyutping(word) || "暫無粵拼";
-    $("#ws-gloss").textContent = resolveGloss(hl, p);
+    const posEl = $("#ws-pos");
+    if (posEl) posEl.textContent = resolvePos(hl, p);
+    $("#ws-gloss").textContent = resolveWordMeaning(hl, p);
     sheet.dataset.speak = word;
     sheet.classList.remove("hidden");
     sheet.hidden = false;
@@ -679,7 +772,41 @@
     return hit && hit.text ? hit.text : "";
   }
 
-  function renderExplainTables(p) {
+  function buildWordsTableHtml(guide, highlights) {
+    let words = (guide && Array.isArray(guide.words) && guide.words.length) ? guide.words : null;
+    if (!words && highlights && highlights.length) {
+      words = highlights.map((h) => ({
+        word: h.text,
+        pos: h.pos || HL_KIND_LABEL[h.kind] || "—",
+        meaning: h.gloss || "",
+      }));
+    }
+    if (!words || !words.length) return "";
+    const rows = words
+      .map((w) => {
+        const word = w.word || w.text || "";
+        const pos = w.pos || "—";
+        const meaning = w.meaning || w.gloss || "—";
+        return (
+          "<tr><td class=\"wt-word\">" +
+          escapeHtml(word) +
+          '</td><td class="wt-pos">' +
+          escapeHtml(pos) +
+          "</td><td>" +
+          escapeHtml(meaning) +
+          "</td></tr>"
+        );
+      })
+      .join("");
+    return (
+      '<div class="words-table-wrap"><h4 class="words-table-title">字詞表</h4>' +
+      '<table class="words-table" role="table"><thead><tr><th>字詞</th><th>詞性</th><th>意思</th></tr></thead><tbody>' +
+      rows +
+      "</tbody></table></div>"
+    );
+  }
+
+    function renderExplainTables(p) {
     const box = $("#pass-explain");
     if (!box) return;
     const g = (p && p.guide) || null;
@@ -720,42 +847,44 @@
       const n = sections.length;
       const paras = splitTextToCount(p.text || "", n);
       const fallbackTrans = splitTranslationToCount(g.translation || "", n);
-      box.innerHTML = sections
-        .map((sec, i) => {
-          const label = (sec && sec.label) || "第" + (i + 1) + "段";
-          const paraText = paras[i] || "";
-          let translation = nonEmptyTrans(sec && sec.translation);
-          if (!translation) translation = nonEmptyTrans(fallbackTrans[i]) || nonEmptyTrans(g.translation);
-          if (!translation) translation = "（本段語譯待補）";
-          const plain = nonEmptyTrans(sec && sec.plain) || dash;
-          const theme = nonEmptyTrans(sec && sec.theme) || dash;
-          return oneTable(label, paraText, translation, plain, theme);
-        })
-        .join("");
+      box.innerHTML =
+        sections
+          .map((sec, i) => {
+            const label = (sec && sec.label) || "第" + (i + 1) + "段";
+            const paraText = paras[i] || "";
+            let translation = nonEmptyTrans(sec && sec.translation);
+            if (!translation) translation = nonEmptyTrans(fallbackTrans[i]) || nonEmptyTrans(g.translation);
+            if (!translation) translation = "（本段語譯待補）";
+            const plain = nonEmptyTrans(sec && sec.plain) || dash;
+            const theme = nonEmptyTrans(sec && sec.theme) || dash;
+            return oneTable(label, paraText, translation, plain, theme);
+          })
+          .join("") + buildWordsTableHtml(g, highlights);
       bindHighlightClicks(box);
       return;
     }
 
     /* Fallback only when guide has no sections at all */
     const paras = paragraphBlocks(p.text || "");
-    box.innerHTML = paras
-      .map((paraText, i) => {
-        const label = "第" + (i + 1) + "段";
-        let translation;
-        let plain;
-        let theme;
-        if (i === 0) {
-          translation = nonEmptyTrans(g.translation) || dash;
-          plain = nonEmptyTrans(g.plain) || dash;
-          theme = noteForPara(g, 1) || nonEmptyTrans(g.theme) || dash;
-        } else {
-          translation = dash;
-          plain = dash;
-          theme = noteForPara(g, i + 1) || dash;
-        }
-        return oneTable(label, paraText, translation, plain, theme);
-      })
-      .join("");
+    box.innerHTML =
+      paras
+        .map((paraText, i) => {
+          const label = "第" + (i + 1) + "段";
+          let translation;
+          let plain;
+          let theme;
+          if (i === 0) {
+            translation = nonEmptyTrans(g.translation) || dash;
+            plain = nonEmptyTrans(g.plain) || dash;
+            theme = noteForPara(g, 1) || nonEmptyTrans(g.theme) || dash;
+          } else {
+            translation = dash;
+            plain = dash;
+            theme = noteForPara(g, i + 1) || dash;
+          }
+          return oneTable(label, paraText, translation, plain, theme);
+        })
+        .join("") + buildWordsTableHtml(g, highlights);
     bindHighlightClicks(box);
   }
 
@@ -785,11 +914,13 @@
 
   /* ---------- Knowledge (unified; grade UI retired) ---------- */
   /** Merge s1+s2+s3 explanation HTML in order; practice merges s1→s2→s3 by stem. */
-  const KNOW_TIER_LABEL = {
-    s1: "入門",
-    s2: "加深",
-    s3: "銜接",
-  };
+  /** R2.7: strip residual grade / tier labels from knowledge HTML (safety net). */
+  function scrubKnowledgeHtml(html) {
+    return String(html || "")
+      .replace(/<p class="level-badge"><strong>[^<]*<\/strong><\/p>/g, "")
+      .replace(/<h3 class="know-tier-title">[^<]*<\/h3>/g, "")
+      .replace(/程度說明：中[一二三][^。<]*/g, "");
+  }
 
   function buildUnifiedKnowledge(knowledge) {
     const unified = {};
@@ -803,15 +934,12 @@
         const t = knowledge[g] && knowledge[g][tid];
         if (!t || !t.html) continue;
         if (t.title) title = t.title;
-        const tierLabel = KNOW_TIER_LABEL[g] || g;
+        /* R2.7: merge without 入門／加深／銜接 tier titles or grade labels */
         parts.push(
-          '<section class="know-tier" data-tier="' +
+          '<section class="know-block" data-src="' +
             g +
             '">' +
-            '<h3 class="know-tier-title">' +
-            tierLabel +
-            "</h3>" +
-            t.html +
+            scrubKnowledgeHtml(t.html) +
             "</section>"
         );
       }
@@ -985,6 +1113,17 @@
       refLabel: "《" + p.title + "》",
       passageTitle: p.title,
       passageFullText: p.text || "",
+      passageTranslation: (function () {
+        const g = p.guide || {};
+        const secs = g.sections || [];
+        if (secs.length) {
+          return secs
+            .map((s) => (s && s.translation) || "")
+            .filter(Boolean)
+            .join("");
+        }
+        return g.translation || "";
+      })(),
       sourceLabel: gradeLabel(state.grade) + " · 《" + p.title + "》",
     };
   }
@@ -1005,6 +1144,7 @@
       refLabel: topic.title,
       passageTitle: topic.title,
       passageFullText: "",
+      passageTranslation: q.explain || "",
       sourceLabel: "文言知識 · " + topic.title,
     };
   }
@@ -1029,6 +1169,7 @@
       source: q.source || "",
       passageTitle: "文言字詞考核",
       passageFullText: q.sentence || "",
+      passageTranslation: q.explain || "",
       sourceLabel: "字詞考核 · " + (q.source || ""),
     };
   }
@@ -1052,6 +1193,7 @@
       source: item.source || "",
       passageTitle: item.passageTitle || "",
       passageFullText: item.passageFullText || "",
+      passageTranslation: item.passageTranslation || "",
       sourceLabel: item.sourceLabel || "",
     };
   }
@@ -1084,6 +1226,7 @@
       source: q.source || "",
       passageTitle: q.passageTitle,
       passageFullText: q.passageFullText,
+      passageTranslation: q.passageTranslation || "",
       sourceLabel: q.sourceLabel,
     };
   }
@@ -1393,6 +1536,7 @@
         tag: q.tag || "練習",
         passageTitle: q.passageTitle || "",
         passageFullText: q.passageFullText || "",
+        passageTranslation: q.passageTranslation || "",
         sourceLabel: q.sourceLabel || "",
       });
     }
@@ -1704,6 +1848,9 @@
       options: item.options || [],
       answer: item.correctAnswer,
       optionExplains: item.optionExplains || null,
+      passageFullText: item.passageFullText || "",
+      passageTranslation: item.passageTranslation || "",
+      sentence: item.sentence || "",
     });
     showRetestNextControls();
   }
@@ -1899,7 +2046,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r261";
+  const DATA_V = "r27";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

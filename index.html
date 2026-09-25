@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="art/ui/favicon-32.png" />
   <link rel="apple-touch-icon" href="art/ui/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/app.css?v=r261" />
+  <link rel="stylesheet" href="css/app.css?v=r27" />
 </head>
 <body>
   <div id="app">
@@ -141,11 +141,14 @@
         <div class="ws-pron" id="ws-pron">
           <div class="ws-label dark">讀音</div>
           <div class="ws-jyut" id="ws-jyut"></div>
-          <p class="ws-pron-hint" id="ws-jyut-src">讀音來源：香港中文大學漢語多功能字庫（離線表）。Web Speech 僅作播放輔助。</p>
           <button type="button" class="ws-play" id="ws-play">播放粵語讀音</button>
         </div>
         <div class="ws-field">
-          <div class="ws-label">解釋</div>
+          <div class="ws-label">詞性</div>
+          <div class="ws-value" id="ws-pos"></div>
+        </div>
+        <div class="ws-field">
+          <div class="ws-label">意思</div>
           <div class="ws-gloss-box" id="ws-gloss"></div>
         </div>
         <button type="button" class="ws-close-btn" id="ws-close">關閉</button>
@@ -308,6 +311,6 @@
   </nav>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/app.js?v=r261"></script>
+  <script src="js/app.js?v=r27"></script>
 </body>
 </html>
