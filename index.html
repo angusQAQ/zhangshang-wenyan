@@ -22,6 +22,7 @@
         <img class="brand-logo" src="art/ui/logo_master.png" alt="掌上文言" width="40" height="40" />
         <h1 class="brand-title">掌上文言</h1>
         <span class="tag-pill">中學文言文</span>
+        <button type="button" class="btn-gear" id="btn-open-settings" aria-label="設定">⚙</button>
       </header>
       <p class="home-caption">通勤自學 · 無倒數 · 本機使用</p>
 
@@ -121,6 +122,81 @@
         <button type="button" class="btn-next-pill" id="btn-next">下一題</button>
       </div>
     </section>
+
+    <!-- Wrong book -->
+    <section id="view-wrong" class="view">
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <div class="page-head-row">
+        <h2 class="page-title">錯題本</h2>
+        <button type="button" class="link-btn danger" id="btn-wrong-clear">清空</button>
+      </div>
+      <p class="page-sub" id="wrong-sub">本機儲存 · 答錯自動記入</p>
+      <div class="wrong-toolbar">
+        <button type="button" class="btn-outline" id="btn-retest-all">重測全部</button>
+        <label class="filter-check"><input type="checkbox" id="wrong-hide-fixed" /> 隱藏已訂正</label>
+      </div>
+      <div id="wrong-list" class="wrong-list"></div>
+    </section>
+
+    <!-- Settings (我的) -->
+    <section id="view-settings" class="view">
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <h2 class="page-title">我的</h2>
+      <p class="page-sub">本機設定 · 無登入</p>
+      <div class="settings-card">
+        <h3 class="settings-label">字體大小</h3>
+        <p class="settings-hint">套用於正文、題幹、選項與解釋</p>
+        <div class="font-scale-row" id="font-scale-row">
+          <button type="button" class="font-opt" data-scale="sm">小</button>
+          <button type="button" class="font-opt" data-scale="md">中</button>
+          <button type="button" class="font-opt" data-scale="lg">大</button>
+          <button type="button" class="font-opt" data-scale="xl">特大</button>
+        </div>
+        <p class="font-preview" id="font-preview">預覽：文言文以單音詞為主，閱讀時宜逐字推敲。</p>
+      </div>
+      <div class="settings-card">
+        <h3 class="settings-label">關於</h3>
+        <p class="settings-hint">掌上文言 · 初中文言文自學。練習無計時，資料僅存本機。</p>
+      </div>
+    </section>
+
+    <!-- Retest (reuses quiz chrome) -->
+    <section id="view-retest" class="view view-quiz">
+      <div class="quiz-top">
+        <button type="button" class="quiz-close" id="btn-retest-close" aria-label="關閉">✕</button>
+        <div class="quiz-title">錯題重測</div>
+        <span class="quiz-top-link muted" id="retest-progress">1 / 1</span>
+      </div>
+      <div id="retest-passage-wrap" class="retest-passage-wrap hidden">
+        <div class="retest-pass-label">原文</div>
+        <div class="classical" id="retest-passage-text"></div>
+      </div>
+      <div class="quiz-meta" id="retest-meta"></div>
+      <div id="retest-body"></div>
+      <div class="explain-panel" id="retest-explain">
+        <h4>解釋</h4>
+        <p id="retest-explain-text"></p>
+      </div>
+      <div class="quiz-done-wrap hidden" id="retest-done">
+        <div class="done-card">
+          <h2>重測完成</h2>
+          <p id="retest-score"></p>
+          <button type="button" class="btn-primary" id="btn-retest-done-back">返回錯題本</button>
+        </div>
+      </div>
+      <div class="quiz-actionbar hidden" id="retest-footer">
+        <button type="button" class="btn-prev-text" id="btn-retest-prev">上一題</button>
+        <button type="button" class="btn-next-pill" id="btn-retest-next">下一題</button>
+      </div>
+    </section>
   </div>
 
   <nav class="tabbar" id="tabbar" aria-label="主導航">
@@ -132,7 +208,7 @@
       <img src="art/ui/icon_line_list.png" alt="" />
       <span>練習</span>
     </button>
-    <button type="button" class="tab" data-tab="wrong" data-toast="即將推出">
+    <button type="button" class="tab" data-tab="wrong">
       <img src="art/ui/icon_line_wrongset.png" alt="" />
       <span>錯題</span>
     </button>
@@ -140,7 +216,7 @@
       <img src="art/ui/icon_line_bookmark.png" alt="" />
       <span>書籤</span>
     </button>
-    <button type="button" class="tab" data-tab="me" data-toast="即將推出">
+    <button type="button" class="tab" data-tab="me">
       <img src="art/ui/icon_line_me.png" alt="" />
       <span>我的</span>
     </button>

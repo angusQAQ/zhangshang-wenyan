@@ -4,12 +4,14 @@
   const GRADES = [
     { id: "s1", label: "中一", desc: "文言知識與篇章" },
     { id: "s2", label: "中二", desc: "文言知識與篇章" },
-    { id: "s3", label: "中三", desc: "文言知識可學；篇章即將推出" },
+    { id: "s3", label: "中三", desc: "內容即將推出", coming: true },
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
   const LAST_GRADE_KEY = "zw_last_grade";
   const STATS_KEY = "zw_stats_v1";
+  const FONT_KEY = "zw_font_scale";
+  const WRONG_KEY = "zw_wrong_v1";
 
   const PREVIEW_TOPICS = [
     { id: "features", label: "特點", icon: "art/ui/icon_line_book.png" },
@@ -32,6 +34,10 @@
     quizCorrect: 0,
     quizTotal: 0,
     knowledgeTopicId: null,
+    retestQueue: [],
+    retestIndex: 0,
+    retestLocked: false,
+    retestCorrect: 0,
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -43,13 +49,16 @@
     "passage-list": $("#view-passage-list"),
     passage: $("#view-passage"),
     quiz: $("#view-quiz"),
+    wrong: $("#view-wrong"),
+    settings: $("#view-settings"),
+    retest: $("#view-retest"),
   };
 
   function show(name) {
     Object.keys(views).forEach((k) => {
-      views[k].classList.toggle("active", k === name);
+      if (views[k]) views[k].classList.toggle("active", k === name);
     });
-    const quizMode = name === "quiz";
+    const quizMode = name === "quiz" || name === "retest";
     $("#app").classList.toggle("quiz-mode", quizMode);
     window.scrollTo(0, 0);
     syncTab(name);
@@ -57,9 +66,12 @@
 
   function syncTab(name) {
     let tab = "home";
-    if (name === "knowledge-list" || name === "knowledge") tab = "practice";
+    if (name === "wrong" || name === "retest") tab = "wrong";
+    else if (name === "settings") tab = "me";
     else if (
       name === "hub" ||
+      name === "knowledge-list" ||
+      name === "knowledge" ||
       name === "passage-list" ||
       name === "passage" ||
       name === "quiz"
@@ -91,6 +103,10 @@
       .replace(/"/g, "&quot;");
   }
 
+  function uid() {
+    return "w_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
+
   function rememberGrade(id) {
     state.grade = id;
     try {
@@ -106,32 +122,120 @@
     }
   }
 
-  /* Full passage body: never truncate; prefer paragraph markup */
-  function renderClassicalText(raw) {
-    const el = $("#pass-text");
+  /* ---------- Font scale ---------- */
+  function applyFontScale(scale) {
+    const allowed = ["sm", "md", "lg", "xl"];
+    if (allowed.indexOf(scale) < 0) scale = "md";
+    document.documentElement.setAttribute("data-font", scale);
+    try {
+      localStorage.setItem(FONT_KEY, scale);
+    } catch (_) {}
+    document.querySelectorAll(".font-opt").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.scale === scale);
+    });
+  }
+
+  function initFontScale() {
+    let scale = "md";
+    try {
+      scale = localStorage.getItem(FONT_KEY) || "md";
+    } catch (_) {}
+    applyFontScale(scale);
+  }
+
+  /* ---------- Wrong book storage ---------- */
+  function loadWrongs() {
+    try {
+      const raw = localStorage.getItem(WRONG_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveWrongs(arr) {
+    try {
+      localStorage.setItem(WRONG_KEY, JSON.stringify(arr));
+    } catch (_) {
+      toast("本機儲存空間不足");
+    }
+  }
+
+  function wrongKeyOf(entry) {
+    return [
+      entry.grade || "",
+      entry.type || "",
+      entry.passageId || "",
+      entry.knowledgeId || "",
+      entry.questionId || "",
+    ].join("|");
+  }
+
+  function addWrong(entry) {
+    const list = loadWrongs();
+    const key = wrongKeyOf(entry);
+    const idx = list.findIndex((x) => wrongKeyOf(x) === key);
+    entry.id = entry.id || uid();
+    entry.timestamp = entry.timestamp || Date.now();
+    entry.corrected = false;
+    if (idx >= 0) {
+      entry.id = list[idx].id;
+      list[idx] = entry;
+    } else {
+      list.unshift(entry);
+    }
+    saveWrongs(list);
+  }
+
+  function markCorrected(id) {
+    const list = loadWrongs();
+    const item = list.find((x) => x.id === id);
+    if (item) {
+      item.corrected = true;
+      item.correctedAt = Date.now();
+      saveWrongs(list);
+    }
+  }
+
+  function removeWrong(id) {
+    saveWrongs(loadWrongs().filter((x) => x.id !== id));
+  }
+
+  function clearWrongs() {
+    saveWrongs([]);
+  }
+
+  function recordAnswer(ok) {
+    try {
+      const raw = localStorage.getItem(STATS_KEY);
+      const s = raw ? JSON.parse(raw) : { attempted: 0, correct: 0 };
+      s.attempted = (Number(s.attempted) || 0) + 1;
+      if (ok) s.correct = (Number(s.correct) || 0) + 1;
+      localStorage.setItem(STATS_KEY, JSON.stringify(s));
+    } catch (_) {}
+  }
+
+  /* ---------- Classical text (full, no truncate) ---------- */
+  function fillClassical(el, raw) {
+    if (!el) return;
     const text = String(raw == null ? "" : raw);
     const blocks = text.split(/\n\s*\n/).map((s) => s.replace(/^\n+|\n+$/g, ""));
     const meaningful = blocks.filter((b) => b.length > 0);
-
     if (meaningful.length > 1) {
       el.innerHTML = meaningful
         .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
         .join("");
       return;
     }
-
     if (text.indexOf("\n") !== -1) {
       el.innerHTML = text
         .split("\n")
-        .map((line) => {
-          if (!line.trim()) return "";
-          return "<p>" + escapeHtml(line) + "</p>";
-        })
+        .map((line) => (line.trim() ? "<p>" + escapeHtml(line) + "</p>" : ""))
         .join("");
       return;
     }
-
-    /* No newlines: soft-split on dialogue／句號邊界，字符一個不丟 */
     const soft = softParagraphs(text);
     if (soft.length > 1) {
       el.innerHTML = soft.map((p) => "<p>" + escapeHtml(p) + "</p>").join("");
@@ -147,23 +251,20 @@
       buf += text[i];
       const ch = text[i];
       const next = text[i + 1] || "";
-      if (
-        (ch === "。" || ch === "！" || ch === "？") &&
-        (next === "" || next === "「" || next === "（" || /[^\s」）]/.test(next))
-      ) {
-        /* break after sentence if next starts new speaker or clause length enough */
-        if (buf.length >= 28 && (next === "「" || next === "" || /[A-Za-z一-龥]/.test(next))) {
-          if (next === "「" || buf.length >= 40) {
-            parts.push(buf);
-            buf = "";
-          }
+      if ((ch === "。" || ch === "！" || ch === "？") && buf.length >= 28) {
+        if (next === "「" || buf.length >= 40) {
+          parts.push(buf);
+          buf = "";
         }
       }
     }
     if (buf) parts.push(buf);
-    /* Verify no character loss */
     if (parts.join("") !== text) return [text];
     return parts.length ? parts : [text];
+  }
+
+  function renderClassicalText(raw) {
+    fillClassical($("#pass-text"), raw);
   }
 
   /* ---------- Home ---------- */
@@ -207,12 +308,11 @@
         ? "文言知識可學 · 篇章即將推出"
         : "請選擇學習內容";
 
-    const knowDesc = gradeId === "s3"
-      ? "進階虛詞、句式與活用等<br/>主題已按年級分級"
-      : "特點、虛詞、句式、通假等";
-    const passDesc = passageReady
-      ? "字詞語譯 · 主旨 · 判斷題"
-      : "內容即將推出";
+    const knowDesc =
+      gradeId === "s3"
+        ? "進階虛詞、句式與活用等<br/>主題已按年級分級"
+        : "特點、虛詞、句式、通假等";
+    const passDesc = passageReady ? "字詞語譯 · 主旨 · 判斷題" : "內容即將推出";
 
     body.innerHTML = `
       <div class="card-list">
@@ -352,6 +452,21 @@
               right.classList.add("correct");
               right.querySelector('[data-mark="ok"]').style.display = "block";
               right.querySelector('[data-mark="bad"]').style.display = "none";
+              addWrong({
+                type: "knowledge",
+                grade: state.grade,
+                knowledgeId: topicId,
+                questionId: topicId + "_q" + qi,
+                stem: q.stem,
+                options: q.options.slice(),
+                userAnswer: oi,
+                correctAnswer: q.answer,
+                explanation: q.explain,
+                tag: "知識小練",
+                passageTitle: topic.title,
+                passageFullText: "",
+                sourceLabel: gradeLabel(state.grade) + " · " + topic.title,
+              });
             }
             const exp = document.createElement("div");
             exp.className = "explain-panel show";
@@ -368,16 +483,6 @@
       practiceBox.classList.add("hidden");
     }
     show("knowledge");
-  }
-
-  function recordAnswer(ok) {
-    try {
-      const raw = localStorage.getItem(STATS_KEY);
-      const s = raw ? JSON.parse(raw) : { attempted: 0, correct: 0 };
-      s.attempted = (Number(s.attempted) || 0) + 1;
-      if (ok) s.correct = (Number(s.correct) || 0) + 1;
-      localStorage.setItem(STATS_KEY, JSON.stringify(s));
-    } catch (_) {}
   }
 
   /* ---------- Passages ---------- */
@@ -489,6 +594,22 @@
       const right = opts.children[q.answer];
       right.classList.add("correct");
       showMark(right, true);
+      const p = state.currentPassage;
+      addWrong({
+        type: "passage",
+        grade: state.grade,
+        passageId: p.id,
+        questionId: p.id + "_q" + state.quizIndex,
+        stem: q.stem,
+        options: q.options.slice(),
+        userAnswer: oi,
+        correctAnswer: q.answer,
+        explanation: q.explain,
+        tag: q.tag || "練習",
+        passageTitle: p.title,
+        passageFullText: p.text,
+        sourceLabel: gradeLabel(state.grade) + " · 《" + p.title + "》",
+      });
     }
 
     $("#explain-text").textContent = q.explain;
@@ -528,6 +649,224 @@
     renderQuestion();
   }
 
+  /* ---------- Wrong book UI ---------- */
+  function openWrongBook() {
+    renderWrongList();
+    show("wrong");
+  }
+
+  function renderWrongList() {
+    const hideFixed = $("#wrong-hide-fixed") && $("#wrong-hide-fixed").checked;
+    let list = loadWrongs();
+    if (hideFixed) list = list.filter((x) => !x.corrected);
+    $("#wrong-sub").textContent =
+      "本機共 " + loadWrongs().length + " 題 · 答錯自動記入";
+    const box = $("#wrong-list");
+    if (!list.length) {
+      box.innerHTML =
+        '<div class="placeholder-s3"><p>暫無錯題。<br/>練習答錯後會自動出現於此。</p></div>';
+      return;
+    }
+    box.innerHTML = list
+      .map((item) => {
+        const letters = item.options && item.options.length === 3 ? ["A", "B", "C"] : LETTERS;
+        const userL = letters[item.userAnswer] || "?";
+        const rightL = letters[item.correctAnswer] || "?";
+        const userTxt = (item.options && item.options[item.userAnswer]) || "";
+        const rightTxt = (item.options && item.options[item.correctAnswer]) || "";
+        const stemShort =
+          item.stem.length > 48 ? item.stem.slice(0, 48) + "…" : item.stem;
+        return `<article class="wrong-card${item.corrected ? " fixed" : ""}" data-wid="${item.id}">
+          <button type="button" class="wrong-card-head" data-toggle="${item.id}">
+            <div class="wrong-card-main">
+              <div class="wrong-badges">
+                <span class="chip chip-orange">${escapeHtml(item.tag || "錯題")}</span>
+                ${item.corrected ? '<span class="chip chip-green">已訂正</span>' : '<span class="chip chip-red">未訂正</span>'}
+              </div>
+              <div class="wrong-stem">${escapeHtml(stemShort)}</div>
+              <div class="wrong-meta">${escapeHtml(item.sourceLabel || "")}</div>
+            </div>
+            <span class="chev">›</span>
+          </button>
+          <div class="wrong-detail hidden" id="wd-${item.id}">
+            <div class="wrong-qa"><strong>你的答案</strong> ${userL}. ${escapeHtml(userTxt)}</div>
+            <div class="wrong-qa ok"><strong>正確答案</strong> ${rightL}. ${escapeHtml(rightTxt)}</div>
+            <div class="wrong-qa"><strong>解釋</strong> ${escapeHtml(item.explanation || "")}</div>
+            <div class="wrong-actions">
+              <button type="button" class="btn-outline" data-retest-one="${item.id}">重測本題</button>
+              <button type="button" class="link-btn danger" data-del-wrong="${item.id}">刪除</button>
+            </div>
+          </div>
+        </article>`;
+      })
+      .join("");
+
+    box.querySelectorAll("[data-toggle]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.toggle;
+        const detail = $("#wd-" + id);
+        if (detail) detail.classList.toggle("hidden");
+      });
+    });
+    box.querySelectorAll("[data-retest-one]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const item = loadWrongs().find((x) => x.id === btn.dataset.retestOne);
+        if (item) startRetest([item]);
+      });
+    });
+    box.querySelectorAll("[data-del-wrong]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        removeWrong(btn.dataset.delWrong);
+        renderWrongList();
+        toast("已刪除");
+      });
+    });
+  }
+
+  /* ---------- Retest ---------- */
+  function startRetest(queue) {
+    if (!queue || !queue.length) {
+      toast("沒有可重測的題目");
+      return;
+    }
+    state.retestQueue = queue.slice();
+    state.retestIndex = 0;
+    state.retestCorrect = 0;
+    state.retestLocked = false;
+    $("#retest-done").classList.add("hidden");
+    $("#retest-body").classList.remove("hidden");
+    $("#retest-explain").classList.remove("show");
+    $("#retest-footer").classList.add("hidden");
+    renderRetestQuestion();
+    show("retest");
+  }
+
+  function renderRetestQuestion() {
+    const item = state.retestQueue[state.retestIndex];
+    if (!item) return;
+    state.retestLocked = false;
+    $("#retest-explain").classList.remove("show");
+    $("#retest-footer").classList.add("hidden");
+    $("#retest-progress").textContent =
+      state.retestIndex + 1 + " / " + state.retestQueue.length;
+    $("#btn-retest-next").textContent =
+      state.retestIndex + 1 >= state.retestQueue.length ? "完成本輪" : "下一題";
+    $("#btn-retest-prev").disabled = state.retestIndex === 0;
+
+    const wrap = $("#retest-passage-wrap");
+    if (item.type === "passage" && item.passageFullText) {
+      wrap.classList.remove("hidden");
+      fillClassical($("#retest-passage-text"), item.passageFullText);
+    } else {
+      wrap.classList.add("hidden");
+      $("#retest-passage-text").innerHTML = "";
+    }
+
+    $("#retest-meta").innerHTML = `
+      <span class="chip chip-orange">${escapeHtml(item.tag || "重測")}</span>
+      <span class="quiz-count">${escapeHtml(item.sourceLabel || "")}</span>`;
+
+    const letters =
+      item.options && item.options.length === 3 ? ["A", "B", "C"] : LETTERS;
+    const body = $("#retest-body");
+    body.innerHTML = `
+      <div class="q-ref">${item.passageTitle ? "《" + escapeHtml(item.passageTitle) + "》" : ""}</div>
+      <div class="q-stem">${escapeHtml(item.stem)}</div>
+      <div id="retest-options"></div>`;
+
+    const opts = body.querySelector("#retest-options");
+    (item.options || []).forEach((opt, oi) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option-card";
+      btn.innerHTML = `<span class="letter">${letters[oi]}</span>
+        <span class="opt-text">${escapeHtml(opt)}</span>
+        <img class="mark" src="art/ui/mark_correct.png" alt="" data-mark="ok" />
+        <img class="mark" src="art/ui/mark_wrong.png" alt="" data-mark="bad" style="display:none" />
+        <span class="your-choice">你的選擇</span>`;
+      btn.addEventListener("click", () => selectRetest(oi, btn, opts, item));
+      opts.appendChild(btn);
+    });
+  }
+
+  function selectRetest(oi, btn, opts, item) {
+    if (state.retestLocked) return;
+    state.retestLocked = true;
+    const correct = oi === item.correctAnswer;
+    if (correct) {
+      state.retestCorrect += 1;
+      markCorrected(item.id);
+    }
+    recordAnswer(correct);
+
+    opts.querySelectorAll(".option-card").forEach((b) => {
+      b.disabled = true;
+    });
+    if (correct) {
+      btn.classList.add("correct");
+      showMark(btn, true);
+    } else {
+      btn.classList.add("wrong");
+      showMark(btn, false);
+      const right = opts.children[item.correctAnswer];
+      if (right) {
+        right.classList.add("correct");
+        showMark(right, true);
+      }
+      /* keep in wrong book with updated user answer */
+      addWrong(
+        Object.assign({}, item, {
+          userAnswer: oi,
+          corrected: false,
+          timestamp: Date.now(),
+        })
+      );
+    }
+
+    $("#retest-explain-text").textContent = item.explanation || "";
+    $("#retest-explain").classList.add("show");
+    $("#retest-footer").classList.remove("hidden");
+  }
+
+  function nextRetest() {
+    if (state.retestIndex + 1 >= state.retestQueue.length) {
+      $("#retest-body").classList.add("hidden");
+      $("#retest-explain").classList.remove("show");
+      $("#retest-footer").classList.add("hidden");
+      $("#retest-passage-wrap").classList.add("hidden");
+      $("#retest-done").classList.remove("hidden");
+      $("#retest-score").textContent =
+        "本輪答對 " +
+        state.retestCorrect +
+        " / " +
+        state.retestQueue.length +
+        " 題（答對已標為已訂正）";
+      return;
+    }
+    state.retestIndex += 1;
+    renderRetestQuestion();
+  }
+
+  function prevRetest() {
+    if (state.retestIndex <= 0) return;
+    state.retestIndex -= 1;
+    renderRetestQuestion();
+  }
+
+  /* ---------- Settings ---------- */
+  function openSettings() {
+    applyFontScale(
+      (function () {
+        try {
+          return localStorage.getItem(FONT_KEY) || "md";
+        } catch (_) {
+          return "md";
+        }
+      })()
+    );
+    show("settings");
+  }
+
   /* ---------- Nav ---------- */
   document.querySelectorAll("[data-go]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -541,7 +880,11 @@
 
   document.querySelectorAll("[data-toast]").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      if (btn.dataset.tab === "practice" || btn.dataset.tab === "home") return;
+      if (btn.classList.contains("tab") && !btn.dataset.toast) return;
+      if (!btn.dataset.toast) return;
+      /* only fire toast for explicit toast tabs / deco */
+      if (btn.dataset.tab && ["wrong", "me", "home", "practice"].indexOf(btn.dataset.tab) >= 0 && !btn.dataset.toast)
+        return;
       e.preventDefault();
       toast(btn.dataset.toast || "即將推出");
     });
@@ -562,9 +905,45 @@
         const g = lastGrade();
         rememberGrade(g);
         openHub(g);
+        return;
+      }
+      if (tab === "wrong") {
+        openWrongBook();
+        return;
+      }
+      if (tab === "me") {
+        openSettings();
       }
     });
   });
+
+  const gear = $("#btn-open-settings");
+  if (gear) gear.addEventListener("click", openSettings);
+
+  document.querySelectorAll(".font-opt").forEach((btn) => {
+    btn.addEventListener("click", () => applyFontScale(btn.dataset.scale));
+  });
+
+  $("#btn-wrong-clear").addEventListener("click", () => {
+    if (!loadWrongs().length) {
+      toast("錯題本已是空的");
+      return;
+    }
+    if (window.confirm("確定清空全部錯題？此操作無法復原。")) {
+      clearWrongs();
+      renderWrongList();
+      toast("已清空");
+    }
+  });
+  $("#btn-retest-all").addEventListener("click", () => {
+    const hideFixed = $("#wrong-hide-fixed") && $("#wrong-hide-fixed").checked;
+    let list = loadWrongs();
+    if (hideFixed) list = list.filter((x) => !x.corrected);
+    startRetest(list);
+  });
+  if ($("#wrong-hide-fixed")) {
+    $("#wrong-hide-fixed").addEventListener("change", renderWrongList);
+  }
 
   $("#btn-start-quiz").addEventListener("click", startQuiz);
   $("#btn-next").addEventListener("click", nextQuestion);
@@ -572,7 +951,13 @@
   $("#btn-quiz-close").addEventListener("click", () => show("passage"));
   $("#btn-done-back").addEventListener("click", () => openPassageList());
 
+  $("#btn-retest-close").addEventListener("click", openWrongBook);
+  $("#btn-retest-next").addEventListener("click", nextRetest);
+  $("#btn-retest-prev").addEventListener("click", prevRetest);
+  $("#btn-retest-done-back").addEventListener("click", openWrongBook);
+
   /* ---------- Boot ---------- */
+  initFontScale();
   Promise.all([
     fetch("data/passages.json").then((r) => r.json()),
     fetch("data/knowledge.json").then((r) => r.json()),
