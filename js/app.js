@@ -150,7 +150,7 @@
   function applyFontScale(scale) {
     const allowed = ["sm", "md", "lg", "xl"];
     if (allowed.indexOf(scale) < 0) scale = "md";
-    document.documentElement.setAttribute("data-font", scale);
+    document.documentElement.dataset.font = scale;
     try {
       localStorage.setItem(FONT_KEY, scale);
     } catch (_) {}
@@ -158,6 +158,8 @@
       btn.classList.toggle("active", btn.dataset.scale === scale);
     });
   }
+
+  const setFontScale = applyFontScale;
 
   function initFontScale() {
     let scale = "md";
@@ -547,7 +549,7 @@
       topic.practice.forEach((q, qi) => {
         const wrap = document.createElement("div");
         wrap.style.marginBottom = "18px";
-        wrap.innerHTML = `<p class="q-stem" style="font-size:15px;margin-bottom:10px">${qi + 1}. ${escapeHtml(q.stem)}</p>`;
+        wrap.innerHTML = `<p class="q-stem" style="margin-bottom:0.625rem">${qi + 1}. ${escapeHtml(q.stem)}</p>`;
         const opts = document.createElement("div");
         q.options.forEach((opt, oi) => {
           const btn = document.createElement("button");
