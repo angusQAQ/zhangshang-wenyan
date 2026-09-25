@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="art/ui/favicon-32.png" />
   <link rel="apple-touch-icon" href="art/ui/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/app.css?v=r281" />
+  <link rel="stylesheet" href="css/app.css?v=r29" />
 </head>
 <body>
   <div id="app">
@@ -46,16 +46,16 @@
         </button>
       </div>
 
-      <h3 class="section-label">操練與收藏</h3>
+      <h3 class="section-label">文言字詞</h3>
       <div class="card-list" id="home-extra">
         <button type="button" class="nav-card feat-entry" id="btn-home-vocab">
-          <div class="icon-wrap"><img src="art/ui/icon_vocab_quiz.png" alt="" /></div>
+          <div class="icon-wrap"><img src="art/ui/icon_home_vocab.png" alt="" onerror="this.src='art/ui/icon_vocab_quiz.png'" /></div>
           <div class="body"><strong>文言字詞考核</strong><span>有出處文言句 · 詞義四選一</span></div>
           <span class="chev">›</span>
         </button>
-        <button type="button" class="nav-card feat-entry" id="btn-home-bookmarks">
-          <div class="icon-wrap"><img src="art/ui/icon_bookmark.png" alt="" /></div>
-          <div class="body"><strong>書籤</strong><span>本機收藏 · 回看重做</span></div>
+        <button type="button" class="nav-card feat-entry" id="btn-home-glossary">
+          <div class="icon-wrap"><img src="art/ui/icon_home_glossary.png" alt="" onerror="this.src='art/ui/icon_line_doc.png'" /></div>
+          <div class="body"><strong>文言字詞表</strong><span>字眼 · 解釋 · 例句 · 出處</span></div>
           <span class="chev">›</span>
         </button>
       </div>
@@ -191,6 +191,20 @@
     </section>
 
 
+
+    <!-- Glossary (R2.9) -->
+    <section id="view-glossary" class="view">
+      <button type="button" class="btn-back" data-go="home">返回</button>
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <h2 class="page-title">文言字詞表</h2>
+      <p class="page-sub" id="glossary-sub">縱表掃讀 · 字／義／例／出處</p>
+      <div id="glossary-body" class="glossary-wrap"></div>
+    </section>
+
     <!-- Bookmarks -->
     <section id="view-bookmarks" class="view">
       <header class="brand-row compact list-brand">
@@ -289,28 +303,28 @@
 
   <nav class="tabbar" id="tabbar" aria-label="主導航">
     <button type="button" class="tab active" data-tab="home">
-      <img src="art/ui/tab_home.png?v=r281" alt="" />
+      <img src="art/ui/tab_home.png?v=r29" alt="" />
       <span>首頁</span>
     </button>
     <button type="button" class="tab" data-tab="practice">
-      <img src="art/ui/tab_practice.png?v=r281" alt="" />
+      <img src="art/ui/tab_practice.png?v=r29" alt="" />
       <span>練習</span>
     </button>
     <button type="button" class="tab" data-tab="wrong">
-      <img src="art/ui/tab_wrong.png?v=r281" alt="" />
+      <img src="art/ui/tab_wrong.png?v=r29" alt="" />
       <span>錯題</span>
     </button>
     <button type="button" class="tab" data-tab="bookmark">
-      <img src="art/ui/tab_bookmark.png?v=r281" alt="" />
+      <img src="art/ui/tab_bookmark.png?v=r29" alt="" />
       <span>書籤</span>
     </button>
     <button type="button" class="tab" data-tab="me">
-      <img src="art/ui/tab_me.png?v=r281" alt="" />
+      <img src="art/ui/tab_me.png?v=r29" alt="" />
       <span>我的</span>
     </button>
   </nav>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/app.js?v=r281"></script>
+  <script src="js/app.js?v=r29"></script>
 </body>
 </html>

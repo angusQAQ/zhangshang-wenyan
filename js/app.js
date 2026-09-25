@@ -2,9 +2,9 @@
   "use strict";
 
   const GRADES = [
-    { id: "s1", label: "中一", desc: "文言篇章" },
-    { id: "s2", label: "中二", desc: "文言篇章" },
-    { id: "s3", label: "中三", desc: "文言篇章即將推出" },
+    { id: "s1", label: "組一", desc: "文言篇章" },
+    { id: "s2", label: "組二", desc: "文言篇章" },
+    { id: "s3", label: "組三", desc: "文言篇章" },
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
@@ -20,6 +20,8 @@
     knowledge: null,
     unifiedKnowledge: null,
     vocabQuiz: null,
+    glossary: null,
+    rareChars: {},
     jyutping: {},
     currentPassage: null,
     guideOpen: false,
@@ -38,7 +40,14 @@
     retestCorrect: 0,
   };
 
-  const HL_KIND_LABEL = { shi: "實詞", xu: "虛詞", tong: "通假", huo: "活用" };
+  const HL_KIND_LABEL = { shi: "實詞", xu: "虛詞", tong: "通假", huo: "活用", rare: "生僻" };
+  const HL_LEGEND = [
+    { kind: "shi", label: "實詞" },
+    { kind: "xu", label: "虛詞" },
+    { kind: "tong", label: "通假" },
+    { kind: "huo", label: "活用" },
+    { kind: "rare", label: "生僻" },
+  ];
 
   const $ = (sel) => document.querySelector(sel);
   const views = {
@@ -49,6 +58,7 @@
     "passage-list": $("#view-passage-list"),
     passage: $("#view-passage"),
     quiz: $("#view-quiz"),
+    glossary: $("#view-glossary"),
     bookmarks: $("#view-bookmarks"),
     wrong: $("#view-wrong"),
     settings: $("#view-settings"),
@@ -69,6 +79,7 @@
   function syncTab(name) {
     let tab = "home";
     if (name === "wrong" || name === "retest") tab = "wrong";
+    else if (name === "glossary") tab = "home";
     else if (name === "bookmarks") tab = "bookmark";
     else if (name === "settings") tab = "me";
     else if (
@@ -587,9 +598,12 @@
     return list.filter((h) => h && h.text);
   }
 
+  function isRareChar(ch) {
+    return !!(state.rareChars && state.rareChars[ch]);
+  }
+
   function wrapHighlights(plain, highlights) {
     const list = buildHighlightIndex(highlights);
-    if (!list.length) return escapeHtml(plain).replace(/\n/g, "<br>");
     let i = 0;
     let out = "";
     while (i < plain.length) {
@@ -606,9 +620,11 @@
         const t = matched.text;
         const gloss = matched.gloss || "";
         const pos = matched.pos || "";
+        const rare = !!(matched.rare || (t.length === 1 && isRareChar(t)));
         out +=
           '<button type="button" class="hl hl-' +
           escapeHtml(kind) +
+          (rare ? " hl-rare" : "") +
           '" data-hl="' +
           escapeHtml(t) +
           '" data-kind="' +
@@ -617,15 +633,29 @@
           escapeHtml(gloss) +
           '" data-pos="' +
           escapeHtml(pos) +
+          '" data-rare="' +
+          (rare ? "1" : "0") +
           '">' +
           escapeHtml(t) +
           "</button>";
         i += t.length;
       } else {
         const ch = plain[i];
-        if (ch === "\n") out += "<br>";
-        else out += escapeHtml(ch);
-        i += 1;
+        if (ch === "\n") {
+          out += "<br>";
+          i += 1;
+        } else if (isRareChar(ch)) {
+          out +=
+            '<button type="button" class="hl hl-rare" data-hl="' +
+            escapeHtml(ch) +
+            '" data-kind="rare" data-gloss="生僻字 · 可播粵語讀音" data-pos="—" data-rare="1">' +
+            escapeHtml(ch) +
+            "</button>";
+          i += 1;
+        } else {
+          out += escapeHtml(ch);
+          i += 1;
+        }
       }
     }
     return out;
@@ -811,6 +841,27 @@
     return hit && hit.text ? hit.text : "";
   }
 
+  function buildColorLegendHtml() {
+    return (
+      '<div class="hl-legend" role="note" aria-label="色標圖例">' +
+      '<div class="hl-legend-title">色標圖例</div>' +
+      '<div class="hl-legend-row">' +
+      HL_LEGEND.map(function (item) {
+        return (
+          '<span class="hl-legend-item">' +
+          '<span class="hl-swatch hl-' +
+          item.kind +
+          '" aria-hidden="true"></span>' +
+          escapeHtml(item.label) +
+          "</span>"
+        );
+      }).join("") +
+      "</div>" +
+      '<p class="hl-legend-hint">點色標／生僻字可看解釋並播粵語讀音。</p>' +
+      "</div>"
+    );
+  }
+
   function buildWordsTableHtml(guide, highlights) {
     let words = (guide && Array.isArray(guide.words) && guide.words.length) ? guide.words : null;
     if (!words && highlights && highlights.length) {
@@ -887,6 +938,7 @@
       const paras = splitTextToCount(p.text || "", n);
       const fallbackTrans = splitTranslationToCount(g.translation || "", n);
       box.innerHTML =
+        buildColorLegendHtml() +
         sections
           .map((sec, i) => {
             const label = (sec && sec.label) || "第" + (i + 1) + "段";
@@ -906,6 +958,7 @@
     /* Fallback only when guide has no sections at all */
     const paras = paragraphBlocks(p.text || "");
     box.innerHTML =
+      buildColorLegendHtml() +
       paras
         .map((paraText, i) => {
           const label = "第" + (i + 1) + "段";
@@ -1044,7 +1097,7 @@
     show("knowledge-list");
   }
 
-  // R2.6: knowledge topic pages use HTML content only; deco_* assets stay unused on disk.
+  // R2.9: knowledge HTML may include teaching media (note-cards／色圈／chart)；deco_* 無教學功能仍不自動插入。
 
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
@@ -1054,7 +1107,6 @@
       return;
     }
     $("#know-title").textContent = topic.title;
-    // R2.6: do not display art/knowledge/deco_*.png on topic pages.
     $("#know-content").innerHTML = topic.html || "";
 
     const practiceBox = $("#know-practice");
@@ -1087,13 +1139,13 @@
       gradeLabel(state.grade) + " · 共 " + list.length + " 篇";
     const box = $("#passage-list");
     if (!list.length) {
-      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習文言知識，或選讀中一、中二篇章。</p></div>`;
+      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習文言知識，或選讀其他組別篇章。</p></div>`;
     } else {
       box.innerHTML = list
         .map(
           (p, i) => `<button type="button" class="list-row" data-pid="${p.id}">
           <span class="num">${i + 1}.</span>
-          <span class="label">${escapeHtml(p.title)}<br/><span class="meta">${escapeHtml(p.source)} · ${p.questions.length} 題</span></span>
+          <span class="label">${escapeHtml(p.title)}<br/><span class="meta">${escapeHtml(p.source)}</span></span>
           <span class="chev">›</span>
         </button>`
         )
@@ -1390,20 +1442,21 @@
   function setQuizNextLabels() {
     const isLast = quizIsLast();
     const single = !!(state.quizMeta && state.quizMeta.single);
-    const label = isLast ? (single ? "完成" : "本輪結束") : "下一題";
+    /* R2.9: 非書籤單題時可持續下一題；池盡自動洗牌，唔再顯示「本輪結束」 */
+    const label = single && isLast ? "完成" : "下一題";
     const footerBtn = $("#btn-next");
     if (footerBtn) footerBtn.textContent = label;
     const inline = $("#btn-next-inline");
     if (inline) {
       const img = inline.querySelector(".next-img");
       const text = inline.querySelector(".next-text");
-      inline.classList.toggle("is-end", isLast);
+      inline.classList.toggle("is-end", !!(single && isLast));
       inline.setAttribute("aria-label", label);
       if (text) {
         text.textContent = label;
-        text.classList.toggle("hidden", !isLast);
+        text.classList.toggle("hidden", !(single && isLast));
       }
-      if (img) img.classList.toggle("hidden", isLast);
+      if (img) img.classList.toggle("hidden", !!(single && isLast));
     }
   }
 
@@ -1621,7 +1674,23 @@
 
   function nextQuestion() {
     if (state.quizCursor + 1 >= state.quizOrder.length) {
-      showQuizDone();
+      if (state.quizMeta && state.quizMeta.single) {
+        showQuizDone();
+        return;
+      }
+      /* R2.9 無限題：池盡重洗，盡量避免下一題與剛做完相同 */
+      const lastIdx = state.quizOrder[state.quizOrder.length - 1];
+      state.quizOrder = buildShuffledOrder(state.quizPool.length);
+      if (state.quizPool.length > 1 && state.quizOrder[0] === lastIdx) {
+        const swap = state.quizOrder[1];
+        state.quizOrder[1] = state.quizOrder[0];
+        state.quizOrder[0] = swap;
+      }
+      state.quizCursor = 0;
+      if (!state.quizMeta) state.quizMeta = {};
+      state.quizMeta.reshuffled = true;
+      toast("題庫已洗牌，繼續不重複操練");
+      renderQuestion();
       return;
     }
     state.quizCursor += 1;
@@ -2040,6 +2109,8 @@
   if (btnHomeKnow) btnHomeKnow.addEventListener("click", openKnowledgeList);
   const btnHomeVocab = $("#btn-home-vocab");
   if (btnHomeVocab) btnHomeVocab.addEventListener("click", startVocabQuiz);
+  const btnHomeGlossary = $("#btn-home-glossary");
+  if (btnHomeGlossary) btnHomeGlossary.addEventListener("click", openGlossary);
   const btnHomeBm = $("#btn-home-bookmarks");
   if (btnHomeBm) btnHomeBm.addEventListener("click", openBookmarks);
   const btnBmClear = $("#btn-bm-clear");
@@ -2083,21 +2154,95 @@
     if (e.key === "Escape") hideWordSheet();
   });
 
+
+  /* ---------- Glossary (R2.9) ---------- */
+  function openGlossary() {
+    const box = $("#glossary-body");
+    const sub = $("#glossary-sub");
+    const entries =
+      (state.glossary && state.glossary.entries) ||
+      (Array.isArray(state.glossary) ? state.glossary : []);
+    if (sub) {
+      sub.textContent =
+        "共 " + entries.length + " 詞 · 縱表掃讀 · 字／義／例／出處";
+    }
+    if (!box) {
+      show("glossary");
+      return;
+    }
+    if (!entries.length) {
+      box.innerHTML =
+        '<p class="page-sub">字詞表尚未載入。</p>';
+    } else {
+      box.innerHTML =
+        '<div class="glossary-table-wrap"><table class="glossary-table" role="table">' +
+        "<thead><tr><th>字眼</th><th>解釋</th><th>例句</th><th>出處</th></tr></thead><tbody>" +
+        entries
+          .map(function (e) {
+            const senses = Array.isArray(e.senses)
+              ? e.senses
+              : e.sense
+              ? [e.sense]
+              : [];
+            const senseHtml = senses
+              .map(function (s, i) {
+                return (
+                  '<div class="gl-sense">' +
+                  (senses.length > 1
+                    ? '<span class="gl-idx">' +
+                      "①②③④⑤⑥⑦⑧⑨⑩".charAt(i) +
+                      "</span> "
+                    : "") +
+                  escapeHtml(s) +
+                  "</div>"
+                );
+              })
+              .join("");
+            return (
+              "<tr>" +
+              '<td class="gl-word">' +
+              escapeHtml(e.word || "") +
+              "</td>" +
+              "<td>" +
+              senseHtml +
+              "</td>" +
+              "<td>" +
+              escapeHtml(e.example || "—") +
+              "</td>" +
+              "<td>" +
+              escapeHtml(e.source || "—") +
+              "</td>" +
+              "</tr>"
+            );
+          })
+          .join("") +
+        "</tbody></table></div>";
+    }
+    show("glossary");
+  }
+
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r271";
+  const DATA_V = "r29";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/jyutping.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({})),
     fetch("data/vocab_quiz.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ questions: [] })),
+    fetch("data/glossary.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
+    fetch("data/rare_chars.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ chars: [] })),
   ])
-    .then(([passages, knowledge, jyutping, vocabQuiz]) => {
+    .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare]) => {
       state.passages = passages;
       state.knowledge = knowledge;
       state.unifiedKnowledge = buildUnifiedKnowledge(knowledge);
       state.jyutping = jyutping || {};
       state.vocabQuiz = vocabQuiz || { questions: [] };
+      state.glossary = glossary || { entries: [] };
+      const map = Object.create(null);
+      const chars = (rare && rare.chars) || [];
+      for (let i = 0; i < chars.length; i++) map[chars[i]] = true;
+      state.rareChars = map;
       renderHome();
       show("home");
     })

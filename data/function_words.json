@@ -1,0 +1,210 @@
+{
+  "version": "r29",
+  "note": "整理自 s3 附檔虛詞表架構與課文例；不取代 glossary 150 字詞表。",
+  "count": 29,
+  "entries": [
+    {
+      "word": "吾",
+      "cat": "代詞",
+      "sense": "第一人稱代詞，我／我們",
+      "example": "子非吾友也。",
+      "source": "管寧華歆共園中鋤菜"
+    },
+    {
+      "word": "予",
+      "cat": "代詞",
+      "sense": "第一人稱代詞，我",
+      "example": "能救我予爾百金。",
+      "source": "許金不酬"
+    },
+    {
+      "word": "余",
+      "cat": "代詞",
+      "sense": "第一人稱代詞，我",
+      "example": "余幼時即嗜學。",
+      "source": "借書速還"
+    },
+    {
+      "word": "寡人",
+      "cat": "代詞",
+      "sense": "君主自稱",
+      "example": "寡人無疾。",
+      "source": "扁鵲倉公列傳"
+    },
+    {
+      "word": "爾",
+      "cat": "代詞",
+      "sense": "第二人稱，你",
+      "example": "能救我予爾百金。",
+      "source": "許金不酬"
+    },
+    {
+      "word": "汝",
+      "cat": "代詞",
+      "sense": "第二人稱，你",
+      "example": "孰為汝多知乎？",
+      "source": "兩小兒辯日"
+    },
+    {
+      "word": "若",
+      "cat": "代詞",
+      "sense": "第二人稱，你",
+      "example": "若漁者也。",
+      "source": "許金不酬"
+    },
+    {
+      "word": "之",
+      "cat": "代詞",
+      "sense": "第三人稱／的",
+      "example": "華捉而擲去之。",
+      "source": "管寧華歆共園中鋤菜"
+    },
+    {
+      "word": "其",
+      "cat": "代詞",
+      "sense": "他的／那",
+      "example": "失其魂魄。",
+      "source": "葉公好龍"
+    },
+    {
+      "word": "是",
+      "cat": "代詞",
+      "sense": "這、這樣",
+      "example": "是許金而不酬者也。",
+      "source": "許金不酬"
+    },
+    {
+      "word": "孰",
+      "cat": "代詞",
+      "sense": "誰、哪一個",
+      "example": "吾孰與徐公美？",
+      "source": "鄒忌諷齊王納諫"
+    },
+    {
+      "word": "何",
+      "cat": "代詞",
+      "sense": "甚麼、怎麼",
+      "example": "父親何故便退兵？",
+      "source": "空城計"
+    },
+    {
+      "word": "焉",
+      "cat": "代詞／兼詞",
+      "sense": "哪裡／於是",
+      "example": "汝輩焉知？",
+      "source": "空城計"
+    },
+    {
+      "word": "已",
+      "cat": "副詞",
+      "sense": "已經",
+      "example": "死已三千歲矣！",
+      "source": "秋水"
+    },
+    {
+      "word": "乃",
+      "cat": "副詞",
+      "sense": "才、於是",
+      "example": "良久乃已。",
+      "source": "小石城山記"
+    },
+    {
+      "word": "甚",
+      "cat": "副詞",
+      "sense": "很、非常",
+      "example": "望甚遠。",
+      "source": "小石城山記"
+    },
+    {
+      "word": "愈",
+      "cat": "副詞",
+      "sense": "愈來愈",
+      "example": "及是愈以為誠有。",
+      "source": "小石城山記"
+    },
+    {
+      "word": "弗",
+      "cat": "副詞",
+      "sense": "不",
+      "example": "又弗如遠甚。",
+      "source": "鄒忌諷齊王納諫"
+    },
+    {
+      "word": "莫",
+      "cat": "副詞",
+      "sense": "沒有誰／不",
+      "example": "莫不以為鬼也。",
+      "source": "荊人畏鬼"
+    },
+    {
+      "word": "而",
+      "cat": "連詞",
+      "sense": "而、卻、並且",
+      "example": "棄而還走。",
+      "source": "葉公好龍"
+    },
+    {
+      "word": "則",
+      "cat": "連詞",
+      "sense": "就、那麼",
+      "example": "虛則欹，中則正，滿則覆。",
+      "source": "宥坐"
+    },
+    {
+      "word": "以",
+      "cat": "介詞／連詞",
+      "sense": "用、因、來",
+      "example": "不敢休息以見君。",
+      "source": "葉公好龍"
+    },
+    {
+      "word": "於",
+      "cat": "介詞",
+      "sense": "在、對",
+      "example": "子張見魯哀公。",
+      "source": "葉公好龍"
+    },
+    {
+      "word": "也",
+      "cat": "助詞",
+      "sense": "語氣助詞",
+      "example": "子非吾友也。",
+      "source": "管寧華歆共園中鋤菜"
+    },
+    {
+      "word": "矣",
+      "cat": "助詞",
+      "sense": "了",
+      "example": "弗若之矣。",
+      "source": "二子學弈"
+    },
+    {
+      "word": "乎",
+      "cat": "助詞",
+      "sense": "嗎、呢",
+      "example": "無乃不可乎。",
+      "source": "許金不酬"
+    },
+    {
+      "word": "哉",
+      "cat": "助詞",
+      "sense": "啊、呢（感嘆）",
+      "example": "惡有滿而不覆者哉！",
+      "source": "宥坐"
+    },
+    {
+      "word": "耳",
+      "cat": "助詞",
+      "sense": "罢了、而已",
+      "example": "然後生其謀耳。",
+      "source": "英雄之言"
+    },
+    {
+      "word": "焉",
+      "cat": "助詞／兼詞",
+      "sense": "於此／啊",
+      "example": "有欹器焉。",
+      "source": "宥坐"
+    }
+  ]
+}

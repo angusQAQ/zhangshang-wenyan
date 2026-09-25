@@ -39,7 +39,7 @@
   "s1": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"know-lead\">文言文是古人常用的書面語。先認清四條「粗線」特點，讀寓言短文就不易慌。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>特點</th><th>宜記</th><th>淺例</th></tr></thead><tbody><tr><td>單音詞為主</td><td>一字常表完整意思</td><td>目＝眼睛；走＝跑</td></tr><tr><td>常省略</td><td>主語／賓語可省，靠前文補</td><td>（兔）觸株而死</td></tr><tr><td>語序偶不同</td><td>謂語可提前加強語氣</td><td>甚矣，汝之不惠！</td></tr><tr><td>虛詞多</td><td>先當語氣／關係標記</td><td>之、乎、者、也……</td></tr></tbody></table></div><p class=\"know-tip\">學習目標：能指出「單音、省略、語序」三點；通假、古今異義後面主題再細學。</p>",
+      "html": "<p class=\"know-lead\">文言文是古人常用的書面語。先認清四條「粗線」特點，讀寓言短文就不易慌。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>特點</th><th>宜記</th><th>淺例</th></tr></thead><tbody><tr><td>單音詞為主</td><td>一字常表完整意思</td><td>目＝眼睛；走＝跑</td></tr><tr><td>常省略</td><td>主語／賓語可省，靠前文補</td><td>（兔）觸株而死</td></tr><tr><td>語序偶不同</td><td>謂語可提前加強語氣</td><td>甚矣，汝之不惠！</td></tr><tr><td>虛詞多</td><td>先當語氣／關係標記</td><td>之、乎、者、也……</td></tr></tbody></table></div><p class=\"know-tip\">學習目標：能指出「單音、省略、語序」三點；通假、古今異義後面主題再細學。</p>\n<div class=\"note-card note-mint\">\n  <div class=\"note-card-label\">📌 預習卡</div>\n  <p>讀文言文時，見到形容詞或名詞後面直接加賓語（如「奇之」「死之」），就要停一停：問自己「係覺得，定係令到？」——後面主題會用對照表同自測帶你拆清楚。</p>\n</div>\n<div class=\"know-visual-row\">\n  <div class=\"viz-circle c1\">單音</div>\n  <div class=\"viz-circle c2\">省略</div>\n  <div class=\"viz-circle c3\">語序</div>\n  <div class=\"viz-circle c4\">活用</div>\n</div>\n",
       "practice": [
         {
           "stem": "文言文用詞最常見的特點是？",
@@ -398,7 +398,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"know-lead\">宜先穩兩類；敘述句看懂「誰—做—甚」即可。被動、倒裝留待進階階段。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>句式</th><th>標記／特徵</th><th>例子</th></tr></thead><tbody><tr><td>判斷句</td><td>……者，……也</td><td>陳勝者，陽城人也</td></tr><tr><td>省略句</td><td>省主語或賓語</td><td>（農人）釋耒而守株</td></tr><tr><td>基本敘述</td><td>主＋動＋賓為主流</td><td>先按現代語序理解</td></tr></tbody></table></div><p class=\"know-tip\">宜只須知道「有時語序會調」；不必一次背完倒裝公式。</p>",
+      "html": "<p class=\"know-lead\">宜先穩兩類；敘述句看懂「誰—做—甚」即可。被動、倒裝留待進階階段。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>句式</th><th>標記／特徵</th><th>例子</th></tr></thead><tbody><tr><td>判斷句</td><td>……者，……也</td><td>陳勝者，陽城人也</td></tr><tr><td>省略句</td><td>省主語或賓語</td><td>（農人）釋耒而守株</td></tr><tr><td>基本敘述</td><td>主＋動＋賓為主流</td><td>先按現代語序理解</td></tr></tbody></table></div><p class=\"know-tip\">宜只須知道「有時語序會調」；不必一次背完倒裝公式。</p>\n<div class=\"note-card note-sky\">\n  <div class=\"note-card-label\">📝 句式速記</div>\n  <p>判斷句先搵「者／也」；被動句先搵「為……所／見」；倒裝句先試<strong>還原現代語序</strong>。還原得通，類型就八九不離十。</p>\n</div>",
       "practice": [
         {
           "stem": "「陳勝者，陽城人也」屬於？",
@@ -457,7 +457,7 @@
   "s2": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"know-lead\">進一步在「單音、省略、語序」之上，加重<strong>詞類活用</strong>，並把虛詞當長句路標。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>名詞作動詞</td><td>名詞臨時當動作</td><td>蹄之 → 用蹄踢</td></tr><tr><td>形容詞作動詞</td><td>性質詞當動作</td><td>親賢臣，遠小人</td></tr><tr><td>使動（初識）</td><td>使對象怎樣</td><td>死其民 → 使民陷於死地（視文）</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>虛詞「而／也／者／然」常切分層次——先劃虛詞，再串實詞。</li><li>與基礎差異：基礎階段知「有活用」；要<strong>指出哪字、屬哪類</strong>。</li></ul>",
+      "html": "<p class=\"know-lead\">進一步在「單音、省略、語序」之上，加重<strong>詞類活用</strong>，並把虛詞當長句路標。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>名詞作動詞</td><td>名詞臨時當動作</td><td>蹄之 → 用蹄踢</td></tr><tr><td>形容詞作動詞</td><td>性質詞當動作</td><td>親賢臣，遠小人</td></tr><tr><td>使動（初識）</td><td>使對象怎樣</td><td>死其民 → 使民陷於死地（視文）</td></tr></tbody></table></div>\n<div class=\"note-card note-lilac\">\n  <div class=\"note-card-label\">🧠 進階提示</div>\n  <p>見到「使動（初識）」時，先唔好死記術語。用改寫法：可不可以講成「使……」？如果只可以講成「認為／覺得」，就係意動。下一節有完整對照表。</p>\n</div>\n<ul class=\"know-bullets\"><li>虛詞「而／也／者／然」常切分層次——先劃虛詞，再串實詞。</li><li>與基礎差異：基礎階段知「有活用」；要<strong>指出哪字、屬哪類</strong>。</li></ul>",
       "practice": [
         {
           "stem": "「驢不勝怒，蹄之」的「蹄」屬於？",
@@ -645,7 +645,7 @@
     },
     "polysemy": {
       "title": "一詞多義",
-      "html": "<p class=\"know-lead\">宜訓練「同卷兩見，必須分釋」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>亡</td><td>丟失</td><td>亡羊補牢</td></tr><tr><td>亡</td><td>滅亡</td><td>國亡</td></tr><tr><td>亡</td><td>通「無」（視文）</td><td>亡以應</td></tr><tr><td>勝</td><td>禁得住</td><td>不勝怒</td></tr><tr><td>勝</td><td>戰勝</td><td>勝敵</td></tr><tr><td>坐</td><td>坐著</td><td>坐視</td></tr><tr><td>坐</td><td>獲罪（古）</td><td>連坐</td></tr></tbody></table></div><p class=\"know-tip\">測驗兩處同字：切勿兩處抄同一解釋。</p>",
+      "html": "<figure class=\"teach-art teach-art-wide\"><img src=\"art/knowledge/teach/teach_polysemy.png\" alt=\"一詞多義示意\" loading=\"lazy\" /><figcaption>一詞多義示意</figcaption></figure><p class=\"know-lead\">宜訓練「同卷兩見，必須分釋」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>亡</td><td>丟失</td><td>亡羊補牢</td></tr><tr><td>亡</td><td>滅亡</td><td>國亡</td></tr><tr><td>亡</td><td>通「無」（視文）</td><td>亡以應</td></tr><tr><td>勝</td><td>禁得住</td><td>不勝怒</td></tr><tr><td>勝</td><td>戰勝</td><td>勝敵</td></tr><tr><td>坐</td><td>坐著</td><td>坐視</td></tr><tr><td>坐</td><td>獲罪（古）</td><td>連坐</td></tr></tbody></table></div><p class=\"know-tip\">測驗兩處同字：切勿兩處抄同一解釋。</p>",
       "practice": [
         {
           "stem": "「亡羊」與「國亡」兩「亡」？",
@@ -759,7 +759,7 @@
     },
     "loan-chars": {
       "title": "通假字",
-      "html": "<p class=\"know-lead\">不只「認幾個」，還要建立規律：音近可通；答題寫「X 通 Y，解作 Z」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>提示</th></tr></thead><tbody><tr><td>嘿</td><td>默</td><td>嘿然＝沉默</td></tr><tr><td>被</td><td>披</td><td>被髮</td></tr><tr><td>鄉</td><td>向</td><td>鄉使＝從前（視文）</td></tr><tr><td>蚤</td><td>早</td><td>音近</td></tr><tr><td>寤</td><td>悟</td><td>覺悟</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>音近（古音）可通；形旁不同、聲旁相近者尤須留意。</li><li>與基礎差異：基礎階段認例；進階階段能說明「為何判通假」。</li></ul>",
+      "html": "<figure class=\"teach-art teach-art-wide\"><img src=\"art/knowledge/teach/teach_loan.png\" alt=\"通假字示意\" loading=\"lazy\" /><figcaption>通假字示意</figcaption></figure><p class=\"know-lead\">不只「認幾個」，還要建立規律：音近可通；答題寫「X 通 Y，解作 Z」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>提示</th></tr></thead><tbody><tr><td>嘿</td><td>默</td><td>嘿然＝沉默</td></tr><tr><td>被</td><td>披</td><td>被髮</td></tr><tr><td>鄉</td><td>向</td><td>鄉使＝從前（視文）</td></tr><tr><td>蚤</td><td>早</td><td>音近</td></tr><tr><td>寤</td><td>悟</td><td>覺悟</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>音近（古音）可通；形旁不同、聲旁相近者尤須留意。</li><li>與基礎差異：基礎階段認例；進階階段能說明「為何判通假」。</li></ul>",
       "practice": [
         {
           "stem": "「主人嘿然」的「嘿」？",
@@ -816,7 +816,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"know-lead\">進一步在判斷、省略之上，加入被動初識、倒裝初識與固定結構。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>格式／現象</th><th>例子</th></tr></thead><tbody><tr><td>被動</td><td>為……所……</td><td>為流矢所傷</td></tr><tr><td>被動</td><td>見……</td><td>見笑於人（進階）</td></tr><tr><td>倒裝</td><td>主謂倒裝</td><td>甚矣，汝之不惠</td></tr><tr><td>倒裝</td><td>賓語前置初感</td><td>不患人之不己知</td></tr><tr><td>固定</td><td>若……何</td><td>對……怎麼辦</td></tr><tr><td>固定</td><td>不亦……乎</td><td>不也……嗎</td></tr></tbody></table></div>",
+      "html": "<figure class=\"teach-art teach-art-wide\"><img src=\"art/knowledge/teach/teach_passive.png\" alt=\"句式／被動示意\" loading=\"lazy\" /><figcaption>句式／被動示意</figcaption></figure><p class=\"know-lead\">進一步在判斷、省略之上，加入被動初識、倒裝初識與固定結構。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>格式／現象</th><th>例子</th></tr></thead><tbody><tr><td>被動</td><td>為……所……</td><td>為流矢所傷</td></tr><tr><td>被動</td><td>見……</td><td>見笑於人（進階）</td></tr><tr><td>倒裝</td><td>主謂倒裝</td><td>甚矣，汝之不惠</td></tr><tr><td>倒裝</td><td>賓語前置初感</td><td>不患人之不己知</td></tr><tr><td>固定</td><td>若……何</td><td>對……怎麼辦</td></tr><tr><td>固定</td><td>不亦……乎</td><td>不也……嗎</td></tr></tbody></table></div>\n<div class=\"note-card note-sky\">\n  <div class=\"note-card-label\">📝 句式速記</div>\n  <p>判斷句先搵「者／也」；被動句先搵「為……所／見」；倒裝句先試<strong>還原現代語序</strong>。還原得通，類型就八九不離十。</p>\n</div>",
       "practice": [
         {
           "stem": "「為流矢所傷」表？",
@@ -875,7 +875,7 @@
   "s3": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"know-lead\">要把特點<strong>用於解題</strong>：見難句，先判斷障礙屬哪一類。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>檢核項</th><th>自問</th><th>常見類型</th></tr></thead><tbody><tr><td>實詞</td><td>單音？活用？古今？通假？</td><td>意動／使動／名作狀</td></tr><tr><td>虛詞</td><td>基本義不夠？要換義項？</td><td>多義虛詞</td></tr><tr><td>句式</td><td>判斷／被動／倒裝／省略？</td><td>賓語前置等</td></tr><tr><td>語篇</td><td>敘事、說理還是勸勉？</td><td>段中作用</td></tr></tbody></table></div><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用進階</th><th>意思</th><th>例子</th></tr></thead><tbody><tr><td>意動</td><td>以之為……／覺得</td><td>奇之</td></tr><tr><td>使動</td><td>使之……</td><td>遠之</td></tr><tr><td>名作狀語</td><td>像……一樣</td><td>犬坐於前</td></tr></tbody></table></div><p class=\"know-tip\">進階提示：高中會重複這些機制；綜合階段先練「辨類＋取義」。</p>",
+      "html": "<p class=\"know-lead\">要把特點<strong>用於解題</strong>：見難句，先判斷障礙屬哪一類。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>檢核項</th><th>自問</th><th>常見類型</th></tr></thead><tbody><tr><td>實詞</td><td>單音？活用？古今？通假？</td><td>意動／使動／名作狀</td></tr><tr><td>虛詞</td><td>基本義不夠？要換義項？</td><td>多義虛詞</td></tr><tr><td>句式</td><td>判斷／被動／倒裝／省略？</td><td>賓語前置等</td></tr><tr><td>語篇</td><td>敘事、說理還是勸勉？</td><td>段中作用</td></tr></tbody></table></div>\n<div class=\"know-media-block\" data-unit=\"yidong-shidong\">\n  <h3 class=\"know-h3\">重點精講：意動用法 × 使動用法</h3>\n  <p class=\"know-lead\">同學最易把「意動」同「使動」撈亂。記住一句人話：<strong>意動＝我覺得／我當佢係</strong>；<strong>使動＝我令到佢變成／去做</strong>。下面用四條路徑，保證你分得清。</p>\n\n  <div class=\"note-card note-pink\">\n    <div class=\"note-card-label\">✏️ 手寫筆記 · 一句記</div>\n    <p><span class=\"circle-tag circle-yi\">意</span> 主觀態度：以……為……／認為……<br/>\n    <span class=\"circle-tag circle-shi\">使</span> 客觀致使：使……／令……</p>\n  </div>\n\n  <div class=\"compare-grid\">\n    <div class=\"compare-card yi\">\n      <h4>意動</h4>\n      <p class=\"def\">主語<strong>主觀上</strong>把賓語當作某種性質或事物。</p>\n      <p class=\"formula\">格式：名詞／形容詞 ＋ 賓語 → 「以賓語為……」</p>\n    </div>\n    <div class=\"compare-card shi\">\n      <h4>使動</h4>\n      <p class=\"def\">主語<strong>致使</strong>賓語產生某種動作或變化。</p>\n      <p class=\"formula\">格式：動詞／形容詞／名詞 ＋ 賓語 → 「使賓語……」</p>\n    </div>\n  </div>\n\n  \n  <div class=\"teach-art-row\">\n    <figure class=\"teach-art\"><img src=\"art/knowledge/teach/teach_yi_dong.png\" alt=\"意動用法示意\" loading=\"lazy\" /><figcaption>意動：覺得／當作</figcaption></figure>\n    <figure class=\"teach-art\"><img src=\"art/knowledge/teach/teach_shi_dong.png\" alt=\"使動用法示意\" loading=\"lazy\" /><figcaption>使動：使／令</figcaption></figure>\n  </div>\n  <figure class=\"teach-art teach-art-wide\"><img src=\"art/knowledge/teach/teach_compare_shi_yi.png\" alt=\"使動與意動對照\" loading=\"lazy\" /><figcaption>使動 × 意動對照卡</figcaption></figure>\n<div class=\"know-table-wrap\">\n    <table class=\"know-table\">\n      <thead><tr><th>對照</th><th>意動</th><th>使動</th><th>一般用法</th></tr></thead>\n      <tbody>\n        <tr><td>核心問句</td><td>「我覺不覺得／當不當佢係？」</td><td>「我有冇令到佢變／做？」</td><td>詞性照常，無「以為／使」</td></tr>\n        <tr><td>典型例</td><td>奇之 → 以之為奇</td><td>死其民 → 使其民死</td><td>奇山異水（奇＝形容詞本用）</td></tr>\n        <tr><td>再例</td><td>友之 → 以之為友</td><td>遠之 → 使之遠離</td><td>遠山（遠＝形容距離）</td></tr>\n        <tr><td>檢查法</td><td>可改寫「認為／覺得」</td><td>可改寫「使／令／叫」</td><td>兩種改寫都不通</td></tr>\n      </tbody>\n    </table>\n  </div>\n\n  <div class=\"path-steps\">\n    <div class=\"path-step\"><span class=\"step-num\">1</span><div><strong>淺例</strong><p>邑人<strong>奇</strong>之 → 邑人<strong>覺得</strong>仲永奇異。（意動）</p></div></div>\n    <div class=\"path-step\"><span class=\"step-num\">2</span><div><strong>對照例</strong><p>齊桓侯<strong>客</strong>之 → 齊桓侯<strong>以客禮待</strong>扁鵲。（意動，不是「使扁鵲變成客人」那麼簡單，重點在「當作客人看待」。）</p></div></div>\n    <div class=\"path-step\"><span class=\"step-num\">3</span><div><strong>深例</strong><p>君將<strong>哀</strong>而生之乎？→ 使／令我活下去。（使動：生之＝使之生）</p></div></div>\n  </div>\n\n  <div class=\"note-card note-amber\">\n    <div class=\"note-card-label\">⚠️ 易混陷阱</div>\n    <ul class=\"know-bullets\">\n      <li>「遠之」：若解「認為他疏遠」→ 意動；若解「使他離開／疏遠他」→ 使動。必須<strong>回看上下文</strong>。</li>\n      <li>「生死」作使動常見（生死人＝使死人復生／使活人死），唔好當普通並列。</li>\n      <li>通假、古今異義係另一回事；活用係<strong>臨時改功能</strong>，唔一定換本字。</li>\n    </ul>\n  </div>\n\n  <div class=\"self-test\" data-selftest=\"yidong\">\n    <div class=\"note-card-label\">✅ 自測一句（心中作答）</div>\n    <p class=\"st-q\">「漁人<strong>異</strong>之」——意動定使動？</p>\n    <details class=\"st-ans\"><summary>撳開核對</summary>\n      <p><strong>意動。</strong>漁人<strong>覺得</strong>桃花林奇異／以之為異。若改「使它奇異」文意不通。</p>\n    </details>\n  </div>\n\n  <div class=\"color-dots\" aria-hidden=\"true\">\n    <span class=\"dot yi\"></span><span class=\"dot shi\"></span><span class=\"dot tip\"></span>\n    <p class=\"dot-cap\">色圈提示：粉＝意動態度；青＝使動致使；黃＝先問「以為定使」再落筆。</p>\n  </div>\n</div>\n\n<div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>其他活用</th><th>意思</th><th>例子</th></tr></thead><tbody>\n<tr><td>名作狀語</td><td>像……一樣／用……方式</td><td>犬坐於前</td></tr>\n<tr><td>名詞作動詞</td><td>名詞臨時表動作</td><td>蹄之 → 用蹄踢</td></tr>\n<tr><td>形容詞作動詞</td><td>性質詞當動作</td><td>親賢臣，遠小人（此「遠」多作使動：使之遠離）</td></tr>\n</tbody></table></div>\n<p class=\"know-tip\">教師叮囑：考試唔會只問「這是活用嗎」——多數要你<strong>說出類別＋改寫意思</strong>。意動／使動分不清，整句語譯就會寫反。上面自測要真正心算一次，唔好只係眼到。</p>",
       "practice": [
         {
           "stem": "「奇之」若為意動，意思接近？",
@@ -926,6 +926,23 @@
             "正確是「按實詞／虛詞／句式／語篇檢核表排查」。綜合階段綜合排查策略。",
             "選「只看譯文標題」不對。並不支持此解。宜回看「辨類＋取義」再判。學生常因未扣題幹與原文關鍵而誤選，正解應為「按實詞／虛詞／句式／語篇檢核表排查」",
             "選「隨機選義」不對。並不支持此解。宜回看「辨類＋取義」再判。學生常因未扣題幹與原文關鍵而誤選，正解應為「按實詞／虛詞／句式／語篇檢核表排查」"
+          ]
+        },
+        {
+          "stem": "「漁人異之」的「異」屬於？",
+          "options": [
+            "使動：使桃花林變奇異",
+            "意動：以之為異／覺得奇異",
+            "通假為「易」",
+            "名詞作狀語"
+          ],
+          "answer": 1,
+          "explain": "正確是「意動：以之為異／覺得奇異」。原文「異之」可作依據。意動＝主觀認為／覺得；此處漁人覺得桃林奇異，並非使它變奇異。",
+          "optionExplains": [
+            "選「使動：使桃花林變奇異」不對。使動強調致使對象變化；「異之」無法改寫成「使桃林奇異」。宜回看「異之」再判。正解應為意動。",
+            "正確是「意動：以之為異／覺得奇異」。原文「異之」可作依據。關鍵在主觀態度，不是致使。",
+            "選「通假為「易」」不對。此處無通假需要；「異」本字可通。正解應為意動。",
+            "選「名詞作狀語」不對。「異」在此帶賓語「之」，屬意動，不是狀語。正解應為意動。"
           ]
         }
       ]
@@ -1251,7 +1268,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"know-lead\">綜合階段要求<strong>還原語序＋說明類型</strong>。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>要點</th><th>例子／還原</th></tr></thead><tbody><tr><td>賓語前置</td><td>疑問代詞賓語前置</td><td>沛公安在？→ 在安</td></tr><tr><td>賓語前置</td><td>否定句代詞賓語前置</td><td>未之有也 → 未有之</td></tr><tr><td>賓語前置</td><td>之／是複指</td><td>唯利是圖</td></tr><tr><td>介賓後置</td><td>狀語後置</td><td>戰於長勺 → 於長勺戰</td></tr><tr><td>定語後置</td><td>中心語＋之＋定＋者</td><td>馬之千里者 → 千里馬</td></tr><tr><td>被動綜合</td><td>為所／見於／意念被動</td><td>見笑於人</td></tr></tbody></table></div>",
+      "html": "<p class=\"know-lead\">綜合階段要求<strong>還原語序＋說明類型</strong>。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>要點</th><th>例子／還原</th></tr></thead><tbody><tr><td>賓語前置</td><td>疑問代詞賓語前置</td><td>沛公安在？→ 在安</td></tr><tr><td>賓語前置</td><td>否定句代詞賓語前置</td><td>未之有也 → 未有之</td></tr><tr><td>賓語前置</td><td>之／是複指</td><td>唯利是圖</td></tr><tr><td>介賓後置</td><td>狀語後置</td><td>戰於長勺 → 於長勺戰</td></tr><tr><td>定語後置</td><td>中心語＋之＋定＋者</td><td>馬之千里者 → 千里馬</td></tr><tr><td>被動綜合</td><td>為所／見於／意念被動</td><td>見笑於人</td></tr></tbody></table></div>\n<div class=\"note-card note-sky\">\n  <div class=\"note-card-label\">📝 句式速記</div>\n  <p>判斷句先搵「者／也」；被動句先搵「為……所／見」；倒裝句先試<strong>還原現代語序</strong>。還原得通，類型就八九不離十。</p>\n</div>",
       "practice": [
         {
           "stem": "「未之有也」正常語序接近？",

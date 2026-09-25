@@ -102,6 +102,8 @@ commercial_ok: true
   --r24-mark-tong-line: #4E8E95; /* 通假：soft teal, distinct */
   --r24-mark-huo-fill: #F1E8FB;
   --r24-mark-huo-line: #8264B4; /* 活用：soft purple, distinct */
+  --r24-mark-rare-fill: #FDE2E8;
+  --r24-mark-rare-line: #C45C7A; /* 生僻：soft pink, R2.9 */
 
   /* word bottom sheet */
   --r24-sheet: #FFFFFF;
@@ -129,3 +131,50 @@ commercial_ok: true
 | btn_play_jyutping | `art/ui/btn_play_jyutping.png` | 讀音 card 內白色 outline button |
 | btn_sheet_close | `art/ui/btn_sheet_close.png` | sheet 底部 full-width 黑 pill「關閉」 |
 | sheet_handle | `art/ui/sheet_handle.png` | sheet 灰色 drag handle |
+
+## R2.8 底欄
+白底細頂線、五等分、線稿＋二字標。icons：`tab_home`／`tab_practice`／`tab_wrong`／`tab_bookmark`／`tab_me`（對齊 `ref/sugong-dse/04-tabbar.jpg`）。選中黑、未選中灰＝CSS。
+
+## R2.9 視覺（NOA）
+
+commercial_ok: true
+
+### 主頁入口 icons（512×512 RGBA；厚橄欖線；無中文）
+
+| entity_id | path | 用途 |
+|-----------|------|------|
+| icon_home_glossary | `art/ui/icon_home_glossary.png` | 文言字詞表；開書＋列表線＋索引標籤 |
+| icon_home_vocab | `art/ui/icon_home_vocab.png` | 文言字詞／操練入口；閃卡＋問號 |
+| icon_vocab_quiz | `art/ui/icon_vocab_quiz.png` | 與 `icon_home_vocab` 同步（同角色） |
+
+### 顯示解釋 · 色標圖例 strip
+
+| entity_id | path | 規格 |
+|-----------|------|------|
+| legend_explain | `art/ui/legend_explain.png` | ~1200×160；橫向 chips：實詞｜虛詞｜通假｜活用｜生僻（生僻旁喇叭 silhouette） |
+
+GIDEON：開「顯示解釋」後置於解釋區可見位置（表上方或原文上方）。`highlight_chips` 仍可用；R2.9 優先 `legend_explain`（含生僻＋正確 token）。
+
+### 生僻色標 token（NEW）
+
+| kind | fill | dotted underline |
+|------|------|------------------|
+| 生僻 | `#FDE2E8` | `#C45C7A` |
+
+CSS 建議：`--r24-mark-rare-fill: #FDE2E8; --r24-mark-rare-line: #C45C7A;`；旁可接粵語讀音（喇叭／btn_play_jyutping）。
+
+### 知識教學卡 teach_*（文章中可顯示）
+
+軟扁卡通＋筆記簿框；短繁中標籤 ≤短句；正文仍 HTML。
+
+| entity_id | path | 主題／插入建議 |
+|-----------|------|----------------|
+| teach_shi_dong | `art/knowledge/teach/teach_shi_dong.png` | 使動；定義句或對照表前／後 |
+| teach_yi_dong | `art/knowledge/teach/teach_yi_dong.png` | 意動；「以之為」說明旁 |
+| teach_compare_shi_yi | `art/knowledge/teach/teach_compare_shi_yi.png` | 使動 vs 意動對照；對照表後 |
+| teach_notebook_frame | `art/knowledge/teach/teach_notebook_frame.png` | 可重用筆記框 deco／section chrome |
+| teach_loan | `art/knowledge/teach/teach_loan.png` | 通假；loan-chars 主題 |
+| teach_polysemy | `art/knowledge/teach/teach_polysemy.png` | 一詞多義；polysemy 主題 |
+| teach_passive | `art/knowledge/teach/teach_passive.png` | 被動；句式／活用相關段 |
+
+**規則：** `deco_*` 仍 **不顯示／optional unused**。`teach_*` **要顯示**於知識文中（教學多媒體層）。勿把長正文燒進 PNG。
