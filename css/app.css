@@ -1024,6 +1024,25 @@ html[data-font="xl"] { font-size: 20px; }
 }
 
 /* R2.2 — knowledge true text (≥ reader body, rem scales with root) */
+/* R2.5 — merged knowledge tiers */
+.know-tier {
+  margin: 0 0 1.25rem;
+  padding: 0 0 1rem;
+  border-bottom: 1px dashed var(--border-soft, #E0E4E0);
+}
+.know-tier:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.know-tier-title {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent, #7A8F6A);
+  letter-spacing: 0.04em;
+}
+
 .reader .level-badge {
   display: inline-block;
   margin: 0 0 0.75rem;

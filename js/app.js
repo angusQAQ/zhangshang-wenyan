@@ -646,7 +646,13 @@
   }
 
   /* ---------- Knowledge (unified; grade UI retired) ---------- */
-  /** Prefer s3 → s2 → s1 for explanation HTML; practice merges s1→s2→s3 by stem. */
+  /** Merge s1+s2+s3 explanation HTML in order; practice merges s1→s2→s3 by stem. */
+  const KNOW_TIER_LABEL = {
+    s1: "入門",
+    s2: "加深",
+    s3: "銜接",
+  };
+
   function buildUnifiedKnowledge(knowledge) {
     const unified = {};
     if (!knowledge) return unified;
@@ -654,14 +660,22 @@
     topics.forEach((meta) => {
       const tid = meta.id;
       let title = meta.title || tid;
-      let html = "";
-      for (const g of ["s3", "s2", "s1"]) {
+      const parts = [];
+      for (const g of ["s1", "s2", "s3"]) {
         const t = knowledge[g] && knowledge[g][tid];
-        if (t && t.html) {
-          html = t.html;
-          title = t.title || title;
-          break;
-        }
+        if (!t || !t.html) continue;
+        if (t.title) title = t.title;
+        const tierLabel = KNOW_TIER_LABEL[g] || g;
+        parts.push(
+          '<section class="know-tier" data-tier="' +
+            g +
+            '">' +
+            '<h3 class="know-tier-title">' +
+            tierLabel +
+            "</h3>" +
+            t.html +
+            "</section>"
+        );
       }
       const practice = [];
       const seen = Object.create(null);
@@ -675,7 +689,11 @@
           practice.push(q);
         });
       }
-      unified[tid] = { title: title, html: html, practice: practice };
+      unified[tid] = {
+        title: title,
+        html: parts.join(""),
+        practice: practice,
+      };
     });
     return unified;
   }
