@@ -12,25 +12,41 @@
 | icon_512 | art/ui/icon-512.png |
 | favicon | art/ui/favicon-32.png |
 
-## Hero / mode
+## Hero / home
 | entity_id | path |
 |-----------|------|
 | hero_home | art/ui/hero_home.png |
+| icon_home_knowledge | art/ui/icon_home_knowledge.png |
 | icon_knowledge | art/ui/icon_knowledge.png |
 | icon_passage | art/ui/icon_passage.png |
 | icon_grade | art/ui/icon_grade.png |
 | icon_vocab_quiz | art/ui/icon_vocab_quiz.png |
 
-## Knowledge charts（必接於對應主題頁頂或中段）
+## Knowledge deco headers（optional 頁頂裝飾；正文用 HTML）
 | entity_id | path | topic |
 |-----------|------|-------|
-| chart_features | art/knowledge/chart_features.png | features |
-| chart_howto_read | art/knowledge/chart_howto_read.png | howto-read |
-| chart_particles | art/knowledge/chart_particles.png | particles |
-| chart_polysemy | art/knowledge/chart_polysemy.png | polysemy |
-| chart_ancient_modern | art/knowledge/chart_ancient_modern.png | ancient-modern |
-| chart_loan_chars | art/knowledge/chart_loan_chars.png | loan-chars |
-| chart_sentence_patterns | art/knowledge/chart_sentence_patterns.png | sentence-patterns |
+| deco_features | art/knowledge/deco_features.png | features |
+| deco_howto_read | art/knowledge/deco_howto_read.png | howto-read |
+| deco_particles | art/knowledge/deco_particles.png | particles |
+| deco_polysemy | art/knowledge/deco_polysemy.png | polysemy |
+| deco_ancient_modern | art/knowledge/deco_ancient_modern.png | ancient-modern |
+| deco_loan_chars | art/knowledge/deco_loan_chars.png | loan-chars |
+| deco_sentence_patterns | art/knowledge/deco_sentence_patterns.png | sentence-patterns |
+
+## DEPRECATED knowledge charts（勿作可讀正文／勿跟 rem 依賴）
+舊 `chart_*.png` 含燒入中文，**GIDEON 必須改用 HTML tables**；以下僅列存檔，預設唔進新 UI：
+
+| entity_id | path | status |
+|-----------|------|--------|
+| chart_features | art/knowledge/chart_features.png | DEPRECATED |
+| chart_howto_read | art/knowledge/chart_howto_read.png | DEPRECATED |
+| chart_particles | art/knowledge/chart_particles.png | DEPRECATED |
+| chart_polysemy | art/knowledge/chart_polysemy.png | DEPRECATED |
+| chart_ancient_modern | art/knowledge/chart_ancient_modern.png | DEPRECATED |
+| chart_loan_chars | art/knowledge/chart_loan_chars.png | DEPRECATED |
+| chart_sentence_patterns | art/knowledge/chart_sentence_patterns.png | DEPRECATED |
+
+**可讀正文禁止用 PNG 燒字；跟 rem 必須 HTML 真字。**
 
 ## Passage / quiz UI
 | entity_id | path |
@@ -41,15 +57,22 @@
 | icon_bookmark | art/ui/icon_bookmark.png |
 | icon_bookmark_on | art/ui/icon_bookmark_on.png |
 | btn_show_explain | art/ui/btn_show_explain.png |
+| btn_close_explain | art/ui/btn_close_explain.png |
+| btn_play_jyutping | art/ui/btn_play_jyutping.png |
+| btn_sheet_close | art/ui/btn_sheet_close.png |
+| sheet_handle | art/ui/sheet_handle.png |
 | highlight_chips | art/ui/highlight_chips.png |
 | highlight_sample | art/ui/highlight_sample.png |
 
-## 色標 token
-| kind | fill | border |
-|------|------|--------|
-| 實詞 | `#DCF5F0` | `#2A9D8F` |
-| 虛詞 | `#E8F0E0` | `#7A8F6A` |
-| 通假 | `#FFECD2` | `#E6963C` |
-| 活用 | `#F0E6FF` | `#8264B4` |
+## R2.4 色標 token 與 CSS 規則
+
+`highlight_chips` 仍是合法的 legend 資產；但篇章原文的互動 marks **必須用 HTML/CSS**，不可把 `highlight_chips` 當成課文標記圖。marks 用 pastel fill + dotted underline（`text-decoration-style: dotted`），只在 explain mode 出現；before explain 保持純黑、無色標。
+
+| kind | fill | dotted underline |
+|------|------|------------------|
+| 實詞／名物 | `#FFF0DA` | `#E6963C` |
+| 虛詞／動詞等 | `#EAF4E5` | `#7A8F6A` |
+| 通假 | `#E4F2F3` | `#4E8E95` |
+| 活用 | `#F1E8FB` | `#8264B4` |
 
 commercial_ok: true

@@ -1,32 +1,109 @@
 # 《掌上文言》ART_KIT（R2）
 
 ## 風格
-白底教育 App + 橄欖綠；知識頁以**圖表／表格卡**為主，禁止純文字牆。
+白底教育 App + 橄欖綠 #7A8F6A；知識頁以 **HTML 真表格／分塊** 承載可讀正文，裝飾圖只作頁頂視覺。
+
+commercial_ok: true
 
 ## Logo
 卡通古代小人快樂讀書（無字）`art/ui/logo_master.png` 及 icon 全套。
 
-## 知識圖表（R2）
-| topic_id | 檔案 |
-|----------|------|
-| features | `art/knowledge/chart_features.png` |
-| howto-read | `art/knowledge/chart_howto_read.png` |
-| particles | `art/knowledge/chart_particles.png` |
-| polysemy | `art/knowledge/chart_polysemy.png` |
-| ancient-modern | `art/knowledge/chart_ancient_modern.png` |
-| loan-chars | `art/knowledge/chart_loan_chars.png` |
-| sentence-patterns | `art/knowledge/chart_sentence_patterns.png` |
+## 知識裝飾頭圖（R2.2 · deco_*）
+頁頂可選裝飾插畫：**純視覺隱喻，無燒入可讀正文／表格字**。短題目若有 ≤6 字且大字；本批皆無字。
 
-內容對齊教局建議學習重點＋站內 knowledge 分級；圖內全港繁。
+| topic_id | entity_id | 檔案 | 隱喻 |
+|----------|-----------|------|------|
+| features | deco_features | `art/knowledge/deco_features.png` | 卷軸＋放大鏡 |
+| howto-read | deco_howto_read | `art/knowledge/deco_howto_read.png` | 五步圖示橫列 |
+| particles | deco_particles | `art/knowledge/deco_particles.png` | 空白色 pill 浮粒 |
+| polysemy | deco_polysemy | `art/knowledge/deco_polysemy.png` | 一字分裂多義 blob |
+| ancient-modern | deco_ancient_modern | `art/knowledge/deco_ancient_modern.png` | 左毛筆／右現代書 |
+| loan-chars | deco_loan_chars | `art/knowledge/deco_loan_chars.png` | 兩字形橋接 |
+| sentence-patterns | deco_sentence_patterns | `art/knowledge/deco_sentence_patterns.png` | 結構積木 |
+
+### DEPRECATED — chart_*.png（勿再作可讀正文）
+舊檔留存僅供對照，**禁止**再當知識正文／表格來源（字級不跟 rem）：
+
+- `art/knowledge/chart_features.png`
+- `art/knowledge/chart_howto_read.png`
+- `art/knowledge/chart_particles.png`
+- `art/knowledge/chart_polysemy.png`
+- `art/knowledge/chart_ancient_modern.png`
+- `art/knowledge/chart_loan_chars.png`
+- `art/knowledge/chart_sentence_patterns.png`
+
+**規則（給 GIDEON）：可讀正文禁止用 PNG 燒字；跟 rem 必須 HTML 真字。** deco_* 僅 optional 頁頂裝飾；定義／例句／步驟一律 HTML table／list。
 
 ## 色標字
-- 樣式條：`art/ui/highlight_chips.png`（實詞青绿／虛詞草綠／通假橙／活用紫）
+- 樣式條：`art/ui/highlight_chips.png`（**legend 仍有效**；篇章 marks 規則見 R2.4）
 - 句中示例：`art/ui/highlight_sample.png`
-- CSS 建議：底色淺＋底邊 2–3px；可點；字級切換時用 `em`／`rem`，容器 `overflow-wrap`／彈性高，禁固定高裁切。
+- CSS 建議：可點字用 pastel fill＋**dotted underline**；字級切換時用 `em`／`rem`，容器 `overflow-wrap`／彈性高，禁固定高裁切。
 
 ## 其他 R2 UI
-書籤 off／on、文言字詞考核 icon、「顯示解釋」鈕、模式置中 mock：`mock/r2_mode_centered.png`
+書籤 off／on、文言字詞考核 icon、「顯示解釋」鈕、主頁入口 `art/ui/icon_home_knowledge.png`（文言知識）、模式置中 mock：`mock/r2_mode_centered.png`
 
 ## 字級不破版（視覺約束給 GIDEON）
-- 圖表寬 100%，高度 auto
-- 卡內文用流式排版；大字級時只加行高／間距，唔改 absolute 座標疊圖
+- 裝飾頭圖寬 100%，高度 auto；**正文唔喺 PNG 入面**
+- 卡內文用流式排版／HTML 表格；大字級時只加行高／間距，唔改 absolute 座標疊圖
+
+## R2.4 速攻對齊
+
+> 只對齊《速攻文憑試》參考圖的互動 chrome／版式；**不可拷貝參考圖的課文或任何課文段落文字**。
+> 參考：`ref/sugong-dse/01-plain-before.png`、`02-explain-on.png`、`03-word-sheet.png`。
+
+### GIDEON 必用 CSS tokens
+
+```css
+:root {
+  /* brand / shared chrome */
+  --brand-olive: #7A8F6A;
+  --r24-ink: #111111;
+  --r24-muted: #8A8A8A;
+  --r24-border: #E5E5E5;
+  --r24-toggle-bg: #111111;
+  --r24-toggle-fg: #FFFFFF;
+
+  /* explain table: label column stays light grey-green */
+  --r24-table-label: #EEF2EE;
+  --r24-row-segment: #EEF2EE;  /* 段落劃分 */
+  --r24-row-original: #FFFFFF; /* 原文 */
+  --r24-row-translation: #F3F1F8; /* 語譯：light purple */
+  --r24-row-plain: #EAF5EE;       /* 淺白解讀：light green */
+  --r24-row-summary: #FBF1DF;     /* 段旨：soft warm cream */
+
+  /* clickable 原文 marks: pastel fill + dotted underline */
+  --r24-mark-shi-fill: #FFF0DA;
+  --r24-mark-shi-line: #E6963C; /* 實詞／名物：orange */
+  --r24-mark-xu-fill: #EAF4E5;
+  --r24-mark-xu-line: #7A8F6A;  /* 虛詞／動詞等：green */
+  --r24-mark-tong-fill: #E4F2F3;
+  --r24-mark-tong-line: #4E8E95; /* 通假：soft teal, distinct */
+  --r24-mark-huo-fill: #F1E8FB;
+  --r24-mark-huo-line: #8264B4; /* 活用：soft purple, distinct */
+
+  /* word bottom sheet */
+  --r24-sheet: #FFFFFF;
+  --r24-sheet-overlay: rgba(0, 0, 0, .40);
+  --r24-sheet-handle: #D9D9D9;
+  --r24-pronunciation-bg: #E8F5EE;
+}
+```
+
+### 狀態與版式規則
+
+- **Before explain**：原文只用 `--r24-ink` 純黑字；不顯示色標、底色、底線或任何色彩 mark。
+- **After explain**：用真正的 HTML `<table>`，不是燒字 PNG。左 label 欄固定 `--r24-table-label` 淺灰；列依序必須是：`段落劃分`（`--r24-row-segment`）、`原文`（白）、`語譯`（`--r24-row-translation` 淡紫）、`淺白解讀`（`--r24-row-plain` 淡綠）、`段旨`（`--r24-row-summary` 淡暖色）。表格內容要流式換行，不可固定高度裁切。
+- **原文色標**：只在 explain mode 的原文格顯示。每個可點字用 pastel fill 加 dotted underline，不能用實線：`text-decoration-line: underline; text-decoration-style: dotted; text-decoration-thickness: 2px; text-underline-offset: 3px;`。kind 對應上方四組 token；實詞／名物橙色、虛詞／動詞等綠色，通假與活用保留獨立柔和 teal／紫色。
+- **Toggle**：黑色 `#111111` pill、白字；開關文案只用「顯示解釋」／「關閉解釋」。
+- **Word bottom sheet**：底部白色 card，圓角只在上方；灰色 `--r24-sheet-handle` drag handle。欄位依序為出處／字詞／讀音（`--r24-pronunciation-bg` 淡綠 box，配「播放粵語讀音」白底 outline button）／解釋；最底 full-width 黑色「關閉」pill。遮罩用 `--r24-sheet-overlay`。
+- **品牌邊界**：首頁／nav 繼續使用橄欖綠 `#7A8F6A`；篇章 explain mode 的表格及 bottom sheet chrome 以本節 token 為準，不要把品牌綠套成整張表的底色。
+
+### R2.4 chrome PNG（可用作非文字版式參照）
+
+| entity_id | path | 用途 |
+|-----------|------|------|
+| btn_show_explain | `art/ui/btn_show_explain.png` | 黑 pill「顯示解釋」 |
+| btn_close_explain | `art/ui/btn_close_explain.png` | 黑 pill「關閉解釋」 |
+| btn_play_jyutping | `art/ui/btn_play_jyutping.png` | 讀音 card 內白色 outline button |
+| btn_sheet_close | `art/ui/btn_sheet_close.png` | sheet 底部 full-width 黑 pill「關閉」 |
+| sheet_handle | `art/ui/sheet_handle.png` | sheet 灰色 drag handle |

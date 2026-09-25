@@ -383,6 +383,7 @@
       if (matched) {
         const kind = matched.kind || "shi";
         const t = matched.text;
+        const gloss = matched.gloss || "";
         out +=
           '<button type="button" class="hl hl-' +
           escapeHtml(kind) +
@@ -390,6 +391,8 @@
           escapeHtml(t) +
           '" data-kind="' +
           escapeHtml(kind) +
+          '" data-gloss="' +
+          escapeHtml(gloss) +
           '">' +
           escapeHtml(t) +
           "</button>";
@@ -404,6 +407,21 @@
     return out;
   }
 
+  function bindHighlightClicks(root) {
+    if (!root) return;
+    root.querySelectorAll("[data-hl]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openWordSheet({
+          text: btn.dataset.hl,
+          kind: btn.dataset.kind,
+          gloss: btn.dataset.gloss || "",
+        });
+      });
+    });
+  }
+
   function fillClassical(el, raw, highlights) {
     if (!el) return;
     const paras = paragraphBlocks(raw);
@@ -415,13 +433,7 @@
       .map((p) => "<p>" + wrapHighlights(p, highlights) + "</p>")
       .join("");
     if (highlights && highlights.length) {
-      el.querySelectorAll("[data-hl]").forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          showJyutping(btn.dataset.hl, btn.dataset.kind);
-        });
-      });
+      bindHighlightClicks(el);
     }
   }
 
@@ -429,83 +441,189 @@
     fillClassical($("#pass-text"), raw, highlights);
   }
 
-  function showJyutping(ch, kind) {
-    const pop = $("#jyut-pop");
-    if (!pop) return;
-    const rom =
-      (state.jyutping && (state.jyutping[ch] || state.jyutping[String(ch)])) ||
-      null;
-    const charEl = $("#jyut-char");
-    const kindEl = $("#jyut-kind");
-    const romEl = $("#jyut-rom");
-    charEl.textContent = ch;
-    charEl.className = "jyut-char" + (kind && kind !== "shi" ? " kind-" + kind : "");
-    kindEl.textContent = HL_KIND_LABEL[kind] || "色標字";
-    romEl.textContent = rom ? rom : "暫無粵拼";
-    pop.classList.remove("hidden");
-    pop.hidden = false;
+  function lookupJyutping(text) {
+    const jp = state.jyutping || {};
+    if (!text) return "";
+    if (jp[text]) return jp[text];
+    const parts = [];
+    for (let i = 0; i < text.length; i++) {
+      parts.push(jp[text[i]] || "?");
+    }
+    return parts.join(" ");
   }
 
-  function hideJyutping() {
-    const pop = $("#jyut-pop");
-    if (!pop) return;
-    pop.classList.add("hidden");
-    pop.hidden = true;
+  function resolveGloss(hl, passage) {
+    if (hl && hl.gloss) return hl.gloss;
+    const word = (hl && hl.text) || "";
+    const kind = (hl && hl.kind) || "";
+    const kindLabel = HL_KIND_LABEL[kind] || "";
+    const notes = (passage && passage.guide && passage.guide.notes) || [];
+    for (let i = 0; i < notes.length; i++) {
+      const t = notes[i].text || "";
+      if (word && t.indexOf(word) >= 0) {
+        const parts = t.split(/[。；;]/);
+        for (let j = 0; j < parts.length; j++) {
+          if (parts[j].indexOf(word) >= 0) {
+            const s = parts[j].trim();
+            if (s) return s;
+          }
+        }
+        return t;
+      }
+    }
+    if (kindLabel) return kindLabel + "。見語譯／段旨。";
+    return "見語譯／段旨";
+  }
+
+  function playCantonese(text) {
+    if (!text) {
+      toast("無可播放字詞");
+      return;
+    }
+    if (!window.speechSynthesis) {
+      toast("此裝置無法播放語音");
+      return;
+    }
+    try {
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "zh-HK";
+      u.rate = 0.9;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const pick =
+        voices.find((v) => v.lang === "zh-HK") ||
+        voices.find((v) =>
+          /yue|cantonese|hong\s*kong|hk/i.test(v.name + " " + v.lang)
+        ) ||
+        voices.find((v) => /^zh/i.test(v.lang || ""));
+      if (pick) u.voice = pick;
+      u.onerror = function () {
+        toast("播放失敗");
+      };
+      window.speechSynthesis.speak(u);
+    } catch (_) {
+      toast("播放失敗");
+    }
+  }
+
+  function openWordSheet(hl) {
+    const sheet = $("#word-sheet");
+    if (!sheet) return;
+    const p = state.currentPassage;
+    const word = (hl && hl.text) || "";
+    $("#ws-source").textContent = (p && p.source) || "本課注釋";
+    $("#ws-word").textContent = word;
+    $("#ws-jyut").textContent = lookupJyutping(word) || "暫無粵拼";
+    $("#ws-gloss").textContent = resolveGloss(hl, p);
+    sheet.dataset.speak = word;
+    sheet.classList.remove("hidden");
+    sheet.hidden = false;
+  }
+
+  function hideWordSheet() {
+    const sheet = $("#word-sheet");
+    if (!sheet) return;
+    sheet.classList.add("hidden");
+    sheet.hidden = true;
+    try {
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    } catch (_) {}
   }
 
   function setGuideOpen(open) {
     state.guideOpen = !!open;
-    const panel = $("#pass-guide");
+    const plain = $("#pass-plain");
+    const explain = $("#pass-explain");
     const btn = $("#btn-toggle-guide");
-    if (!panel || !btn) return;
-    if (state.guideOpen) {
-      panel.classList.remove("hidden");
-      panel.hidden = false;
-      btn.classList.add("is-open");
-      btn.setAttribute("aria-expanded", "true");
-    } else {
-      panel.classList.add("hidden");
-      panel.hidden = true;
-      btn.classList.remove("is-open");
-      btn.setAttribute("aria-expanded", "false");
+    const label = $("#btn-toggle-guide-label");
+    if (btn) {
+      btn.classList.toggle("is-open", state.guideOpen);
+      btn.setAttribute("aria-expanded", state.guideOpen ? "true" : "false");
     }
+    if (label) label.textContent = state.guideOpen ? "關閉解釋" : "顯示解釋";
+    if (plain) plain.classList.toggle("hidden", state.guideOpen);
+    if (explain) {
+      if (state.guideOpen) {
+        explain.classList.remove("hidden");
+        explain.hidden = false;
+      } else {
+        explain.classList.add("hidden");
+        explain.hidden = true;
+        hideWordSheet();
+      }
+    }
+    const p = state.currentPassage;
+    if (!p) return;
+    if (state.guideOpen) renderExplainTables(p);
+    else renderClassicalText(p.text, null);
   }
 
-  function renderGuide(p) {
-    const g = p && p.guide;
-    const translation = $("#guide-translation");
-    const plain = $("#guide-plain");
-    const notes = $("#guide-notes");
-    const theme = $("#guide-theme");
-    const btn = $("#btn-toggle-guide");
+  function noteForPara(guide, idx1) {
+    const notes = (guide && guide.notes) || [];
+    const hit = notes.find((n) => Number(n.para) === idx1);
+    return hit && hit.text ? hit.text : "";
+  }
+
+  function renderExplainTables(p) {
+    const box = $("#pass-explain");
+    if (!box) return;
+    const g = (p && p.guide) || null;
     if (!g) {
-      if (translation) translation.textContent = "本篇解釋稍後補充。";
-      if (plain) plain.textContent = "";
-      if (notes) notes.innerHTML = "";
-      if (theme) theme.textContent = "";
-      if (btn) btn.classList.add("hidden");
-      setGuideOpen(false);
+      box.innerHTML =
+        '<p class="page-sub" style="margin:0">本篇解釋稍後補充。</p>';
       return;
     }
-    if (btn) btn.classList.remove("hidden");
-    if (translation) translation.textContent = g.translation || "";
-    if (plain) plain.textContent = g.plain || "";
-    if (theme) theme.textContent = g.theme || "";
-    if (notes) {
-      const arr = Array.isArray(g.notes) ? g.notes : [];
-      notes.innerHTML = arr
-        .map((n) => {
-          const para = n.para != null ? n.para : "";
-          return (
-            '<div class="guide-note"><span class="guide-para-label">第' +
-            escapeHtml(String(para)) +
-            "段</span>" +
-            escapeHtml(n.text || "") +
-            "</div>"
-          );
-        })
-        .join("");
-    }
+    const paras = paragraphBlocks(p.text || "");
+    const sections = Array.isArray(g.sections) ? g.sections : null;
+    const highlights = p.highlights || [];
+    const dash = "—";
+    box.innerHTML = paras
+      .map((paraText, i) => {
+        const sec = sections && sections[i] ? sections[i] : null;
+        const label = (sec && sec.label) || "第" + (i + 1) + "段";
+        let translation;
+        let plain;
+        let theme;
+        if (sec) {
+          translation = sec.translation || dash;
+          plain = sec.plain || dash;
+          theme = sec.theme || dash;
+        } else if (i === 0) {
+          translation = g.translation || dash;
+          plain = g.plain || dash;
+          theme = noteForPara(g, 1) || g.theme || dash;
+        } else {
+          translation = dash;
+          plain = dash;
+          theme = noteForPara(g, i + 1) || dash;
+        }
+        return (
+          '<table class="explain-table" role="table"><tbody>' +
+          '<tr><th scope="row">段落劃分</th><td>' +
+          escapeHtml(label) +
+          "</td></tr>" +
+          '<tr><th scope="row">原文</th><td class="cell-classical">' +
+          wrapHighlights(paraText, highlights) +
+          "</td></tr>" +
+          '<tr><th scope="row">語譯</th><td>' +
+          escapeHtml(translation) +
+          "</td></tr>" +
+          '<tr><th scope="row">淺白解讀</th><td>' +
+          escapeHtml(plain) +
+          "</td></tr>" +
+          '<tr><th scope="row">段旨</th><td>' +
+          escapeHtml(theme) +
+          "</td></tr>" +
+          "</tbody></table>"
+        );
+      })
+      .join("");
+    bindHighlightClicks(box);
+  }
+
+  function preparePassageGuide(p) {
+    const btn = $("#btn-toggle-guide");
+    if (btn) btn.classList.toggle("hidden", !(p && p.guide));
   }
 
   /* ---------- Home ---------- */
@@ -603,6 +721,16 @@
     show("knowledge-list");
   }
 
+  const KNOW_DECO = {
+    features: "art/knowledge/deco_features.png",
+    "howto-read": "art/knowledge/deco_howto_read.png",
+    particles: "art/knowledge/deco_particles.png",
+    polysemy: "art/knowledge/deco_polysemy.png",
+    "ancient-modern": "art/knowledge/deco_ancient_modern.png",
+    "loan-chars": "art/knowledge/deco_loan_chars.png",
+    "sentence-patterns": "art/knowledge/deco_sentence_patterns.png",
+  };
+
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
     const topic = getUnifiedTopic(topicId);
@@ -611,7 +739,13 @@
       return;
     }
     $("#know-title").textContent = topic.title;
-    $("#know-content").innerHTML = topic.html || "";
+    const deco = KNOW_DECO[topicId];
+    const decoHtml = deco
+      ? '<img class="know-deco" src="' +
+        deco +
+        '" alt="" width="720" height="240" />'
+      : "";
+    $("#know-content").innerHTML = decoHtml + (topic.html || "");
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -666,13 +800,28 @@
     const p = list.find((x) => x.id === pid);
     if (!p) return;
     state.currentPassage = p;
-    hideJyutping();
+    hideWordSheet();
     $("#pass-title").textContent = p.title;
-    $("#pass-source").textContent = p.source;
-    renderClassicalText(p.text, p.highlights || []);
-    $("#pass-notes").textContent = p.notes ? "提要：" + p.notes : "";
-    renderGuide(p);
-    setGuideOpen(false);
+    const src = $("#pass-source");
+    if (src) src.textContent = p.source || "";
+    preparePassageGuide(p);
+    state.guideOpen = false;
+    renderClassicalText(p.text, null);
+    const plainBox = $("#pass-plain");
+    if (plainBox) plainBox.classList.remove("hidden");
+    const explain = $("#pass-explain");
+    if (explain) {
+      explain.innerHTML = "";
+      explain.classList.add("hidden");
+      explain.hidden = true;
+    }
+    const btn = $("#btn-toggle-guide");
+    const label = $("#btn-toggle-guide-label");
+    if (btn) {
+      btn.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+    if (label) label.textContent = "顯示解釋";
     show("passage");
   }
 
@@ -1501,14 +1650,19 @@
   if (btnGuide) {
     btnGuide.addEventListener("click", () => setGuideOpen(!state.guideOpen));
   }
-  const jyutClose = $("#jyut-close");
-  if (jyutClose) jyutClose.addEventListener("click", hideJyutping);
-  document.addEventListener("click", (e) => {
-    const pop = $("#jyut-pop");
-    if (!pop || pop.hidden) return;
-    if (e.target.closest && (e.target.closest("#jyut-pop") || e.target.closest("[data-hl]")))
-      return;
-    hideJyutping();
+  const wsClose = $("#ws-close");
+  if (wsClose) wsClose.addEventListener("click", hideWordSheet);
+  const wsMask = $("#ws-mask");
+  if (wsMask) wsMask.addEventListener("click", hideWordSheet);
+  const wsPlay = $("#ws-play");
+  if (wsPlay) {
+    wsPlay.addEventListener("click", () => {
+      const sheet = $("#word-sheet");
+      playCantonese(sheet && sheet.dataset.speak);
+    });
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hideWordSheet();
   });
 
   /* ---------- Boot ---------- */
