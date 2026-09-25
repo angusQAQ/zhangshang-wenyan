@@ -360,6 +360,121 @@
     return parts.length ? parts : [text];
   }
 
+  /** Split classical text into exactly n blocks (\\n\\n → \\n → sentence-balance). */
+  function splitTextToCount(raw, n) {
+    const text = String(raw == null ? "" : raw);
+    const target = Math.max(1, Number(n) || 1);
+    if (target === 1) return [text];
+    let parts = text.split(/\n\s*\n/).map((s) => s.replace(/^\n+|\n+$/g, "")).filter((b) => b.length > 0);
+    if (parts.length === target) return parts;
+    if (parts.length !== target && text.indexOf("\n") !== -1) {
+      const byLine = text.split("\n").filter((line) => line.trim());
+      if (byLine.length === target) return byLine;
+      if (byLine.length > 1) parts = byLine;
+    }
+    if (parts.length === target) return parts;
+    if (parts.length > target) {
+      const merged = parts.slice(0, target - 1);
+      merged.push(parts.slice(target - 1).join("\n\n"));
+      return merged;
+    }
+    /* parts.length < target: re-split by sentence punctuation into target buckets */
+    const src = parts.length ? parts.join("") : text;
+    const sentences = [];
+    let buf = "";
+    for (let i = 0; i < src.length; i++) {
+      buf += src[i];
+      if ("。！？".indexOf(src[i]) !== -1) {
+        sentences.push(buf);
+        buf = "";
+      }
+    }
+    if (buf) sentences.push(buf);
+    if (sentences.length <= 1) {
+      const out = [];
+      const step = Math.max(1, Math.ceil(src.length / target));
+      for (let i = 0; i < target; i++) {
+        out.push(src.slice(i * step, i === target - 1 ? src.length : (i + 1) * step));
+      }
+      return out;
+    }
+    const out = Array.from({ length: target }, () => "");
+    const per = Math.max(1, Math.ceil(sentences.length / target));
+    let si = 0;
+    for (let i = 0; i < target; i++) {
+      const chunk = sentences.slice(si, i === target - 1 ? sentences.length : si + per);
+      out[i] = chunk.join("");
+      si += per;
+    }
+    if (!out[target - 1] && sentences.length) {
+      /* ensure last bucket not empty: pull from previous */
+      for (let i = target - 1; i > 0; i--) {
+        if (!out[i] && out[i - 1]) {
+          const sents = [];
+          let b = "";
+          for (let j = 0; j < out[i - 1].length; j++) {
+            b += out[i - 1][j];
+            if ("。！？".indexOf(out[i - 1][j]) !== -1) {
+              sents.push(b);
+              b = "";
+            }
+          }
+          if (b) sents.push(b);
+          if (sents.length >= 2) {
+            out[i] = sents.pop();
+            out[i - 1] = sents.join("");
+          }
+        }
+      }
+    }
+    return out;
+  }
+
+  function nonEmptyTrans(s) {
+    const t = s == null ? "" : String(s).trim();
+    if (!t || t === "—" || t === "－" || t === "-") return "";
+    return t;
+  }
+
+  /** Evenly split a full translation into n non-empty chunks by sentence. */
+  function splitTranslationToCount(full, n) {
+    const text = String(full || "").trim();
+    const target = Math.max(1, Number(n) || 1);
+    if (!text) return Array.from({ length: target }, () => "");
+    if (target === 1) return [text];
+    const sentences = [];
+    let buf = "";
+    for (let i = 0; i < text.length; i++) {
+      buf += text[i];
+      if ("。！？".indexOf(text[i]) !== -1) {
+        sentences.push(buf);
+        buf = "";
+      }
+    }
+    if (buf) sentences.push(buf);
+    if (sentences.length <= 1) {
+      const out = [];
+      const step = Math.max(1, Math.ceil(text.length / target));
+      for (let i = 0; i < target; i++) {
+        const piece = text.slice(i * step, i === target - 1 ? text.length : (i + 1) * step);
+        out.push(piece || text);
+      }
+      return out;
+    }
+    const out = Array.from({ length: target }, () => "");
+    const per = Math.max(1, Math.ceil(sentences.length / target));
+    let si = 0;
+    for (let i = 0; i < target; i++) {
+      const chunk = sentences.slice(si, i === target - 1 ? sentences.length : si + per);
+      out[i] = chunk.join("") || sentences[Math.min(si, sentences.length - 1)] || text;
+      si += per;
+    }
+    for (let i = 0; i < out.length; i++) {
+      if (!out[i]) out[i] = text;
+    }
+    return out;
+  }
+
   function buildHighlightIndex(highlights) {
     const list = Array.isArray(highlights) ? highlights.slice() : [];
     list.sort((a, b) => String(b.text || "").length - String(a.text || "").length);
@@ -573,49 +688,72 @@
         '<p class="page-sub" style="margin:0">本篇解釋稍後補充。</p>';
       return;
     }
-    const paras = paragraphBlocks(p.text || "");
-    const sections = Array.isArray(g.sections) ? g.sections : null;
     const highlights = p.highlights || [];
     const dash = "—";
+    const sections =
+      Array.isArray(g.sections) && g.sections.length >= 1 ? g.sections : null;
+
+    function oneTable(label, paraText, translation, plain, theme) {
+      return (
+        '<table class="explain-table" role="table"><tbody>' +
+        '<tr><th scope="row">段落劃分</th><td>' +
+        escapeHtml(label) +
+        "</td></tr>" +
+        '<tr><th scope="row">原文</th><td class="cell-classical">' +
+        wrapHighlights(paraText, highlights) +
+        "</td></tr>" +
+        '<tr><th scope="row">語譯</th><td>' +
+        escapeHtml(translation) +
+        "</td></tr>" +
+        '<tr><th scope="row">淺白解讀</th><td>' +
+        escapeHtml(plain) +
+        "</td></tr>" +
+        '<tr><th scope="row">段旨</th><td>' +
+        escapeHtml(theme) +
+        "</td></tr>" +
+        "</tbody></table>"
+      );
+    }
+
+    /* R2.6.1 hard gate: sections drive table count when present */
+    if (sections) {
+      const n = sections.length;
+      const paras = splitTextToCount(p.text || "", n);
+      const fallbackTrans = splitTranslationToCount(g.translation || "", n);
+      box.innerHTML = sections
+        .map((sec, i) => {
+          const label = (sec && sec.label) || "第" + (i + 1) + "段";
+          const paraText = paras[i] || "";
+          let translation = nonEmptyTrans(sec && sec.translation);
+          if (!translation) translation = nonEmptyTrans(fallbackTrans[i]) || nonEmptyTrans(g.translation);
+          if (!translation) translation = "（本段語譯待補）";
+          const plain = nonEmptyTrans(sec && sec.plain) || dash;
+          const theme = nonEmptyTrans(sec && sec.theme) || dash;
+          return oneTable(label, paraText, translation, plain, theme);
+        })
+        .join("");
+      bindHighlightClicks(box);
+      return;
+    }
+
+    /* Fallback only when guide has no sections at all */
+    const paras = paragraphBlocks(p.text || "");
     box.innerHTML = paras
       .map((paraText, i) => {
-        const sec = sections && sections[i] ? sections[i] : null;
-        const label = (sec && sec.label) || "第" + (i + 1) + "段";
+        const label = "第" + (i + 1) + "段";
         let translation;
         let plain;
         let theme;
-        if (sec) {
-          translation = sec.translation || dash;
-          plain = sec.plain || dash;
-          theme = sec.theme || dash;
-        } else if (i === 0) {
-          translation = g.translation || dash;
-          plain = g.plain || dash;
-          theme = noteForPara(g, 1) || g.theme || dash;
+        if (i === 0) {
+          translation = nonEmptyTrans(g.translation) || dash;
+          plain = nonEmptyTrans(g.plain) || dash;
+          theme = noteForPara(g, 1) || nonEmptyTrans(g.theme) || dash;
         } else {
           translation = dash;
           plain = dash;
           theme = noteForPara(g, i + 1) || dash;
         }
-        return (
-          '<table class="explain-table" role="table"><tbody>' +
-          '<tr><th scope="row">段落劃分</th><td>' +
-          escapeHtml(label) +
-          "</td></tr>" +
-          '<tr><th scope="row">原文</th><td class="cell-classical">' +
-          wrapHighlights(paraText, highlights) +
-          "</td></tr>" +
-          '<tr><th scope="row">語譯</th><td>' +
-          escapeHtml(translation) +
-          "</td></tr>" +
-          '<tr><th scope="row">淺白解讀</th><td>' +
-          escapeHtml(plain) +
-          "</td></tr>" +
-          '<tr><th scope="row">段旨</th><td>' +
-          escapeHtml(theme) +
-          "</td></tr>" +
-          "</tbody></table>"
-        );
+        return oneTable(label, paraText, translation, plain, theme);
       })
       .join("");
     bindHighlightClicks(box);
@@ -1761,11 +1899,12 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
+  const DATA_V = "r261";
   Promise.all([
-    fetch("data/passages.json").then((r) => r.json()),
-    fetch("data/knowledge.json").then((r) => r.json()),
-    fetch("data/jyutping.json").then((r) => r.json()).catch(() => ({})),
-    fetch("data/vocab_quiz.json").then((r) => r.json()).catch(() => ({ questions: [] })),
+    fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
+    fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
+    fetch("data/jyutping.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({})),
+    fetch("data/vocab_quiz.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ questions: [] })),
   ])
     .then(([passages, knowledge, jyutping, vocabQuiz]) => {
       state.passages = passages;
