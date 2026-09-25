@@ -1648,46 +1648,68 @@ img[src*="art/knowledge/chart_"] {
   border-bottom-color: #C45C7A !important;
 }
 
-/* Glossary vertical table */
-.glossary-wrap { margin-top: 0.5rem; }
-.glossary-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius, 12px);
+/* R2.10 Glossary — 疏朗卡片 · ①②③ 對齊 */
+.glossary-wrap { margin-top: 0.75rem; }
+.glossary-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.glossary-card {
+  background: #FFFEFA;
   border: 1px solid #E8E4DA;
+  border-radius: 16px;
+  padding: 1rem 1.05rem 1.1rem;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
 }
-.glossary-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9375rem;
-  background: #fff;
+.glossary-card .gl-word {
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #1A1A1A;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px dashed #E5DFD2;
 }
-.glossary-table th,
-.glossary-table td {
-  padding: 0.65rem 0.6rem;
-  border-bottom: 1px solid #EEEAE2;
-  vertical-align: top;
-  text-align: left;
-  line-height: 1.45;
+.glossary-card .gl-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
-.glossary-table thead th {
-  background: #F5F2EA;
-  font-weight: 700;
-  font-size: 0.8125rem;
-  color: #5A5A5A;
-  position: sticky;
-  top: 0;
-  z-index: 1;
+.glossary-card .gl-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 12px;
+  background: #F9F6F0;
+  line-height: 1.65;
 }
-.glossary-table .gl-word {
-  font-weight: 700;
-  font-size: 1.05em;
-  white-space: nowrap;
+.glossary-card .gl-sense {
+  font-size: 0.98rem;
   color: #2A2A2A;
 }
-.glossary-table .gl-sense { margin: 0.15rem 0; }
-.glossary-table .gl-idx { color: #8A6A3A; font-weight: 600; }
-.glossary-table tbody tr:last-child td { border-bottom: none; }
+.glossary-card .gl-sense-text { font-weight: 600; }
+.glossary-card .gl-ex,
+.glossary-card .gl-src {
+  font-size: 0.9rem;
+  color: #4A4A4A;
+  padding-left: 0.1rem;
+}
+.glossary-card .gl-k {
+  display: inline-block;
+  min-width: 1.4rem;
+  margin-right: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8A6A3A;
+  letter-spacing: 0.06em;
+}
+.glossary-card .gl-idx {
+  color: #8A6A3A;
+  font-weight: 700;
+  margin-right: 0.28rem;
+}
 
 /* Knowledge multimedia skeleton (NOA art later) */
 .reader .note-card {
@@ -1874,3 +1896,175 @@ img[src*="art/knowledge/chart_"] {
   color: #8A6A3A;
 }
 .reader .teach-art-wide img { max-height: 280px; }
+
+
+/* ---------- R2.10 Knowledge immerse (點選 only) ---------- */
+.list-grade-head {
+  margin: 0.85rem 0 0.35rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #8A6A3A;
+  background: #F5F2EA;
+  border-radius: 8px;
+}
+.list-grade-head:first-child { margin-top: 0.25rem; }
+
+.reader .know-hero {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg, #FFF8EE 0%, #F7F2FC 100%);
+  border: 1px solid #E8E0D0;
+  /* reserved: art/ui/immersive_panel_bg.png */
+}
+.reader .know-hero-art {
+  position: relative;
+  flex: 0 0 auto;
+  width: 64px;
+  height: 64px;
+}
+.reader .know-hero-art img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #E8E4DA;
+}
+.reader .know-hero-art img.hero-fallback { padding: 6px; }
+.reader .tap-hint-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 18px;
+  border: 2px dashed rgba(196, 92, 122, 0.45);
+  pointer-events: none;
+  /* reserved asset: art/ui/tap_hint_ring.png */
+}
+.reader .know-hero-cap {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #4A4A4A;
+  font-weight: 600;
+}
+
+.reader .know-color-board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0 0 1rem;
+}
+@media (min-width: 420px) {
+  .reader .know-color-board { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.reader .color-hotspot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  text-align: left;
+  padding: 0.7rem 0.65rem;
+  border-radius: 14px;
+  border: 1.5px solid rgba(0,0,0,0.06);
+  background: var(--chip, #F5F2EA);
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  min-height: 3.2rem;
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+}
+.reader .color-hotspot:focus-visible {
+  outline: 2px solid #C45C7A;
+  outline-offset: 2px;
+}
+.reader .color-hotspot.is-open {
+  box-shadow: 0 0 0 2px rgba(196, 92, 122, 0.35);
+  transform: translateY(-1px);
+}
+.reader .hotspot-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #C45C7A;
+  box-shadow: 0 0 0 3px rgba(196, 92, 122, 0.18);
+  /* reserved: art/ui/hotspot_dot.png */
+}
+.reader .chip-lab {
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+.reader .chip-panel,
+.reader .immersive-panel {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #3A3A3A;
+  margin-top: 0.15rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(0,0,0,0.05);
+  /* reserved: art/ui/immersive_panel_bg.png */
+}
+.reader .color-hotspot .immersive-panel[hidden],
+.reader .compare-card .immersive-panel[hidden] {
+  display: none !important;
+}
+
+.reader .note-hot {
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+.reader .note-hot .tap-mini {
+  margin-left: 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #A08050;
+  opacity: 0.85;
+}
+.reader .note-hot:not(.is-open) > :not(.note-card-label) {
+  display: none;
+}
+.reader .note-hot.is-open {
+  box-shadow: 0 0 0 2px rgba(138, 106, 58, 0.25);
+}
+.reader .note-hot.is-open .tap-mini { display: none; }
+
+.reader table.know-table-hot tbody tr {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.reader table.know-table-hot tbody tr.is-hot {
+  background: #FFF3D6;
+  outline: 2px solid #E0B878;
+  outline-offset: -2px;
+}
+.reader table.know-table-hot tbody tr:focus-visible {
+  outline: 2px solid #C45C7A;
+}
+
+.reader .viz-circle {
+  cursor: pointer;
+}
+.reader .viz-circle.is-hot {
+  box-shadow: 0 0 0 3px rgba(78, 142, 149, 0.45);
+  transform: scale(1.04);
+}
+
+.reader .compare-card.color-hotspot {
+  cursor: pointer;
+}
+.reader .compare-card.color-hotspot.is-open {
+  box-shadow: 0 0 0 2px rgba(196, 92, 122, 0.3);
+}
+
+.reader .know-chart-slot.chart-missing {
+  display: none;
+}
+.reader .teach-art img[src*="hero_"] { max-height: 160px; }

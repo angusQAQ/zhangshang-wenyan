@@ -2,9 +2,9 @@
   "use strict";
 
   const GRADES = [
-    { id: "s1", label: "組一", desc: "文言篇章" },
-    { id: "s2", label: "組二", desc: "文言篇章" },
-    { id: "s3", label: "組三", desc: "文言篇章" },
+    { id: "s1", label: "中一", desc: "文言篇章" },
+    { id: "s2", label: "中二", desc: "文言篇章" },
+    { id: "s3", label: "中三", desc: "文言篇章" },
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
@@ -1099,6 +1099,81 @@
 
   // R2.9: knowledge HTML may include teaching media (note-cards／色圈／chart)；deco_* 無教學功能仍不自動插入。
 
+  /* R2.10: 知識互動＝點選（熱點展開／色表高亮／沉浸面板）；唔加第二機制 */
+  function bindKnowledgeImmerse(root, topicId) {
+    if (!root) return;
+    root.querySelectorAll(".color-hotspot").forEach((btn) => {
+      if (btn.dataset.boundImmerse) return;
+      btn.dataset.boundImmerse = "1";
+      const toggle = () => {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        const next = !open;
+        btn.setAttribute("aria-expanded", next ? "true" : "false");
+        btn.classList.toggle("is-open", next);
+        btn.querySelectorAll(".immersive-panel").forEach((p) => {
+          if (next) p.removeAttribute("hidden");
+          else p.setAttribute("hidden", "");
+        });
+      };
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        toggle();
+      });
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+    root.querySelectorAll(".note-hot").forEach((card) => {
+      if (card.dataset.boundImmerse) return;
+      card.dataset.boundImmerse = "1";
+      const toggle = () => {
+        const open = card.getAttribute("aria-expanded") === "true";
+        const next = !open;
+        card.setAttribute("aria-expanded", next ? "true" : "false");
+        card.classList.toggle("is-open", next);
+      };
+      card.addEventListener("click", toggle);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+    root.querySelectorAll("table.know-table-hot").forEach((table) => {
+      if (table.dataset.boundImmerse) return;
+      table.dataset.boundImmerse = "1";
+      table.querySelectorAll("tbody tr").forEach((tr) => {
+        tr.tabIndex = 0;
+        tr.setAttribute("role", "button");
+        tr.addEventListener("click", () => {
+          table.querySelectorAll("tr.is-hot").forEach((x) => x.classList.remove("is-hot"));
+          tr.classList.add("is-hot");
+        });
+        tr.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            tr.click();
+          }
+        });
+      });
+    });
+    /* viz-circle → same click expand if no panel yet */
+    root.querySelectorAll(".viz-circle").forEach((el) => {
+      if (el.dataset.boundImmerse) return;
+      el.dataset.boundImmerse = "1";
+      el.setAttribute("role", "button");
+      el.tabIndex = 0;
+      el.addEventListener("click", () => {
+        root.querySelectorAll(".viz-circle.is-hot").forEach((x) => x.classList.remove("is-hot"));
+        el.classList.toggle("is-hot");
+      });
+    });
+  }
+
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
     const topic = getUnifiedTopic(topicId);
@@ -1108,6 +1183,7 @@
     }
     $("#know-title").textContent = topic.title;
     $("#know-content").innerHTML = topic.html || "";
+    bindKnowledgeImmerse($("#know-content"), topicId);
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -1133,25 +1209,71 @@
   }
 
   /* ---------- Passages ---------- */
-  function openPassageList() {
-    const list = (state.passages && state.passages[state.grade]) || [];
-    $("#pass-list-sub").textContent =
-      gradeLabel(state.grade) + " · 共 " + list.length + " 篇";
-    const box = $("#passage-list");
-    if (!list.length) {
-      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習文言知識，或選讀其他組別篇章。</p></div>`;
+  function allPassagesFlat() {
+    const out = [];
+    if (!state.passages) return out;
+    GRADES.forEach((g) => {
+      const list = state.passages[g.id] || [];
+      list.forEach((p) => {
+        out.push({ grade: g.id, gradeLabel: g.label, passage: p });
+      });
+    });
+    return out;
+  }
+
+  /**
+   * R2.10: 練習入口（底欄）→ 中一＋中二＋中三全部；
+   * 主頁點年級卡 → 仍只開該級。
+   * @param {{ all?: boolean }} [opts]
+   */
+  function openPassageList(opts) {
+    const showAll = !!(opts && opts.all);
+    state.passageListAll = showAll;
+    let flat;
+    if (showAll) {
+      flat = allPassagesFlat();
+      $("#pass-list-sub").textContent =
+        "中一／中二／中三 · 共 " + flat.length + " 篇";
     } else {
-      box.innerHTML = list
-        .map(
-          (p, i) => `<button type="button" class="list-row" data-pid="${p.id}">
+      const g = state.grade || "s1";
+      const list = (state.passages && state.passages[g]) || [];
+      flat = list.map((p) => ({
+        grade: g,
+        gradeLabel: gradeLabel(g),
+        passage: p,
+      }));
+      $("#pass-list-sub").textContent =
+        gradeLabel(g) + " · 共 " + flat.length + " 篇";
+    }
+    const box = $("#passage-list");
+    if (!flat.length) {
+      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習文言知識，或選讀其他年級篇章。</p></div>`;
+    } else {
+      let lastG = "";
+      const parts = [];
+      flat.forEach((row, i) => {
+        if (showAll && row.grade !== lastG) {
+          lastG = row.grade;
+          parts.push(
+            `<div class="list-grade-head" data-grade-head="${row.grade}">${escapeHtml(row.gradeLabel)}</div>`
+          );
+        }
+        const p = row.passage;
+        const meta = showAll
+          ? escapeHtml(row.gradeLabel) + " · " + escapeHtml(p.source)
+          : escapeHtml(p.source);
+        parts.push(`<button type="button" class="list-row" data-pid="${p.id}" data-grade="${row.grade}">
           <span class="num">${i + 1}.</span>
-          <span class="label">${escapeHtml(p.title)}<br/><span class="meta">${escapeHtml(p.source)}</span></span>
+          <span class="label">${escapeHtml(p.title)}<br/><span class="meta">${meta}</span></span>
           <span class="chev">›</span>
-        </button>`
-        )
-        .join("");
+        </button>`);
+      });
+      box.innerHTML = parts.join("");
       box.querySelectorAll("[data-pid]").forEach((btn) => {
-        btn.addEventListener("click", () => openPassage(btn.dataset.pid));
+        btn.addEventListener("click", () => {
+          rememberGrade(btn.dataset.grade);
+          openPassage(btn.dataset.pid);
+        });
       });
     }
     show("passage-list");
@@ -2009,7 +2131,7 @@
       if (go === "home") show("home");
       else if (go === "hub" || go === "knowledge-grades") openKnowledgeList();
       else if (go === "knowledge-list") openKnowledgeList();
-      else if (go === "passage-list") openPassageList();
+      else if (go === "passage-list") openPassageList(state.passageListAll ? { all: true } : undefined);
     });
   });
 
@@ -2039,7 +2161,7 @@
       if (tab === "practice") {
         const g = lastGrade();
         rememberGrade(g);
-        openPassageList();
+        openPassageList({ all: true });
         return;
       }
       if (tab === "wrong") {
@@ -2155,7 +2277,26 @@
   });
 
 
-  /* ---------- Glossary (R2.9) ---------- */
+  /* ---------- Glossary (R2.10: 疏朗卡片 · ①②③ 義／例／出處同號) ---------- */
+  function glossaryItems(e) {
+    if (Array.isArray(e.items) && e.items.length) return e.items;
+    const senses = Array.isArray(e.senses)
+      ? e.senses
+      : e.sense
+      ? [e.sense]
+      : [];
+    if (!senses.length) {
+      return [{ sense: "", example: e.example || "", source: e.source || "" }];
+    }
+    return senses.map(function (s, i) {
+      return {
+        sense: s,
+        example: i === 0 ? e.example || "" : "",
+        source: i === 0 ? e.source || "" : "",
+      };
+    });
+  }
+
   function openGlossary() {
     const box = $("#glossary-body");
     const sub = $("#glossary-sub");
@@ -2164,66 +2305,65 @@
       (Array.isArray(state.glossary) ? state.glossary : []);
     if (sub) {
       sub.textContent =
-        "共 " + entries.length + " 詞 · 縱表掃讀 · 字／義／例／出處";
+        "共 " + entries.length + " 詞 · 多義／多例以 ①②③ 對齊";
     }
     if (!box) {
       show("glossary");
       return;
     }
     if (!entries.length) {
-      box.innerHTML =
-        '<p class="page-sub">字詞表尚未載入。</p>';
+      box.innerHTML = '<p class="page-sub">字詞表尚未載入。</p>';
     } else {
+      const CIRCLES = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
       box.innerHTML =
-        '<div class="glossary-table-wrap"><table class="glossary-table" role="table">' +
-        "<thead><tr><th>字眼</th><th>解釋</th><th>例句</th><th>出處</th></tr></thead><tbody>" +
+        '<div class="glossary-cards">' +
         entries
           .map(function (e) {
-            const senses = Array.isArray(e.senses)
-              ? e.senses
-              : e.sense
-              ? [e.sense]
-              : [];
-            const senseHtml = senses
-              .map(function (s, i) {
+            const items = glossaryItems(e);
+            const multi = items.length > 1;
+            const rows = items
+              .map(function (it, i) {
+                const idx = multi
+                  ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>"
+                  : "";
                 return (
+                  '<div class="gl-item">' +
                   '<div class="gl-sense">' +
-                  (senses.length > 1
-                    ? '<span class="gl-idx">' +
-                      "①②③④⑤⑥⑦⑧⑨⑩".charAt(i) +
-                      "</span> "
-                    : "") +
-                  escapeHtml(s) +
+                  idx +
+                  '<span class="gl-sense-text">' +
+                  escapeHtml(it.sense || "—") +
+                  "</span></div>" +
+                  '<div class="gl-ex"><span class="gl-k">例</span>' +
+                  (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                  escapeHtml(it.example || "—") +
+                  "</div>" +
+                  '<div class="gl-src"><span class="gl-k">出</span>' +
+                  (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                  escapeHtml(it.source || "—") +
+                  "</div>" +
                   "</div>"
                 );
               })
               .join("");
             return (
-              "<tr>" +
-              '<td class="gl-word">' +
+              '<article class="glossary-card">' +
+              '<header class="gl-word">' +
               escapeHtml(e.word || "") +
-              "</td>" +
-              "<td>" +
-              senseHtml +
-              "</td>" +
-              "<td>" +
-              escapeHtml(e.example || "—") +
-              "</td>" +
-              "<td>" +
-              escapeHtml(e.source || "—") +
-              "</td>" +
-              "</tr>"
+              "</header>" +
+              '<div class="gl-body">' +
+              rows +
+              "</div></article>"
             );
           })
           .join("") +
-        "</tbody></table></div>";
+        "</div>";
     }
     show("glossary");
   }
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r29";
+  const DATA_V = "r210";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
