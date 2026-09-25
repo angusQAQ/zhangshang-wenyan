@@ -13,17 +13,6 @@
   const FONT_KEY = "zw_font_scale";
   const WRONG_KEY = "zw_wrong_v1";
 
-  const PREVIEW_TOPICS = [
-    { id: "features", label: "特點", icon: "art/ui/icon_line_book.png" },
-    { id: "howto-read", label: "閱讀", icon: "art/ui/icon_line_doc.png" },
-    { id: "particles", label: "虛詞", icon: "art/ui/icon_line_chat.png" },
-    { id: "polysemy", label: "多義", icon: "art/ui/icon_line_list.png" },
-    { id: "ancient-modern", label: "古今", icon: "art/ui/icon_line_pencil.png" },
-    { id: "loan-chars", label: "通假", icon: "art/ui/icon_line_mail.png" },
-    { id: "sentence-patterns", label: "句式", icon: "art/ui/icon_line_bookmark.png" },
-    { id: "__practice__", label: "練習", icon: "art/ui/icon_line_list.png" },
-  ];
-
   const state = {
     grade: null,
     passages: null,
@@ -332,40 +321,11 @@
           </div>
           <span class="chev">›</span>
         </button>
-      </div>
-      ${hasKnowledge ? renderPreviewGridHtml() : ""}`;
+      </div>`;
 
     $("#btn-mode-knowledge").addEventListener("click", openKnowledgeList);
     $("#btn-mode-passage").addEventListener("click", openPassageList);
-    bindPreviewGrid(body);
     show("hub");
-  }
-
-  function renderPreviewGridHtml() {
-    return `<h3 class="preview-label">知識主題預覽</h3>
-      <div class="topic-preview" id="topic-preview">
-        ${PREVIEW_TOPICS.map(
-          (t) => `<button type="button" class="topic-cell" data-preview="${t.id}">
-            <img src="${t.icon}" alt="" />
-            <span>${t.label}</span>
-          </button>`
-        ).join("")}
-      </div>`;
-  }
-
-  function bindPreviewGrid(root) {
-    const box = root.querySelector("#topic-preview");
-    if (!box) return;
-    box.querySelectorAll("[data-preview]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.preview;
-        if (id === "__practice__") {
-          openKnowledgeList();
-          return;
-        }
-        openKnowledge(id);
-      });
-    });
   }
 
   /* ---------- Knowledge ---------- */

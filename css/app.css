@@ -24,25 +24,37 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  height: 100%;
+html {
+  height: auto;
+  min-height: 100%;
+  background: #F2F2F2;
+}
+
+body {
+  min-height: 100%;
+  min-height: 100dvh;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #F2F2F2;
   color: var(--text);
   font-family: "PingFang HK", "Noto Sans TC", "Noto Sans CJK HK", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
-
-body { display: flex; justify-content: center; }
 
 #app {
   width: 100%;
   max-width: var(--max);
-  min-height: 100%;
   min-height: 100dvh;
+  height: auto;
   background: var(--bg);
   position: relative;
-  padding-bottom: calc(var(--tabbar-h) + 18px + var(--safe-bottom));
+  /* tabbar 不擋列表／內文最底列 */
+  padding-bottom: calc(var(--tabbar-h) + 32px + var(--safe-bottom));
 }
 
 .view {
@@ -211,6 +223,7 @@ body { display: flex; justify-content: center; }
   color: var(--muted);
   margin-top: 2px;
   line-height: 1.4;
+  word-break: break-word;
 }
 .nav-card .chev {
   color: #C4C4C4;
@@ -222,6 +235,32 @@ body { display: flex; justify-content: center; }
   width: 72px;
   height: auto;
   margin-left: 2px;
+}
+
+
+/* Hub: center mode cards in visible content area (portrait phone) */
+#view-hub.view.active {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - var(--tabbar-h) - var(--safe-bottom));
+  box-sizing: border-box;
+}
+#hub-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  padding: 8px 0 16px;
+}
+#hub-body .card-list {
+  width: 100%;
+  max-width: 100%;
+}
+#hub-body .placeholder-s3 {
+  width: 100%;
 }
 
 .mode-card {
@@ -258,6 +297,7 @@ body { display: flex; justify-content: center; }
   color: var(--muted);
   margin-top: 4px;
   line-height: 1.45;
+  word-break: break-word;
 }
 .mode-card .chev { color: #C4C4C4; font-size: 22px; }
 
@@ -327,9 +367,11 @@ body { display: flex; justify-content: center; }
 }
 .list-row .label {
   flex: 1;
+  min-width: 0;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.35;
+  word-break: break-word;
 }
 .list-row .meta {
   font-size: 12px;
@@ -739,11 +781,24 @@ body { display: flex; justify-content: center; }
   transform: translateX(-50%) translateY(0);
 }
 
+
+/* Document scroll: views must not trap overflow */
+.view {
+  overflow: visible;
+  max-height: none;
+}
+#view-passage-list,
+#view-passage,
+#passage-list,
+#pass-text {
+  overflow: visible;
+  max-height: none;
+}
+
 .hidden { display: none !important; }
 
-/* ---------- Font scale ---------- */
+/* ---------- Font scale（只縮放閱讀／題幹文字變數；UI chrome 維持 px） ---------- */
 html[data-font="sm"] {
-  --font-scale: 0.9;
   --fs-body: 14px;
   --fs-stem: 15px;
   --fs-opt: 14px;
@@ -751,7 +806,6 @@ html[data-font="sm"] {
   --fs-classical: 15px;
 }
 html[data-font="md"], html:not([data-font]) {
-  --font-scale: 1;
   --fs-body: 15px;
   --fs-stem: 17px;
   --fs-opt: 15px;
@@ -759,7 +813,6 @@ html[data-font="md"], html:not([data-font]) {
   --fs-classical: 16px;
 }
 html[data-font="lg"] {
-  --font-scale: 1.12;
   --fs-body: 17px;
   --fs-stem: 19px;
   --fs-opt: 16px;
@@ -767,13 +820,17 @@ html[data-font="lg"] {
   --fs-classical: 18px;
 }
 html[data-font="xl"] {
-  --font-scale: 1.22;
   --fs-body: 18px;
   --fs-stem: 21px;
   --fs-opt: 17px;
   --fs-explain: 16px;
   --fs-classical: 19px;
 }
+
+/* 固定 UI：hero／icon／logo 尺寸用 px 鎖定，不受字級變數影響 */
+.hero img { height: 152px; }
+.brand-logo { width: 40px; height: 40px; }
+.brand-logo.sm { width: 28px; height: 28px; }
 
 .reader { font-size: var(--fs-body, 15px); }
 .q-stem { font-size: var(--fs-stem, 17px); }
@@ -782,6 +839,10 @@ html[data-font="xl"] {
 .passage-card .classical,
 .retest-passage-wrap .classical {
   font-size: var(--fs-classical, 16px);
+}
+.know-practice-body .q-stem,
+#know-practice-body .q-stem {
+  font-size: var(--fs-stem, 17px);
 }
 
 .btn-gear {
