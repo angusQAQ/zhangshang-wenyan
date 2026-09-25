@@ -4,7 +4,7 @@
   const GRADES = [
     { id: "s1", label: "中一", desc: "文言知識與篇章" },
     { id: "s2", label: "中二", desc: "文言知識與篇章" },
-    { id: "s3", label: "中三", desc: "內容即將推出", coming: true },
+    { id: "s3", label: "中三", desc: "文言知識可學 · 篇章即將推出" },
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
