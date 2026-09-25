@@ -1023,40 +1023,41 @@ html[data-font="xl"] { font-size: 20px; }
   pointer-events: none;
 }
 
-/* R2 P1 — knowledge tables / charts */
+/* R2.2 — knowledge true text (≥ reader body, rem scales with root) */
 .reader .level-badge {
   display: inline-block;
-  margin: 0 0 12px;
-  padding: 4px 10px;
+  margin: 0 0 0.75rem;
+  padding: 0.25rem 0.625rem;
   border-radius: 999px;
   background: #EEF6F2;
   color: var(--accent, #2F6F5E);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .reader .know-lead {
-  margin: 0 0 12px;
-  font-size: 0.875rem;
+  margin: 0 0 0.75rem;
+  font-size: 1em; /* = .reader body */
   line-height: 1.7;
   color: #444;
 }
 .reader .know-card {
-  margin: 12px 0 16px;
-  padding: 12px 14px;
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem 0.875rem;
   border: 1px solid var(--border-soft);
   border-radius: var(--radius);
   background: #FAFBFA;
+  font-size: 1em;
 }
 .reader .know-card h3 {
-  margin: 0 0 8px;
-  font-size: 0.9375rem;
+  margin: 0 0 0.5rem;
+  font-size: 1.0667em; /* ≥ body */
 }
 .reader .know-chart {
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
-  margin: 10px 0 14px;
+  margin: 0.625rem 0 0.875rem;
   border-radius: 10px;
   border: 1px solid var(--border-soft);
   background: #fff;
@@ -1065,25 +1066,26 @@ html[data-font="xl"] { font-size: 20px; }
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin: 8px 0 14px;
+  margin: 0.5rem 0 0.875rem;
   border: 1px solid var(--border-soft);
   border-radius: 10px;
   background: #fff;
 }
 .reader .know-table {
   width: 100%;
-  min-width: 280px;
+  min-width: 17.5rem;
   border-collapse: collapse;
-  font-size: 0.8125rem;
-  line-height: 1.55;
+  font-size: 1em; /* ≥ .reader body；跟根 rem */
+  line-height: 1.6;
 }
 .reader .know-table th,
 .reader .know-table td {
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--border-soft);
   word-break: break-word;
+  font-size: 1em;
 }
 .reader .know-table th {
   background: #F3F7F5;
@@ -1094,19 +1096,19 @@ html[data-font="xl"] { font-size: 20px; }
 .reader .know-table tr:last-child td { border-bottom: none; }
 .reader .know-table td:first-child { font-weight: 600; white-space: nowrap; }
 .reader .know-bullets {
-  margin: 8px 0 4px;
+  margin: 0.5rem 0 0.25rem;
   padding-left: 1.2em;
-  font-size: 0.8125rem;
+  font-size: 1em;
   line-height: 1.65;
   color: #444;
 }
-.reader .know-bullets li { margin: 4px 0; }
+.reader .know-bullets li { margin: 0.25rem 0; }
 .reader .know-tip {
-  margin: 10px 0 0;
-  padding: 10px 12px;
+  margin: 0.625rem 0 0;
+  padding: 0.625rem 0.75rem;
   border-left: 3px solid var(--accent, #2F6F5E);
   background: #F7FAF8;
-  font-size: 0.8125rem;
+  font-size: 1em;
   line-height: 1.65;
   color: #444;
 }

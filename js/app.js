@@ -2,9 +2,9 @@
   "use strict";
 
   const GRADES = [
-    { id: "s1", label: "中一", desc: "文言知識與篇章" },
-    { id: "s2", label: "中二", desc: "文言知識與篇章" },
-    { id: "s3", label: "中三", desc: "文言知識可學 · 篇章即將推出" },
+    { id: "s1", label: "中一", desc: "文言篇章" },
+    { id: "s2", label: "中二", desc: "文言篇章" },
+    { id: "s3", label: "中三", desc: "文言篇章即將推出" },
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
@@ -519,64 +519,46 @@
       </button>`;
     }).join("");
     list.querySelectorAll("[data-grade]").forEach((btn) => {
-      btn.addEventListener("click", () => openHub(btn.dataset.grade));
+      btn.addEventListener("click", () => {
+        rememberGrade(btn.dataset.grade);
+        openPassageList();
+      });
     });
   }
 
-  /* ---------- Hub ---------- */
-  function openHub(gradeId) {
-    rememberGrade(gradeId);
-    $("#hub-title").textContent = gradeLabel(gradeId);
+  /* ---------- Knowledge grade select (hub shell) ---------- */
+  function openKnowledgeGradeSelect() {
+    $("#hub-title").textContent = "文言知識";
+    $("#hub-sub").textContent = "請選擇年級";
     const body = $("#hub-body");
-    const hasKnowledge = !!(state.knowledge && state.knowledge[gradeId]);
-    const passages = (state.passages && state.passages[gradeId]) || [];
-    const passageReady = passages.length > 0;
-
-    if (gradeId === "s3" && !hasKnowledge && !passageReady) {
-      $("#hub-sub").textContent = "內容即將推出";
-      body.innerHTML = `<div class="placeholder-s3">
-        <img src="art/ui/badge_coming_soon.png" alt="內容即將推出" />
-        <p>中三文言知識與篇章稍後補充。<br/>請先研習中一、中二內容。</p>
-      </div>`;
-      show("hub");
-      return;
-    }
-
-    $("#hub-sub").textContent = passageReady
-      ? "請選擇學習內容"
-      : hasKnowledge
-        ? "文言知識可學 · 篇章即將推出"
-        : "請選擇學習內容";
-
-    const knowDesc =
-      gradeId === "s3"
-        ? "進階虛詞、句式與活用等<br/>主題已按年級分級"
-        : "特點、虛詞、句式、通假等";
-    const passDesc = passageReady ? "字詞語譯 · 主旨 · 判斷題" : "內容即將推出";
-
-    body.innerHTML = `
-      <div class="card-list">
-        <button type="button" class="mode-card" id="btn-mode-knowledge">
-          <img class="mode-icon" src="art/ui/icon_knowledge.png" alt="" />
-          <div class="body">
-            <strong>文言知識</strong>
-            <span>${knowDesc}</span>
-          </div>
-          <span class="chev">›</span>
-        </button>
-        <button type="button" class="mode-card" id="btn-mode-passage">
-          <img class="mode-icon" src="art/ui/icon_passage.png" alt="" />
-          <div class="body">
-            <strong>文言篇章</strong>
-            <span>${passDesc}</span>
-          </div>
-          <span class="chev">›</span>
-        </button>
-      </div>`;
-
-    $("#btn-mode-knowledge").addEventListener("click", openKnowledgeList);
-    $("#btn-mode-passage").addEventListener("click", openPassageList);
+    body.innerHTML =
+      `<div class="card-list">` +
+      GRADES.map((g) => {
+        const has = !!(state.knowledge && state.knowledge[g.id]);
+        const sub = has
+          ? g.id === "s3"
+            ? "進階虛詞、句式與活用等"
+            : "特點、虛詞、句式、通假等"
+          : "內容即將推出";
+        return `<button type="button" class="nav-card" data-know-grade="${g.id}" ${has ? "" : "disabled"}>
+        <div class="icon-wrap"><img src="art/ui/icon_grade.png" alt="" /></div>
+        <div class="body"><strong>${g.label}</strong><span>${sub}</span></div>
+        <span class="chev">›</span>
+      </button>`;
+      }).join("") +
+      `</div>`;
+    body.querySelectorAll("[data-know-grade]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        rememberGrade(btn.dataset.knowGrade);
+        openKnowledgeList();
+      });
+    });
     show("hub");
+  }
+
+  /** @deprecated hub no longer splits knowledge/passage; keep alias for back nav */
+  function openHub(_gradeId) {
+    openKnowledgeGradeSelect();
   }
 
   /* ---------- Knowledge ---------- */
@@ -1388,7 +1370,7 @@
     btn.addEventListener("click", () => {
       const go = btn.dataset.go;
       if (go === "home") show("home");
-      else if (go === "hub") openHub(state.grade || lastGrade());
+      else if (go === "hub" || go === "knowledge-grades") openKnowledgeGradeSelect();
       else if (go === "knowledge-list") openKnowledgeList();
       else if (go === "passage-list") openPassageList();
     });
@@ -1420,7 +1402,7 @@
       if (tab === "practice") {
         const g = lastGrade();
         rememberGrade(g);
-        openHub(g);
+        openPassageList();
         return;
       }
       if (tab === "wrong") {
@@ -1484,6 +1466,8 @@
     });
   }
 
+  const btnHomeKnow = $("#btn-home-knowledge");
+  if (btnHomeKnow) btnHomeKnow.addEventListener("click", openKnowledgeGradeSelect);
   const btnHomeVocab = $("#btn-home-vocab");
   if (btnHomeVocab) btnHomeVocab.addEventListener("click", startVocabQuiz);
   const btnHomeBm = $("#btn-home-bookmarks");

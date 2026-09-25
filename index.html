@@ -37,6 +37,15 @@
       <h3 class="section-label">選擇年級</h3>
       <div class="card-list" id="grade-list"></div>
 
+      <h3 class="section-label">文言知識</h3>
+      <div class="card-list" id="home-knowledge">
+        <button type="button" class="nav-card" id="btn-home-knowledge">
+          <div class="icon-wrap"><img src="art/ui/icon_knowledge.png" alt="" /></div>
+          <div class="body"><strong>文言知識</strong><span>中一至中三 · 特點、虛詞、句式等</span></div>
+          <span class="chev">›</span>
+        </button>
+      </div>
+
       <h3 class="section-label">操練與收藏</h3>
       <div class="card-list" id="home-extra">
         <button type="button" class="nav-card" id="btn-home-vocab">
@@ -54,11 +63,11 @@
       <p class="footer-note">內容依據教局及校本材料整理；不代表考試局立場。僅供自學參考。</p>
     </section>
 
-    <!-- Grade hub -->
+    <!-- Knowledge grade select (hub shell) -->
     <section id="view-hub" class="view">
       <button type="button" class="btn-back" data-go="home">返回</button>
-      <h2 class="page-title" id="hub-title">中一</h2>
-      <p class="page-sub" id="hub-sub">請選擇學習內容</p>
+      <h2 class="page-title" id="hub-title">文言知識</h2>
+      <p class="page-sub" id="hub-sub">請選擇年級</p>
       <div id="hub-body"></div>
     </section>
 
@@ -90,7 +99,7 @@
 
     <!-- Passage list -->
     <section id="view-passage-list" class="view">
-      <button type="button" class="btn-back" data-go="hub">返回</button>
+      <button type="button" class="btn-back" data-go="home">返回</button>
       <header class="brand-row compact list-brand">
         <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
         <h1 class="brand-title sm">掌上文言</h1>

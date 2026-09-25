@@ -39,7 +39,7 @@
   "s1": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門</strong></p><p class=\"know-lead\">文言文是古人常用的書面語。先認清四條「粗線」特點，讀寓言短文就不易慌。</p><img class=\"know-chart\" src=\"art/knowledge/chart_features.png\" alt=\"文言文特點示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>特點</th><th>中一記住</th><th>淺例</th></tr></thead><tbody><tr><td>單音詞為主</td><td>一字常表完整意思</td><td>目＝眼睛；走＝跑</td></tr><tr><td>常省略</td><td>主語／賓語可省，靠前文補</td><td>（兔）觸株而死</td></tr><tr><td>語序偶不同</td><td>謂語可提前加強語氣</td><td>甚矣，汝之不惠！</td></tr><tr><td>虛詞多</td><td>先當語氣／關係標記</td><td>之、乎、者、也……</td></tr></tbody></table></div><p class=\"know-tip\">中一目標：能指出「單音、省略、語序」三點；通假、古今異義後面主題再細學。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門</strong></p><p class=\"know-lead\">文言文是古人常用的書面語。先認清四條「粗線」特點，讀寓言短文就不易慌。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>特點</th><th>中一記住</th><th>淺例</th></tr></thead><tbody><tr><td>單音詞為主</td><td>一字常表完整意思</td><td>目＝眼睛；走＝跑</td></tr><tr><td>常省略</td><td>主語／賓語可省，靠前文補</td><td>（兔）觸株而死</td></tr><tr><td>語序偶不同</td><td>謂語可提前加強語氣</td><td>甚矣，汝之不惠！</td></tr><tr><td>虛詞多</td><td>先當語氣／關係標記</td><td>之、乎、者、也……</td></tr></tbody></table></div><p class=\"know-tip\">中一目標：能指出「單音、省略、語序」三點；通假、古今異義後面主題再細學。</p>",
       "practice": [
         {
           "stem": "文言文用詞最常見的特點是？",
@@ -96,7 +96,7 @@
     },
     "howto-read": {
       "title": "如何閱讀文言文",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門</strong></p><p class=\"know-lead\">中一先練「穩妥五步」，像學騎單車的輔助輪。</p><img class=\"know-chart\" src=\"art/knowledge/chart_howto_read.png\" alt=\"如何閱讀文言文步驟示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>步驟</th><th>做甚麼</th><th>注意</th></tr></thead><tbody><tr><td>1 通讀</td><td>先知其事（誰、做甚、結果）</td><td>勿一開頭死記生字</td></tr><tr><td>2 圈實詞</td><td>人名、地名、動作</td><td>建立情節骨架</td></tr><tr><td>3 虛詞輕處理</td><td>之、也、者暫當語氣</td><td>稍後再精辨</td></tr><tr><td>4 補省略</td><td>問「誰做？對誰做？」</td><td>括號補主語／賓語</td></tr><tr><td>5 說大意</td><td>用自己的話講通故事</td><td>講不通就回頭檢查</td></tr></tbody></table></div><p class=\"know-tip\">一字多義時，只選最合文意的一項，不要把字典全抄上。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門</strong></p><p class=\"know-lead\">中一先練「穩妥五步」，像學騎單車的輔助輪。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>步驟</th><th>做甚麼</th><th>注意</th></tr></thead><tbody><tr><td>1 通讀</td><td>先知其事（誰、做甚、結果）</td><td>勿一開頭死記生字</td></tr><tr><td>2 圈實詞</td><td>人名、地名、動作</td><td>建立情節骨架</td></tr><tr><td>3 虛詞輕處理</td><td>之、也、者暫當語氣</td><td>稍後再精辨</td></tr><tr><td>4 補省略</td><td>問「誰做？對誰做？」</td><td>括號補主語／賓語</td></tr><tr><td>5 說大意</td><td>用自己的話講通故事</td><td>講不通就回頭檢查</td></tr></tbody></table></div><p class=\"know-tip\">一字多義時，只選最合文意的一項，不要把字典全抄上。</p>",
       "practice": [
         {
           "stem": "中一閱讀文言文，第一步宜？",
@@ -153,7 +153,7 @@
     },
     "particles": {
       "title": "文言虛詞",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（基礎八詞，各記一基本義）</strong></p><p class=\"know-lead\">虛詞多半沒有「東西」可指，卻標示語氣與關係。中一先記八個，每個先掌握一個最常用義。</p><img class=\"know-chart\" src=\"art/knowledge/chart_particles.png\" alt=\"文言虛詞示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>中一先記</th><th>淺例</th></tr></thead><tbody><tr><td>之</td><td>助詞「的」</td><td>宋人之愚</td></tr><tr><td>乎</td><td>語氣「嗎／呢」</td><td>虎畏之乎？</td></tr><tr><td>者</td><td>……的人／事物</td><td>耕者</td></tr><tr><td>也</td><td>語氣，表肯定／判斷</td><td>此木也</td></tr><tr><td>而</td><td>然後／卻（先擇一）</td><td>觸株而死</td></tr><tr><td>矣</td><td>語氣「了」</td><td>兔死矣</td></tr><tr><td>於</td><td>在／到</td><td>立於株旁</td></tr><tr><td>以</td><td>用／拿</td><td>以棒擊之</td></tr></tbody></table></div><p class=\"know-tip\">中二才系統學「同一虛詞多義」；中一先求穩。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（基礎八詞，各記一基本義）</strong></p><p class=\"know-lead\">虛詞多半沒有「東西」可指，卻標示語氣與關係。中一先記八個，每個先掌握一個最常用義。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>中一先記</th><th>淺例</th></tr></thead><tbody><tr><td>之</td><td>助詞「的」</td><td>宋人之愚</td></tr><tr><td>乎</td><td>語氣「嗎／呢」</td><td>虎畏之乎？</td></tr><tr><td>者</td><td>……的人／事物</td><td>耕者</td></tr><tr><td>也</td><td>語氣，表肯定／判斷</td><td>此木也</td></tr><tr><td>而</td><td>然後／卻（先擇一）</td><td>觸株而死</td></tr><tr><td>矣</td><td>語氣「了」</td><td>兔死矣</td></tr><tr><td>於</td><td>在／到</td><td>立於株旁</td></tr><tr><td>以</td><td>用／拿</td><td>以棒擊之</td></tr></tbody></table></div><p class=\"know-tip\">中二才系統學「同一虛詞多義」；中一先求穩。</p>",
       "practice": [
         {
           "stem": "「耕者」的「者」中一宜先解作？",
@@ -227,7 +227,7 @@
     },
     "polysemy": {
       "title": "一詞多義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（生活向淺例）</strong></p><p class=\"know-lead\">同一個字在不同句子可有不同意思——一詞多義。中一用生活向、寓言向例子建立感覺。</p><img class=\"know-chart\" src=\"art/knowledge/chart_polysemy.png\" alt=\"一詞多義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>走</td><td>跑</td><td>兔走觸株</td></tr><tr><td>走</td><td>步行（今常義）</td><td>走路（對照）</td></tr><tr><td>食</td><td>吃（動詞）</td><td>虎食人</td></tr><tr><td>食</td><td>食物（名詞）</td><td>人有食</td></tr><tr><td>之</td><td>的</td><td>宋人之田</td></tr><tr><td>之</td><td>代詞：這／他</td><td>聞之</td></tr></tbody></table></div><p class=\"know-tip\">方法：把義項代入句中，選合乎情節者。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（生活向淺例）</strong></p><p class=\"know-lead\">同一個字在不同句子可有不同意思——一詞多義。中一用生活向、寓言向例子建立感覺。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>走</td><td>跑</td><td>兔走觸株</td></tr><tr><td>走</td><td>步行（今常義）</td><td>走路（對照）</td></tr><tr><td>食</td><td>吃（動詞）</td><td>虎食人</td></tr><tr><td>食</td><td>食物（名詞）</td><td>人有食</td></tr><tr><td>之</td><td>的</td><td>宋人之田</td></tr><tr><td>之</td><td>代詞：這／他</td><td>聞之</td></tr></tbody></table></div><p class=\"know-tip\">方法：把義項代入句中，選合乎情節者。</p>",
       "practice": [
         {
           "stem": "「兔走觸株」的「走」宜解作？",
@@ -284,7 +284,7 @@
     },
     "ancient-modern": {
       "title": "古今詞義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（勿以今律古）</strong></p><p class=\"know-lead\">有些字今天仍在用，但<strong>古義≠今義</strong>。中一先記生活向淺例。</p><img class=\"know-chart\" src=\"art/knowledge/chart_ancient_modern.png\" alt=\"古今詞義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>詞</th><th>古義（常見）</th><th>今義（對照）</th></tr></thead><tbody><tr><td>走</td><td>跑</td><td>步行</td></tr><tr><td>去</td><td>離開</td><td>前往</td></tr><tr><td>湯</td><td>熱水</td><td>羹湯</td></tr><tr><td>聞</td><td>聽見</td><td>亦有「新聞」等</td></tr><tr><td>妻子</td><td>妻子和兒女</td><td>多指配偶</td></tr></tbody></table></div><p class=\"know-tip\">口訣：先看故事通不通。若用今義說不通，就要懷疑古今異義。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（勿以今律古）</strong></p><p class=\"know-lead\">有些字今天仍在用，但<strong>古義≠今義</strong>。中一先記生活向淺例。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>詞</th><th>古義（常見）</th><th>今義（對照）</th></tr></thead><tbody><tr><td>走</td><td>跑</td><td>步行</td></tr><tr><td>去</td><td>離開</td><td>前往</td></tr><tr><td>湯</td><td>熱水</td><td>羹湯</td></tr><tr><td>聞</td><td>聽見</td><td>亦有「新聞」等</td></tr><tr><td>妻子</td><td>妻子和兒女</td><td>多指配偶</td></tr></tbody></table></div><p class=\"know-tip\">口訣：先看故事通不通。若用今義說不通，就要懷疑古今異義。</p>",
       "practice": [
         {
           "stem": "文言「去」常見古義是？",
@@ -341,7 +341,7 @@
     },
     "loan-chars": {
       "title": "通假字",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（少數常見）</strong></p><p class=\"know-lead\">通假：借用<strong>讀音相同或相近</strong>的字，代替本來該寫的字。中一只先認少數高頻。</p><img class=\"know-chart\" src=\"art/knowledge/chart_loan_chars.png\" alt=\"通假字示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>釋義／例</th></tr></thead><tbody><tr><td>說</td><td>悅</td><td>高興 · 不亦說乎</td></tr><tr><td>女</td><td>汝</td><td>你 · 女知之乎（視語境）</td></tr><tr><td>反</td><td>返</td><td>返回 · 反歸</td></tr><tr><td>見</td><td>現</td><td>出現 · 圖窮而匕首見</td></tr></tbody></table></div><p class=\"know-tip\">辨認：用本義讀不通、換成同音字就通——可能是通假。答題寫「X 通 Y，解作……」。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（少數常見）</strong></p><p class=\"know-lead\">通假：借用<strong>讀音相同或相近</strong>的字，代替本來該寫的字。中一只先認少數高頻。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>釋義／例</th></tr></thead><tbody><tr><td>說</td><td>悅</td><td>高興 · 不亦說乎</td></tr><tr><td>女</td><td>汝</td><td>你 · 女知之乎（視語境）</td></tr><tr><td>反</td><td>返</td><td>返回 · 反歸</td></tr><tr><td>見</td><td>現</td><td>出現 · 圖窮而匕首見</td></tr></tbody></table></div><p class=\"know-tip\">辨認：用本義讀不通、換成同音字就通——可能是通假。答題寫「X 通 Y，解作……」。</p>",
       "practice": [
         {
           "stem": "「不亦說乎」的「說」通？",
@@ -398,7 +398,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（判斷／省略／基本敘述）</strong></p><p class=\"know-lead\">中一先穩兩類；敘述句看懂「誰—做—甚」即可。被動、倒裝留待中二。</p><img class=\"know-chart\" src=\"art/knowledge/chart_sentence_patterns.png\" alt=\"文言常見句式示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>句式</th><th>標記／特徵</th><th>例子</th></tr></thead><tbody><tr><td>判斷句</td><td>……者，……也</td><td>陳勝者，陽城人也</td></tr><tr><td>省略句</td><td>省主語或賓語</td><td>（農人）釋耒而守株</td></tr><tr><td>基本敘述</td><td>主＋動＋賓為主流</td><td>先按現代語序理解</td></tr></tbody></table></div><p class=\"know-tip\">中一只須知道「有時語序會調」；不必一次背完倒裝公式。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中一・入門（判斷／省略／基本敘述）</strong></p><p class=\"know-lead\">中一先穩兩類；敘述句看懂「誰—做—甚」即可。被動、倒裝留待中二。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>句式</th><th>標記／特徵</th><th>例子</th></tr></thead><tbody><tr><td>判斷句</td><td>……者，……也</td><td>陳勝者，陽城人也</td></tr><tr><td>省略句</td><td>省主語或賓語</td><td>（農人）釋耒而守株</td></tr><tr><td>基本敘述</td><td>主＋動＋賓為主流</td><td>先按現代語序理解</td></tr></tbody></table></div><p class=\"know-tip\">中一只須知道「有時語序會調」；不必一次背完倒裝公式。</p>",
       "practice": [
         {
           "stem": "「陳勝者，陽城人也」屬於？",
@@ -457,7 +457,7 @@
   "s2": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（詞類活用＋虛詞作路標）</strong></p><p class=\"know-lead\">中二在「單音、省略、語序」之上，加重<strong>詞類活用</strong>，並把虛詞當長句路標。</p><img class=\"know-chart\" src=\"art/knowledge/chart_features.png\" alt=\"文言文特點示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>名詞作動詞</td><td>名詞臨時當動作</td><td>蹄之 → 用蹄踢</td></tr><tr><td>形容詞作動詞</td><td>性質詞當動作</td><td>親賢臣，遠小人</td></tr><tr><td>使動（初識）</td><td>使對象怎樣</td><td>死其民 → 使民陷於死地（視文）</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>虛詞「而／也／者／然」常切分層次——先劃虛詞，再串實詞。</li><li>與中一差異：中一知「有活用」；中二要<strong>指出哪字、屬哪類</strong>。</li></ul>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（詞類活用＋虛詞作路標）</strong></p><p class=\"know-lead\">中二在「單音、省略、語序」之上，加重<strong>詞類活用</strong>，並把虛詞當長句路標。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>名詞作動詞</td><td>名詞臨時當動作</td><td>蹄之 → 用蹄踢</td></tr><tr><td>形容詞作動詞</td><td>性質詞當動作</td><td>親賢臣，遠小人</td></tr><tr><td>使動（初識）</td><td>使對象怎樣</td><td>死其民 → 使民陷於死地（視文）</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>虛詞「而／也／者／然」常切分層次——先劃虛詞，再串實詞。</li><li>與中一差異：中一知「有活用」；中二要<strong>指出哪字、屬哪類</strong>。</li></ul>",
       "practice": [
         {
           "stem": "「驢不勝怒，蹄之」的「蹄」屬於？",
@@ -514,7 +514,7 @@
     },
     "howto-read": {
       "title": "如何閱讀文言文",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（指涉＋詞義推斷）</strong></p><p class=\"know-lead\">中二在五步之上，加<strong>指涉</strong>與<strong>詞義推斷</strong>兩項核心能力。</p><img class=\"know-chart\" src=\"art/knowledge/chart_howto_read.png\" alt=\"如何閱讀文言文步驟示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>能力</th><th>做法</th><th>例子</th></tr></thead><tbody><tr><td>標明指涉</td><td>之／其／此／是指誰？省略主語是誰？</td><td>虎見之……「之」指驢</td></tr><tr><td>詞義推斷</td><td>字形、對仗、上下文先估再核</td><td>龐然←大物</td></tr><tr><td>比較異同</td><td>兩段先各概括，再比目的手法</td><td>對讀題常用</td></tr><tr><td>判斷題策略</td><td>矛盾→錯；無據→無從判斷；有據→對</td><td>勿過度推論</td></tr></tbody></table></div><p class=\"know-tip\">與中一差異：中一重「能講故事」；中二重「能說明為何這樣解」。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（指涉＋詞義推斷）</strong></p><p class=\"know-lead\">中二在五步之上，加<strong>指涉</strong>與<strong>詞義推斷</strong>兩項核心能力。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>能力</th><th>做法</th><th>例子</th></tr></thead><tbody><tr><td>標明指涉</td><td>之／其／此／是指誰？省略主語是誰？</td><td>虎見之……「之」指驢</td></tr><tr><td>詞義推斷</td><td>字形、對仗、上下文先估再核</td><td>龐然←大物</td></tr><tr><td>比較異同</td><td>兩段先各概括，再比目的手法</td><td>對讀題常用</td></tr><tr><td>判斷題策略</td><td>矛盾→錯；無據→無從判斷；有據→對</td><td>勿過度推論</td></tr></tbody></table></div><p class=\"know-tip\">與中一差異：中一重「能講故事」；中二重「能說明為何這樣解」。</p>",
       "practice": [
         {
           "stem": "「虎見之，……以為神」的「之」指涉宜先找？",
@@ -571,7 +571,7 @@
     },
     "particles": {
       "title": "文言虛詞",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（進階清單＋多義對照）</strong></p><p class=\"know-lead\">中一已練「之乎者也而矣於以」。中二改攻<strong>另一批</strong>，並練習多義對照。</p><img class=\"know-chart\" src=\"art/knowledge/chart_particles.png\" alt=\"文言虛詞示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>常見義（擇要）</th><th>對照例</th></tr></thead><tbody><tr><td>其</td><td>他的／那個；語氣「大概」</td><td>其鳴；其真無馬邪</td></tr><tr><td>則</td><td>就／卻／那麼</td><td>學則進</td></tr><tr><td>乃</td><td>於是／才／竟</td><td>乃悟</td></tr><tr><td>焉</td><td>於之／怎麼／語氣</td><td>始一反焉</td></tr><tr><td>為</td><td>做／是／被／替</td><td>為……所……</td></tr><tr><td>何</td><td>甚麼／為甚麼</td><td>何必</td></tr><tr><td>耶／邪</td><td>嗎／呢</td><td>是耶非耶</td></tr><tr><td>所</td><td>所＋動＝……的事物</td><td>所見</td></tr></tbody></table></div><p class=\"know-tip\">答題時先寫「在本句取何義」，再引鄰近實詞證明。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（進階清單＋多義對照）</strong></p><p class=\"know-lead\">中一已練「之乎者也而矣於以」。中二改攻<strong>另一批</strong>，並練習多義對照。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>常見義（擇要）</th><th>對照例</th></tr></thead><tbody><tr><td>其</td><td>他的／那個；語氣「大概」</td><td>其鳴；其真無馬邪</td></tr><tr><td>則</td><td>就／卻／那麼</td><td>學則進</td></tr><tr><td>乃</td><td>於是／才／竟</td><td>乃悟</td></tr><tr><td>焉</td><td>於之／怎麼／語氣</td><td>始一反焉</td></tr><tr><td>為</td><td>做／是／被／替</td><td>為……所……</td></tr><tr><td>何</td><td>甚麼／為甚麼</td><td>何必</td></tr><tr><td>耶／邪</td><td>嗎／呢</td><td>是耶非耶</td></tr><tr><td>所</td><td>所＋動＝……的事物</td><td>所見</td></tr></tbody></table></div><p class=\"know-tip\">答題時先寫「在本句取何義」，再引鄰近實詞證明。</p>",
       "practice": [
         {
           "stem": "「乃悟前犬之為虎」的「乃」較接近？",
@@ -645,7 +645,7 @@
     },
     "polysemy": {
       "title": "一詞多義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（同字異義對訓）</strong></p><p class=\"know-lead\">中二訓練「同卷兩見，必須分釋」。</p><img class=\"know-chart\" src=\"art/knowledge/chart_polysemy.png\" alt=\"一詞多義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>亡</td><td>丟失</td><td>亡羊補牢</td></tr><tr><td>亡</td><td>滅亡</td><td>國亡</td></tr><tr><td>亡</td><td>通「無」（視文）</td><td>亡以應</td></tr><tr><td>勝</td><td>禁得住</td><td>不勝怒</td></tr><tr><td>勝</td><td>戰勝</td><td>勝敵</td></tr><tr><td>坐</td><td>坐著</td><td>坐視</td></tr><tr><td>坐</td><td>獲罪（古）</td><td>連坐</td></tr></tbody></table></div><p class=\"know-tip\">測驗兩處同字：切勿兩處抄同一解釋。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（同字異義對訓）</strong></p><p class=\"know-lead\">中二訓練「同卷兩見，必須分釋」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>義項</th><th>例子</th></tr></thead><tbody><tr><td>亡</td><td>丟失</td><td>亡羊補牢</td></tr><tr><td>亡</td><td>滅亡</td><td>國亡</td></tr><tr><td>亡</td><td>通「無」（視文）</td><td>亡以應</td></tr><tr><td>勝</td><td>禁得住</td><td>不勝怒</td></tr><tr><td>勝</td><td>戰勝</td><td>勝敵</td></tr><tr><td>坐</td><td>坐著</td><td>坐視</td></tr><tr><td>坐</td><td>獲罪（古）</td><td>連坐</td></tr></tbody></table></div><p class=\"know-tip\">測驗兩處同字：切勿兩處抄同一解釋。</p>",
       "practice": [
         {
           "stem": "「亡羊」與「國亡」兩「亡」？",
@@ -702,7 +702,7 @@
     },
     "ancient-modern": {
       "title": "古今詞義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（易混組）</strong></p><p class=\"know-lead\">中二聚焦<strong>易混組</strong>：今義會「看起來通」其實錯。</p><img class=\"know-chart\" src=\"art/knowledge/chart_ancient_modern.png\" alt=\"古今詞義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>詞</th><th>古義可能</th><th>今義陷阱</th></tr></thead><tbody><tr><td>可憐</td><td>可愛／可惜</td><td>值得同情</td></tr><tr><td>消息</td><td>消長、音訊</td><td>新聞資訊</td></tr><tr><td>夫人</td><td>那人／妻</td><td>尊稱妻</td></tr><tr><td>交通</td><td>交錯相通</td><td>運輸</td></tr><tr><td>覺</td><td>醒</td><td>睡覺／覺得</td></tr><tr><td>戶</td><td>門</td><td>窗戶／住戶</td></tr></tbody></table></div><p class=\"know-tip\">原則：先文意，後今義；易混詞最考「以今律古」防線。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（易混組）</strong></p><p class=\"know-lead\">中二聚焦<strong>易混組</strong>：今義會「看起來通」其實錯。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>詞</th><th>古義可能</th><th>今義陷阱</th></tr></thead><tbody><tr><td>可憐</td><td>可愛／可惜</td><td>值得同情</td></tr><tr><td>消息</td><td>消長、音訊</td><td>新聞資訊</td></tr><tr><td>夫人</td><td>那人／妻</td><td>尊稱妻</td></tr><tr><td>交通</td><td>交錯相通</td><td>運輸</td></tr><tr><td>覺</td><td>醒</td><td>睡覺／覺得</td></tr><tr><td>戶</td><td>門</td><td>窗戶／住戶</td></tr></tbody></table></div><p class=\"know-tip\">原則：先文意，後今義；易混詞最考「以今律古」防線。</p>",
       "practice": [
         {
           "stem": "文言「覺」在「公覺」一類句中常指？",
@@ -759,7 +759,7 @@
     },
     "loan-chars": {
       "title": "通假字",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（規律意識）</strong></p><p class=\"know-lead\">中二不只「認幾個」，還要建立規律：音近可通；答題寫「X 通 Y，解作 Z」。</p><img class=\"know-chart\" src=\"art/knowledge/chart_loan_chars.png\" alt=\"通假字示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>提示</th></tr></thead><tbody><tr><td>嘿</td><td>默</td><td>嘿然＝沉默</td></tr><tr><td>被</td><td>披</td><td>被髮</td></tr><tr><td>鄉</td><td>向</td><td>鄉使＝從前（視文）</td></tr><tr><td>蚤</td><td>早</td><td>音近</td></tr><tr><td>寤</td><td>悟</td><td>覺悟</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>音近（古音）可通；形旁不同、聲旁相近者尤須留意。</li><li>與中一差異：中一認例；中二能說明「為何判通假」。</li></ul>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（規律意識）</strong></p><p class=\"know-lead\">中二不只「認幾個」，還要建立規律：音近可通；答題寫「X 通 Y，解作 Z」。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>通假字</th><th>本字</th><th>提示</th></tr></thead><tbody><tr><td>嘿</td><td>默</td><td>嘿然＝沉默</td></tr><tr><td>被</td><td>披</td><td>被髮</td></tr><tr><td>鄉</td><td>向</td><td>鄉使＝從前（視文）</td></tr><tr><td>蚤</td><td>早</td><td>音近</td></tr><tr><td>寤</td><td>悟</td><td>覺悟</td></tr></tbody></table></div><ul class=\"know-bullets\"><li>音近（古音）可通；形旁不同、聲旁相近者尤須留意。</li><li>與中一差異：中一認例；中二能說明「為何判通假」。</li></ul>",
       "practice": [
         {
           "stem": "「主人嘿然」的「嘿」？",
@@ -816,7 +816,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（被動／倒裝入門＋固定結構）</strong></p><p class=\"know-lead\">中二在判斷、省略之上，加入被動入門、倒裝初識與固定結構。</p><img class=\"know-chart\" src=\"art/knowledge/chart_sentence_patterns.png\" alt=\"文言常見句式示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>格式／現象</th><th>例子</th></tr></thead><tbody><tr><td>被動</td><td>為……所……</td><td>為流矢所傷</td></tr><tr><td>被動</td><td>見……</td><td>見笑於人（進階）</td></tr><tr><td>倒裝</td><td>主謂倒裝</td><td>甚矣，汝之不惠</td></tr><tr><td>倒裝</td><td>賓語前置初感</td><td>不患人之不己知</td></tr><tr><td>固定</td><td>若……何</td><td>對……怎麼辦</td></tr><tr><td>固定</td><td>不亦……乎</td><td>不也……嗎</td></tr></tbody></table></div>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中二・加深（被動／倒裝入門＋固定結構）</strong></p><p class=\"know-lead\">中二在判斷、省略之上，加入被動入門、倒裝初識與固定結構。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>格式／現象</th><th>例子</th></tr></thead><tbody><tr><td>被動</td><td>為……所……</td><td>為流矢所傷</td></tr><tr><td>被動</td><td>見……</td><td>見笑於人（進階）</td></tr><tr><td>倒裝</td><td>主謂倒裝</td><td>甚矣，汝之不惠</td></tr><tr><td>倒裝</td><td>賓語前置初感</td><td>不患人之不己知</td></tr><tr><td>固定</td><td>若……何</td><td>對……怎麼辦</td></tr><tr><td>固定</td><td>不亦……乎</td><td>不也……嗎</td></tr></tbody></table></div>",
       "practice": [
         {
           "stem": "「為流矢所傷」表？",
@@ -875,7 +875,7 @@
   "s3": {
     "features": {
       "title": "文言文的特點",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（綜合排查，非 DSE 十二篇）</strong></p><p class=\"know-lead\">中三要把特點<strong>用於解題</strong>：見難句，先判斷障礙屬哪一類。</p><img class=\"know-chart\" src=\"art/knowledge/chart_features.png\" alt=\"文言文特點示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>檢核項</th><th>自問</th><th>常見類型</th></tr></thead><tbody><tr><td>實詞</td><td>單音？活用？古今？通假？</td><td>意動／使動／名作狀</td></tr><tr><td>虛詞</td><td>基本義不夠？要換義項？</td><td>多義虛詞</td></tr><tr><td>句式</td><td>判斷／被動／倒裝／省略？</td><td>賓語前置等</td></tr><tr><td>語篇</td><td>敘事、說理還是勸勉？</td><td>段中作用</td></tr></tbody></table></div><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用加深</th><th>意思</th><th>例子</th></tr></thead><tbody><tr><td>意動</td><td>以之為……／覺得</td><td>奇之</td></tr><tr><td>使動</td><td>使之……</td><td>遠之</td></tr><tr><td>名作狀語</td><td>像……一樣</td><td>犬坐於前</td></tr></tbody></table></div><p class=\"know-tip\">銜接提示：高中會重複這些機制；中三先練「辨類＋取義」。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（綜合排查，非 DSE 十二篇）</strong></p><p class=\"know-lead\">中三要把特點<strong>用於解題</strong>：見難句，先判斷障礙屬哪一類。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>檢核項</th><th>自問</th><th>常見類型</th></tr></thead><tbody><tr><td>實詞</td><td>單音？活用？古今？通假？</td><td>意動／使動／名作狀</td></tr><tr><td>虛詞</td><td>基本義不夠？要換義項？</td><td>多義虛詞</td></tr><tr><td>句式</td><td>判斷／被動／倒裝／省略？</td><td>賓語前置等</td></tr><tr><td>語篇</td><td>敘事、說理還是勸勉？</td><td>段中作用</td></tr></tbody></table></div><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>活用加深</th><th>意思</th><th>例子</th></tr></thead><tbody><tr><td>意動</td><td>以之為……／覺得</td><td>奇之</td></tr><tr><td>使動</td><td>使之……</td><td>遠之</td></tr><tr><td>名作狀語</td><td>像……一樣</td><td>犬坐於前</td></tr></tbody></table></div><p class=\"know-tip\">銜接提示：高中會重複這些機制；中三先練「辨類＋取義」。</p>",
       "practice": [
         {
           "stem": "「奇之」若為意動，意思接近？",
@@ -932,7 +932,7 @@
     },
     "howto-read": {
       "title": "如何閱讀文言文",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（語境決義＋翻譯步驟）</strong></p><p class=\"know-lead\">中三核心：<strong>語境決義</strong>與<strong>可檢查的翻譯步驟</strong>。</p><img class=\"know-chart\" src=\"art/knowledge/chart_howto_read.png\" alt=\"如何閱讀文言文步驟示意\"><div class=\"know-card\"><h3>語境決義四問</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>提問</th><th>用意</th></tr></thead><tbody><tr><td>義項放入句中，主謂賓合理嗎？</td><td>句法檢驗</td></tr><tr><td>與段旨／作者態度一致嗎？</td><td>語篇檢驗</td></tr><tr><td>是否只是今義「看起來通」？</td><td>防以今律古</td></tr><tr><td>相鄰虛詞、句式支持此解嗎？</td><td>系統檢驗</td></tr></tbody></table></div></div><div class=\"know-card\"><h3>翻譯五步（自學版）</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>步</th><th>動作</th></tr></thead><tbody><tr><td>1</td><td>斷句／分層（依虛詞、對仗）</td></tr><tr><td>2</td><td>落實名物與指涉</td></tr><tr><td>3</td><td>處理活用、通假、古今異義</td></tr><tr><td>4</td><td>倒裝還原為現代語序</td></tr><tr><td>5</td><td>補省略、寫通順語體（不添戲）</td></tr></tbody></table></div></div><p class=\"know-tip\">評量自己：譯文能回對原文，且沒有加入原文沒有的情節。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（語境決義＋翻譯步驟）</strong></p><p class=\"know-lead\">中三核心：<strong>語境決義</strong>與<strong>可檢查的翻譯步驟</strong>。</p><div class=\"know-card\"><h3>語境決義四問</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>提問</th><th>用意</th></tr></thead><tbody><tr><td>義項放入句中，主謂賓合理嗎？</td><td>句法檢驗</td></tr><tr><td>與段旨／作者態度一致嗎？</td><td>語篇檢驗</td></tr><tr><td>是否只是今義「看起來通」？</td><td>防以今律古</td></tr><tr><td>相鄰虛詞、句式支持此解嗎？</td><td>系統檢驗</td></tr></tbody></table></div></div><div class=\"know-card\"><h3>翻譯五步（自學版）</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>步</th><th>動作</th></tr></thead><tbody><tr><td>1</td><td>斷句／分層（依虛詞、對仗）</td></tr><tr><td>2</td><td>落實名物與指涉</td></tr><tr><td>3</td><td>處理活用、通假、古今異義</td></tr><tr><td>4</td><td>倒裝還原為現代語序</td></tr><tr><td>5</td><td>補省略、寫通順語體（不添戲）</td></tr></tbody></table></div></div><p class=\"know-tip\">評量自己：譯文能回對原文，且沒有加入原文沒有的情節。</p>",
       "practice": [
         {
           "stem": "「語境決義」最強調？",
@@ -1006,7 +1006,7 @@
     },
     "particles": {
       "title": "文言虛詞",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（綜合辨識＋易混組）</strong></p><p class=\"know-lead\">中三兩線並行：① 新一批虛詞；② <strong>易混組</strong>綜合辨識。</p><img class=\"know-chart\" src=\"art/knowledge/chart_particles.png\" alt=\"文言虛詞示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>用法要點</th><th>例</th></tr></thead><tbody><tr><td>蓋</td><td>大概／原來；發語</td><td>蓋儒者所爭</td></tr><tr><td>夫</td><td>發語／那</td><td>夫學須靜也</td></tr><tr><td>且</td><td>並且／尚且／將要</td><td>且庸人尚羞之</td></tr><tr><td>安</td><td>怎麼／哪裏（反問）</td><td>燕雀安知……</td></tr><tr><td>哉</td><td>感嘆／反問</td><td>豈不快哉</td></tr><tr><td>若</td><td>如果／像／你</td><td>視文取義</td></tr><tr><td>與</td><td>和／給予／參與</td><td>勿與「於」混</td></tr><tr><td>因</td><td>於是／憑藉／因為</td><td>因勢利導（助記）</td></tr></tbody></table></div><div class=\"know-card\"><h3>易混組</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>對照</th><th>辨法</th></tr></thead><tbody><tr><td>以 vs 於</td><td>以多表憑藉／工具／原因；於多表處所／對象／比較</td></tr><tr><td>蓋 vs 夫</td><td>蓋常帶推測；夫常純發語起議論</td></tr><tr><td>安 vs 何</td><td>安偏反問「怎麼／哪裏」；何問「甚麼／為甚麼」</td></tr></tbody></table></div></div>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（綜合辨識＋易混組）</strong></p><p class=\"know-lead\">中三兩線並行：① 新一批虛詞；② <strong>易混組</strong>綜合辨識。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>虛詞</th><th>用法要點</th><th>例</th></tr></thead><tbody><tr><td>蓋</td><td>大概／原來；發語</td><td>蓋儒者所爭</td></tr><tr><td>夫</td><td>發語／那</td><td>夫學須靜也</td></tr><tr><td>且</td><td>並且／尚且／將要</td><td>且庸人尚羞之</td></tr><tr><td>安</td><td>怎麼／哪裏（反問）</td><td>燕雀安知……</td></tr><tr><td>哉</td><td>感嘆／反問</td><td>豈不快哉</td></tr><tr><td>若</td><td>如果／像／你</td><td>視文取義</td></tr><tr><td>與</td><td>和／給予／參與</td><td>勿與「於」混</td></tr><tr><td>因</td><td>於是／憑藉／因為</td><td>因勢利導（助記）</td></tr></tbody></table></div><div class=\"know-card\"><h3>易混組</h3><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>對照</th><th>辨法</th></tr></thead><tbody><tr><td>以 vs 於</td><td>以多表憑藉／工具／原因；於多表處所／對象／比較</td></tr><tr><td>蓋 vs 夫</td><td>蓋常帶推測；夫常純發語起議論</td></tr><tr><td>安 vs 何</td><td>安偏反問「怎麼／哪裏」；何問「甚麼／為甚麼」</td></tr></tbody></table></div></div>",
       "practice": [
         {
           "stem": "「燕雀安知鴻鵠之志哉」的「安」解作？",
@@ -1080,7 +1080,7 @@
     },
     "polysemy": {
       "title": "一詞多義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（語境決勝＋詞性轉移）</strong></p><p class=\"know-lead\">中三一詞多義要連<strong>詞性轉移</strong>一併看：先判詞性，再選義項。</p><img class=\"know-chart\" src=\"art/knowledge/chart_polysemy.png\" alt=\"一詞多義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>詞性／義</th><th>例子</th></tr></thead><tbody><tr><td>故</td><td>形：舊</td><td>故人</td></tr><tr><td>故</td><td>名：緣故</td><td>以故</td></tr><tr><td>故</td><td>副：故意</td><td>故遣</td></tr><tr><td>微</td><td>暗中／隱蔽</td><td>微行</td></tr><tr><td>微</td><td>如果沒有</td><td>微斯人</td></tr><tr><td>請</td><td>請求允許去……</td><td>請戰</td></tr><tr><td>請</td><td>請對方做</td><td>請示（對照今義，視文）</td></tr></tbody></table></div><p class=\"know-tip\">穩妥順序：先判詞性 → 再選合語境義項 → 用鄰句驗證。</p>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（語境決勝＋詞性轉移）</strong></p><p class=\"know-lead\">中三一詞多義要連<strong>詞性轉移</strong>一併看：先判詞性，再選義項。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>詞性／義</th><th>例子</th></tr></thead><tbody><tr><td>故</td><td>形：舊</td><td>故人</td></tr><tr><td>故</td><td>名：緣故</td><td>以故</td></tr><tr><td>故</td><td>副：故意</td><td>故遣</td></tr><tr><td>微</td><td>暗中／隱蔽</td><td>微行</td></tr><tr><td>微</td><td>如果沒有</td><td>微斯人</td></tr><tr><td>請</td><td>請求允許去……</td><td>請戰</td></tr><tr><td>請</td><td>請對方做</td><td>請示（對照今義，視文）</td></tr></tbody></table></div><p class=\"know-tip\">穩妥順序：先判詞性 → 再選合語境義項 → 用鄰句驗證。</p>",
       "practice": [
         {
           "stem": "「以故」的「故」多解作？",
@@ -1137,7 +1137,7 @@
     },
     "ancient-modern": {
       "title": "古今詞義",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（演變類型＋易誤組）</strong></p><p class=\"know-lead\">中三除記詞，還要能說<strong>演變類型</strong>，利於遷移。</p><img class=\"know-chart\" src=\"art/knowledge/chart_ancient_modern.png\" alt=\"古今詞義示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>擴大</td><td>所指範圍變大</td><td>江：長江→大河</td></tr><tr><td>縮小</td><td>所指範圍變小</td><td>臭：氣味→難聞</td></tr><tr><td>轉移</td><td>所指對象改換</td><td>涕：淚→鼻涕</td></tr><tr><td>色彩變</td><td>褒貶轉移</td><td>爪牙：幫手→貶義</td></tr></tbody></table></div><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>易誤組</th><th>古義</th><th>今義陷阱</th></tr></thead><tbody><tr><td>卑鄙</td><td>地位低、見識淺</td><td>品格惡劣</td></tr><tr><td>開張</td><td>擴大／開展</td><td>商店開業</td></tr><tr><td>烈士</td><td>有志功業之士</td><td>為義犧牲者</td></tr></tbody></table></div>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（演變類型＋易誤組）</strong></p><p class=\"know-lead\">中三除記詞，還要能說<strong>演變類型</strong>，利於遷移。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>說明</th><th>例子</th></tr></thead><tbody><tr><td>擴大</td><td>所指範圍變大</td><td>江：長江→大河</td></tr><tr><td>縮小</td><td>所指範圍變小</td><td>臭：氣味→難聞</td></tr><tr><td>轉移</td><td>所指對象改換</td><td>涕：淚→鼻涕</td></tr><tr><td>色彩變</td><td>褒貶轉移</td><td>爪牙：幫手→貶義</td></tr></tbody></table></div><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>易誤組</th><th>古義</th><th>今義陷阱</th></tr></thead><tbody><tr><td>卑鄙</td><td>地位低、見識淺</td><td>品格惡劣</td></tr><tr><td>開張</td><td>擴大／開展</td><td>商店開業</td></tr><tr><td>烈士</td><td>有志功業之士</td><td>為義犧牲者</td></tr></tbody></table></div>",
       "practice": [
         {
           "stem": "「涕」古今差異屬較典型的？",
@@ -1194,7 +1194,7 @@
     },
     "loan-chars": {
       "title": "通假字",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（系統辨認＋與古今字區隔）</strong></p><p class=\"know-lead\">通假 ≠ 錯字；是當時用字習慣。判斷順序：本義是否可通 → 音是否近 → 書證／註釋。</p><img class=\"know-chart\" src=\"art/knowledge/chart_loan_chars.png\" alt=\"通假字示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>可能所通</th><th>提醒</th></tr></thead><tbody><tr><td>辟</td><td>避／僻／譬</td><td>多可能，必依文</td></tr><tr><td>信</td><td>伸</td><td>屈信</td></tr><tr><td>責</td><td>債</td><td>視文</td></tr><tr><td>闕</td><td>缺</td><td>音近＋文意</td></tr></tbody></table></div><div class=\"know-card\"><h3>易混</h3><ul class=\"know-bullets\"><li>通假 vs 古今字：教材用語或異（如說／悅），答題跟校本。</li><li>通假 vs 詞類活用：活用是功能臨時改變，未必換本字。</li></ul></div>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（系統辨認＋與古今字區隔）</strong></p><p class=\"know-lead\">通假 ≠ 錯字；是當時用字習慣。判斷順序：本義是否可通 → 音是否近 → 書證／註釋。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>字</th><th>可能所通</th><th>提醒</th></tr></thead><tbody><tr><td>辟</td><td>避／僻／譬</td><td>多可能，必依文</td></tr><tr><td>信</td><td>伸</td><td>屈信</td></tr><tr><td>責</td><td>債</td><td>視文</td></tr><tr><td>闕</td><td>缺</td><td>音近＋文意</td></tr></tbody></table></div><div class=\"know-card\"><h3>易混</h3><ul class=\"know-bullets\"><li>通假 vs 古今字：教材用語或異（如說／悅），答題跟校本。</li><li>通假 vs 詞類活用：活用是功能臨時改變，未必換本字。</li></ul></div>",
       "practice": [
         {
           "stem": "「信」在「信手」／「信腳」一類或「屈信」中，可能通？",
@@ -1251,7 +1251,7 @@
     },
     "sentence-patterns": {
       "title": "文言常見句式",
-      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（複雜倒裝／被動／賓語前置）</strong></p><p class=\"know-lead\">中三要求<strong>還原語序＋說明類型</strong>。</p><img class=\"know-chart\" src=\"art/knowledge/chart_sentence_patterns.png\" alt=\"文言常見句式示意\"><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>要點</th><th>例子／還原</th></tr></thead><tbody><tr><td>賓語前置</td><td>疑問代詞賓語前置</td><td>沛公安在？→ 在安</td></tr><tr><td>賓語前置</td><td>否定句代詞賓語前置</td><td>未之有也 → 未有之</td></tr><tr><td>賓語前置</td><td>之／是複指</td><td>唯利是圖</td></tr><tr><td>介賓後置</td><td>狀語後置</td><td>戰於長勺 → 於長勺戰</td></tr><tr><td>定語後置</td><td>中心語＋之＋定＋者</td><td>馬之千里者 → 千里馬</td></tr><tr><td>被動綜合</td><td>為所／見於／意念被動</td><td>見笑於人</td></tr></tbody></table></div>",
+      "html": "<p class=\"level-badge\"><strong>程度說明：中三・銜接（複雜倒裝／被動／賓語前置）</strong></p><p class=\"know-lead\">中三要求<strong>還原語序＋說明類型</strong>。</p><div class=\"know-table-wrap\"><table class=\"know-table\"><thead><tr><th>類型</th><th>要點</th><th>例子／還原</th></tr></thead><tbody><tr><td>賓語前置</td><td>疑問代詞賓語前置</td><td>沛公安在？→ 在安</td></tr><tr><td>賓語前置</td><td>否定句代詞賓語前置</td><td>未之有也 → 未有之</td></tr><tr><td>賓語前置</td><td>之／是複指</td><td>唯利是圖</td></tr><tr><td>介賓後置</td><td>狀語後置</td><td>戰於長勺 → 於長勺戰</td></tr><tr><td>定語後置</td><td>中心語＋之＋定＋者</td><td>馬之千里者 → 千里馬</td></tr><tr><td>被動綜合</td><td>為所／見於／意念被動</td><td>見笑於人</td></tr></tbody></table></div>",
       "practice": [
         {
           "stem": "「未之有也」正常語序接近？",
