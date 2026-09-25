@@ -17,7 +17,9 @@
     grade: null,
     passages: null,
     knowledge: null,
+    jyutping: {},
     currentPassage: null,
+    guideOpen: false,
     quizIndex: 0,
     quizLocked: false,
     quizCorrect: 0,
@@ -28,6 +30,8 @@
     retestLocked: false,
     retestCorrect: 0,
   };
+
+  const HL_KIND_LABEL = { shi: "實詞", xu: "虛詞", tong: "通假", huo: "活用" };
 
   const $ = (sel) => document.querySelector(sel);
   const views = {
@@ -237,31 +241,17 @@
     } catch (_) {}
   }
 
-  /* ---------- Classical text (full, no truncate) ---------- */
-  function fillClassical(el, raw) {
-    if (!el) return;
+  /* ---------- Classical text (full, no truncate) + P2 highlights ---------- */
+  function paragraphBlocks(raw) {
     const text = String(raw == null ? "" : raw);
     const blocks = text.split(/\n\s*\n/).map((s) => s.replace(/^\n+|\n+$/g, ""));
     const meaningful = blocks.filter((b) => b.length > 0);
-    if (meaningful.length > 1) {
-      el.innerHTML = meaningful
-        .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
-        .join("");
-      return;
-    }
+    if (meaningful.length > 1) return meaningful;
     if (text.indexOf("\n") !== -1) {
-      el.innerHTML = text
-        .split("\n")
-        .map((line) => (line.trim() ? "<p>" + escapeHtml(line) + "</p>" : ""))
-        .join("");
-      return;
+      return text.split("\n").filter((line) => line.trim());
     }
     const soft = softParagraphs(text);
-    if (soft.length > 1) {
-      el.innerHTML = soft.map((p) => "<p>" + escapeHtml(p) + "</p>").join("");
-    } else {
-      el.textContent = text;
-    }
+    return soft.length ? soft : [text];
   }
 
   function softParagraphs(text) {
@@ -283,8 +273,152 @@
     return parts.length ? parts : [text];
   }
 
-  function renderClassicalText(raw) {
-    fillClassical($("#pass-text"), raw);
+  function buildHighlightIndex(highlights) {
+    const list = Array.isArray(highlights) ? highlights.slice() : [];
+    list.sort((a, b) => String(b.text || "").length - String(a.text || "").length);
+    return list.filter((h) => h && h.text);
+  }
+
+  function wrapHighlights(plain, highlights) {
+    const list = buildHighlightIndex(highlights);
+    if (!list.length) return escapeHtml(plain).replace(/\n/g, "<br>");
+    let i = 0;
+    let out = "";
+    while (i < plain.length) {
+      let matched = null;
+      for (let hi = 0; hi < list.length; hi++) {
+        const t = list[hi].text;
+        if (t && plain.substr(i, t.length) === t) {
+          matched = list[hi];
+          break;
+        }
+      }
+      if (matched) {
+        const kind = matched.kind || "shi";
+        const t = matched.text;
+        out +=
+          '<button type="button" class="hl hl-' +
+          escapeHtml(kind) +
+          '" data-hl="' +
+          escapeHtml(t) +
+          '" data-kind="' +
+          escapeHtml(kind) +
+          '">' +
+          escapeHtml(t) +
+          "</button>";
+        i += t.length;
+      } else {
+        const ch = plain[i];
+        if (ch === "\n") out += "<br>";
+        else out += escapeHtml(ch);
+        i += 1;
+      }
+    }
+    return out;
+  }
+
+  function fillClassical(el, raw, highlights) {
+    if (!el) return;
+    const paras = paragraphBlocks(raw);
+    if (!paras.length) {
+      el.textContent = "";
+      return;
+    }
+    el.innerHTML = paras
+      .map((p) => "<p>" + wrapHighlights(p, highlights) + "</p>")
+      .join("");
+    if (highlights && highlights.length) {
+      el.querySelectorAll("[data-hl]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showJyutping(btn.dataset.hl, btn.dataset.kind);
+        });
+      });
+    }
+  }
+
+  function renderClassicalText(raw, highlights) {
+    fillClassical($("#pass-text"), raw, highlights);
+  }
+
+  function showJyutping(ch, kind) {
+    const pop = $("#jyut-pop");
+    if (!pop) return;
+    const rom =
+      (state.jyutping && (state.jyutping[ch] || state.jyutping[String(ch)])) ||
+      null;
+    const charEl = $("#jyut-char");
+    const kindEl = $("#jyut-kind");
+    const romEl = $("#jyut-rom");
+    charEl.textContent = ch;
+    charEl.className = "jyut-char" + (kind && kind !== "shi" ? " kind-" + kind : "");
+    kindEl.textContent = HL_KIND_LABEL[kind] || "色標字";
+    romEl.textContent = rom ? rom : "暫無粵拼";
+    pop.classList.remove("hidden");
+    pop.hidden = false;
+  }
+
+  function hideJyutping() {
+    const pop = $("#jyut-pop");
+    if (!pop) return;
+    pop.classList.add("hidden");
+    pop.hidden = true;
+  }
+
+  function setGuideOpen(open) {
+    state.guideOpen = !!open;
+    const panel = $("#pass-guide");
+    const btn = $("#btn-toggle-guide");
+    if (!panel || !btn) return;
+    if (state.guideOpen) {
+      panel.classList.remove("hidden");
+      panel.hidden = false;
+      btn.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+    } else {
+      panel.classList.add("hidden");
+      panel.hidden = true;
+      btn.classList.remove("is-open");
+      btn.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  function renderGuide(p) {
+    const g = p && p.guide;
+    const translation = $("#guide-translation");
+    const plain = $("#guide-plain");
+    const notes = $("#guide-notes");
+    const theme = $("#guide-theme");
+    const btn = $("#btn-toggle-guide");
+    if (!g) {
+      if (translation) translation.textContent = "本篇解釋稍後補充。";
+      if (plain) plain.textContent = "";
+      if (notes) notes.innerHTML = "";
+      if (theme) theme.textContent = "";
+      if (btn) btn.classList.add("hidden");
+      setGuideOpen(false);
+      return;
+    }
+    if (btn) btn.classList.remove("hidden");
+    if (translation) translation.textContent = g.translation || "";
+    if (plain) plain.textContent = g.plain || "";
+    if (theme) theme.textContent = g.theme || "";
+    if (notes) {
+      const arr = Array.isArray(g.notes) ? g.notes : [];
+      notes.innerHTML = arr
+        .map((n) => {
+          const para = n.para != null ? n.para : "";
+          return (
+            '<div class="guide-note"><span class="guide-para-label">第' +
+            escapeHtml(String(para)) +
+            "段</span>" +
+            escapeHtml(n.text || "") +
+            "</div>"
+          );
+        })
+        .join("");
+    }
   }
 
   /* ---------- Home ---------- */
@@ -507,10 +641,13 @@
     const p = list.find((x) => x.id === pid);
     if (!p) return;
     state.currentPassage = p;
+    hideJyutping();
     $("#pass-title").textContent = p.title;
     $("#pass-source").textContent = p.source;
-    renderClassicalText(p.text);
+    renderClassicalText(p.text, p.highlights || []);
     $("#pass-notes").textContent = p.notes ? "提要：" + p.notes : "";
+    renderGuide(p);
+    setGuideOpen(false);
     show("passage");
   }
 
@@ -952,15 +1089,31 @@
   $("#btn-retest-prev").addEventListener("click", prevRetest);
   $("#btn-retest-done-back").addEventListener("click", openWrongBook);
 
+  const btnGuide = $("#btn-toggle-guide");
+  if (btnGuide) {
+    btnGuide.addEventListener("click", () => setGuideOpen(!state.guideOpen));
+  }
+  const jyutClose = $("#jyut-close");
+  if (jyutClose) jyutClose.addEventListener("click", hideJyutping);
+  document.addEventListener("click", (e) => {
+    const pop = $("#jyut-pop");
+    if (!pop || pop.hidden) return;
+    if (e.target.closest && (e.target.closest("#jyut-pop") || e.target.closest("[data-hl]")))
+      return;
+    hideJyutping();
+  });
+
   /* ---------- Boot ---------- */
   initFontScale();
   Promise.all([
     fetch("data/passages.json").then((r) => r.json()),
     fetch("data/knowledge.json").then((r) => r.json()),
+    fetch("data/jyutping.json").then((r) => r.json()).catch(() => ({})),
   ])
-    .then(([passages, knowledge]) => {
+    .then(([passages, knowledge, jyutping]) => {
       state.passages = passages;
       state.knowledge = knowledge;
+      state.jyutping = jyutping || {};
       renderHome();
       show("home");
     })

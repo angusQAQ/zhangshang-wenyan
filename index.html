@@ -91,11 +91,47 @@
       <h2 class="page-title" id="pass-title">篇目</h2>
       <div class="passage-card">
         <div class="source" id="pass-source"></div>
+        <p class="hl-legend-label">色標字（點擊可查粵拼）</p>
+        <img class="hl-chips" src="art/ui/highlight_chips.png" alt="實詞、虛詞、通假、活用" width="320" height="40" />
         <div class="classical" id="pass-text"></div>
         <div class="notes" id="pass-notes"></div>
       </div>
+      <button type="button" class="btn-explain" id="btn-toggle-guide" aria-expanded="false" aria-controls="pass-guide">
+        <img class="btn-explain-show" src="art/ui/btn_show_explain.png" alt="顯示解釋" width="280" height="48" />
+        <span class="btn-explain-hide">隱藏解釋</span>
+      </button>
+      <div class="pass-guide hidden" id="pass-guide" hidden>
+        <section class="guide-block">
+          <h3>語譯</h3>
+          <p id="guide-translation"></p>
+        </section>
+        <section class="guide-block">
+          <h3>淺白講解</h3>
+          <p id="guide-plain"></p>
+        </section>
+        <section class="guide-block">
+          <h3>段落注釋</h3>
+          <div id="guide-notes"></div>
+        </section>
+        <section class="guide-block">
+          <h3>文章主旨</h3>
+          <p id="guide-theme"></p>
+        </section>
+      </div>
       <button type="button" class="btn-primary" id="btn-start-quiz">開始練習</button>
     </section>
+
+    <!-- Jyutping popover (offline) -->
+    <div id="jyut-pop" class="jyut-pop hidden" role="dialog" aria-live="polite" hidden>
+      <div class="jyut-pop-inner">
+        <div class="jyut-char" id="jyut-char"></div>
+        <div class="jyut-meta">
+          <span class="jyut-kind" id="jyut-kind"></span>
+          <span class="jyut-rom" id="jyut-rom"></span>
+        </div>
+        <button type="button" class="jyut-close" id="jyut-close" aria-label="關閉">關閉</button>
+      </div>
+    </div>
 
     <!-- Quiz -->
     <section id="view-quiz" class="view view-quiz">

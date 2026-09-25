@@ -1185,3 +1185,203 @@ html[data-font="xl"] {
 }
 .opt-exp.is-wrong .opt-exp-label { color: #A05A5A; }
 .opt-exp.is-wrong p { color: #666; }
+
+/* ---------- R2 P2: 色標字 + 顯示解釋 + 粵拼 ---------- */
+.hl-legend-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.hl-chips {
+  display: block;
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin: 0 0 12px;
+}
+
+.classical .hl {
+  display: inline;
+  padding: 0 0.15em;
+  margin: 0 0.02em;
+  border-radius: 4px;
+  border-bottom: 2px solid currentColor;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  -webkit-tap-highlight-color: transparent;
+}
+.classical .hl:active { filter: brightness(0.95); }
+.classical .hl-shi {
+  background: #DCF5F0;
+  border-color: #2A9D8F;
+  color: #2A9D8F;
+}
+.classical .hl-xu {
+  background: #E8F0E0;
+  border-color: #7A8F6A;
+  color: #5F734F;
+}
+.classical .hl-tong {
+  background: #FFECD2;
+  border-color: #E6963C;
+  color: #C47820;
+}
+.classical .hl-huo {
+  background: #F0E6FF;
+  border-color: #8264B4;
+  color: #6A4E9A;
+}
+
+.btn-explain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-explain .btn-explain-show {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+}
+.btn-explain .btn-explain-hide {
+  display: none;
+  width: 100%;
+  max-width: 320px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1.5px solid #8a9a7b;
+  border-radius: 999px;
+  color: #8a9a7b;
+  background: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  box-sizing: border-box;
+}
+.btn-explain.is-open .btn-explain-show { display: none; }
+.btn-explain.is-open .btn-explain-hide { display: flex; align-items: center; justify-content: center; }
+.btn-explain:active { opacity: 0.9; }
+
+.pass-guide {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  background: #FAFBFA;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: visible;
+  max-height: none;
+}
+.pass-guide.hidden,
+.pass-guide[hidden] { display: none !important; }
+.guide-block { margin-bottom: 14px; }
+.guide-block:last-child { margin-bottom: 0; }
+.guide-block h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.guide-block p,
+.guide-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.guide-note {
+  margin-bottom: 8px;
+  padding-left: 0;
+}
+.guide-note .guide-para-label {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--tag);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.jyut-pop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  padding: 0 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+.jyut-pop.hidden,
+.jyut-pop[hidden] { display: none !important; }
+.jyut-pop-inner {
+  pointer-events: auto;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 12px 12px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.jyut-char {
+  flex: 0 0 auto;
+  min-width: 48px;
+  height: 48px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  border-radius: 10px;
+  background: #DCF5F0;
+  color: #2A9D8F;
+  border: 1.5px solid #2A9D8F;
+}
+.jyut-char.kind-xu { background: #E8F0E0; color: #5F734F; border-color: #7A8F6A; }
+.jyut-char.kind-tong { background: #FFECD2; color: #C47820; border-color: #E6963C; }
+.jyut-char.kind-huo { background: #F0E6FF; color: #6A4E9A; border-color: #8264B4; }
+.jyut-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.jyut-kind {
+  font-size: 12px;
+  color: var(--muted);
+}
+.jyut-rom {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.jyut-close {
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: inherit;
+}

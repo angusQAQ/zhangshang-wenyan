@@ -123,5 +123,9 @@
   "deploy": {
     "target": "github_pages",
     "permanent_link_required": true
+  },
+  "revision": "R2-P2",
+  "pending_user_choice": {
+    "jyutping": "A_offline"
   }
 }
