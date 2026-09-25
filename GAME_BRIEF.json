@@ -1,0 +1,116 @@
+{
+  "title": "掌上文言",
+  "product_type": "self_study_web_app",
+  "not_a_game": true,
+  "dimension": "2D",
+  "engine": "static_web_html_css_js",
+  "engine_note": "手機 Safari／Chrome 開即用；不用 Three.js／Godot",
+  "platform": {
+    "primary": "iPhone",
+    "orientation": "portrait_only",
+    "input": [
+      "touch",
+      "mouse_fallback"
+    ]
+  },
+  "locale": {
+    "ui_text": "zh-HK-written",
+    "forbid_cantonese": true,
+    "forbid_simplified_chinese": true,
+    "forbid_mainland_terms": true
+  },
+  "audio": {
+    "bgm": false,
+    "sfx": "optional_tap_only_muteable",
+    "default": "silent_ok"
+  },
+  "art_direction": {
+    "lock": "ref_hkdse_edu_ui_white",
+    "summary": "白底教育 App：大標題＋淺綠標籤、圓角卡片、線條 icon、直向列表、底欄精簡、選擇題 A–D 卡、對＝青綠／錯＝紅、解釋區塊",
+    "refs": [
+      "ref/ui-home.png",
+      "ref/ui-list.png",
+      "ref/ui-quiz.png",
+      "ref/ui-explain.png"
+    ],
+    "palette": {
+      "bg": "#FFFFFF",
+      "text": "#1A1A1A",
+      "muted": "#8A8A8A",
+      "accent": "#7A8F6A",
+      "correct": "#2A9D8F",
+      "wrong": "#E57373",
+      "tag": "#E8F0E0"
+    },
+    "forbid": [
+      "landscape_layout",
+      "game_hud",
+      "ink_wash_heavy",
+      "paper_grid_cream",
+      "simplified_glyphs_in_art"
+    ]
+  },
+  "ia": {
+    "home": [
+      "中一",
+      "中二",
+      "中三"
+    ],
+    "per_grade": [
+      "文言知識",
+      "文言篇章"
+    ],
+    "knowledge_topics": [
+      "文言文的特點",
+      "如何閱讀文言文",
+      "文言虛詞",
+      "一詞多義",
+      "古今詞義",
+      "通假字",
+      "文言常見句式"
+    ],
+    "passage_quiz_types": [
+      "字詞語譯_MCQ",
+      "主旨_MCQ",
+      "判斷_正確錯誤無從判斷"
+    ]
+  },
+  "content_rules": {
+    "source_primary": "content/source-wenyan-kit.md",
+    "also": "香港教育局初中文言文教學材料／年級深淺",
+    "grade_band": true,
+    "no_invent_passages": true,
+    "v1_scope": "每級知識 7 題庫頁可掃讀；每級篇章 ≥3 篇×每篇 ≥5 題（可擴）",
+    "s1_passages": "content/s1-passages-qa.md",
+    "s2_passages": "content/s2-passages-qa.md",
+    "s3_passages": null,
+    "s3_placeholder": "中三稍後補充；UI 顯示「內容即將推出」"
+  },
+  "core_verb": "點選",
+  "modifier": "即時對錯回饋＋簡短解釋",
+  "session": "30–180s 碎片溫習",
+  "success_bar": {
+    "0s": "睇到掌上文言＋三個年級",
+    "10s": "進入任一知識或篇章並完成第一次點選回饋",
+    "60s": "完成至少一題有對錯判斷"
+  },
+  "entities_max": 6,
+  "entities": [
+    "btn_grade",
+    "btn_mode",
+    "card_topic",
+    "card_option",
+    "panel_explain",
+    "btn_next"
+  ],
+  "approval": {
+    "approved_by_user": true,
+    "phrase": "你先製作這個程式",
+    "s3_deferred": true,
+    "gate": "Execute unlocked"
+  },
+  "deploy": {
+    "target": "github_pages",
+    "permanent_link_required": true
+  }
+}
