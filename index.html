@@ -39,7 +39,7 @@
 
       <h3 class="section-label">文言知識</h3>
       <div class="card-list" id="home-knowledge">
-        <button type="button" class="nav-card" id="btn-home-knowledge">
+        <button type="button" class="nav-card feat-entry" id="btn-home-knowledge">
           <div class="icon-wrap"><img src="art/ui/icon_home_knowledge.png" alt="" /></div>
           <div class="body"><strong>文言知識</strong><span>七個主題 · 特點、虛詞、句式等</span></div>
           <span class="chev">›</span>
@@ -48,12 +48,12 @@
 
       <h3 class="section-label">操練與收藏</h3>
       <div class="card-list" id="home-extra">
-        <button type="button" class="nav-card" id="btn-home-vocab">
+        <button type="button" class="nav-card feat-entry" id="btn-home-vocab">
           <div class="icon-wrap"><img src="art/ui/icon_vocab_quiz.png" alt="" /></div>
           <div class="body"><strong>文言字詞考核</strong><span>有出處文言句 · 詞義四選一</span></div>
           <span class="chev">›</span>
         </button>
-        <button type="button" class="nav-card" id="btn-home-bookmarks">
+        <button type="button" class="nav-card feat-entry" id="btn-home-bookmarks">
           <div class="icon-wrap"><img src="art/ui/icon_bookmark.png" alt="" /></div>
           <div class="body"><strong>書籤</strong><span>本機收藏 · 回看重做</span></div>
           <span class="chev">›</span>
@@ -141,7 +141,7 @@
         <div class="ws-pron" id="ws-pron">
           <div class="ws-label dark">讀音</div>
           <div class="ws-jyut" id="ws-jyut"></div>
-          <p class="ws-pron-hint">粵拼依本機詞庫；語音以裝置粵語為準（唔連外網）。</p>
+          <p class="ws-pron-hint" id="ws-jyut-src">讀音來源：香港中文大學漢語多功能字庫（離線表）。Web Speech 僅作播放輔助。</p>
           <button type="button" class="ws-play" id="ws-play">播放粵語讀音</button>
         </div>
         <div class="ws-field">
@@ -165,6 +165,14 @@
       <div class="quiz-meta" id="quiz-meta"></div>
       <div id="quiz-body"></div>
       <div class="explain-panel" id="explain-panel"></div>
+
+      <div class="quiz-next-inline hidden" id="quiz-next-inline">
+        <button type="button" class="btn-next-asset" id="btn-next-inline" aria-label="下一題">
+          <img class="next-img" src="art/ui/btn_next_question.png" alt="下一題" width="600" height="128" />
+          <span class="next-text hidden">本輪結束</span>
+        </button>
+      </div>
+
       <div class="quiz-done-wrap hidden" id="quiz-done">
         <div class="done-card">
           <h2 id="quiz-done-title">本輪練習結束</h2>
@@ -254,6 +262,14 @@
       <div class="quiz-meta" id="retest-meta"></div>
       <div id="retest-body"></div>
       <div class="explain-panel" id="retest-explain"></div>
+
+      <div class="quiz-next-inline hidden" id="retest-next-inline">
+        <button type="button" class="btn-next-asset" id="btn-retest-next-inline" aria-label="下一題">
+          <img class="next-img" src="art/ui/btn_next_question.png" alt="下一題" width="600" height="128" />
+          <span class="next-text hidden">本輪結束</span>
+        </button>
+      </div>
+
       <div class="quiz-done-wrap hidden" id="retest-done">
         <div class="done-card">
           <h2>重測完成</h2>

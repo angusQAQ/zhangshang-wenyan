@@ -5,11 +5,33 @@
 
 commercial_ok: true
 
+## R2.6 視覺更新（NOA）
+
+### 首頁入口圖標（可用 CSS 放大）
+首頁入口圖標統一輸出 **512×512 RGBA**、透明底，線條用較厚的橄欖綠 `#7A8F6A`；圖內不燒入中文。可按首頁卡片需要以 CSS 縮放，不應再以低解像度圖放大。
+
+| entity_id | path | 狀態／用途 |
+|-----------|------|------------|
+| icon_grade | `art/ui/icon_grade.png` | R2.6 更新；三張無字等級卡片 |
+| icon_vocab_quiz | `art/ui/icon_vocab_quiz.png` | R2.6 更新；字詞考核頁／問號圖示 |
+| icon_passage | `art/ui/icon_passage.png` | R2.6 更新；篇章文件圖示（如首頁使用） |
+| icon_home_knowledge | `art/ui/icon_home_knowledge.png` | 保留；512×512 文言知識入口 |
+
+### 練習按鈕
+
+| entity_id | path | 規格 |
+|-----------|------|------|
+| btn_next_question | `art/ui/btn_next_question.png` | 600×128 RGBA；黑色 pill、白色「下一題」 |
+
+### 知識主題頁（R2.6 規則）
+`deco_*.png` **不顯示**於 knowledge topic pages；檔案可以留在磁碟，但一律標記為「不顯示／optional unused」，不可由主題頁引用。知識頁以可跟 `rem` 的 HTML 真字、table/list 為主。
+
+
 ## Logo
 卡通古代小人快樂讀書（無字）`art/ui/logo_master.png` 及 icon 全套。
 
-## 知識裝飾頭圖（R2.2 · deco_*）
-頁頂可選裝飾插畫：**純視覺隱喻，無燒入可讀正文／表格字**。短題目若有 ≤6 字且大字；本批皆無字。
+## 知識裝飾頭圖（R2.2 資產；R2.6 不顯示）
+頁頂裝飾插畫資產可留檔，但 R2.6 **不再顯示／optional unused**；**純視覺隱喻，無燒入可讀正文／表格字**。短題目若有 ≤6 字且大字；本批皆無字。
 
 | topic_id | entity_id | 檔案 | 隱喻 |
 |----------|-----------|------|------|
@@ -32,7 +54,7 @@ commercial_ok: true
 - `art/knowledge/chart_loan_chars.png`
 - `art/knowledge/chart_sentence_patterns.png`
 
-**規則（給 GIDEON）：可讀正文禁止用 PNG 燒字；跟 rem 必須 HTML 真字。** deco_* 僅 optional 頁頂裝飾；定義／例句／步驟一律 HTML table／list。
+**規則（給 GIDEON）：可讀正文禁止用 PNG 燒字；跟 rem 必須 HTML 真字。** R2.6 起 `deco_*` 不顯示（optional unused）；定義／例句／步驟一律 HTML table／list。
 
 ## 色標字
 - 樣式條：`art/ui/highlight_chips.png`（**legend 仍有效**；篇章 marks 規則見 R2.4）

@@ -739,15 +739,7 @@
     show("knowledge-list");
   }
 
-  const KNOW_DECO = {
-    features: "art/knowledge/deco_features.png",
-    "howto-read": "art/knowledge/deco_howto_read.png",
-    particles: "art/knowledge/deco_particles.png",
-    polysemy: "art/knowledge/deco_polysemy.png",
-    "ancient-modern": "art/knowledge/deco_ancient_modern.png",
-    "loan-chars": "art/knowledge/deco_loan_chars.png",
-    "sentence-patterns": "art/knowledge/deco_sentence_patterns.png",
-  };
+  // R2.6: knowledge topic pages use HTML content only; deco_* assets stay unused on disk.
 
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
@@ -757,13 +749,8 @@
       return;
     }
     $("#know-title").textContent = topic.title;
-    const deco = KNOW_DECO[topicId];
-    const decoHtml = deco
-      ? '<img class="know-deco" src="' +
-        deco +
-        '" alt="" width="720" height="240" />'
-      : "";
-    $("#know-content").innerHTML = decoHtml + (topic.html || "");
+    // R2.6: do not display art/knowledge/deco_*.png on topic pages.
+    $("#know-content").innerHTML = topic.html || "";
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -992,7 +979,7 @@
     $("#quiz-done").classList.add("hidden");
     $("#quiz-body").classList.remove("hidden");
     $("#explain-panel").classList.remove("show");
-    $("#quiz-footer").classList.add("hidden");
+    hideQuizNextControls();
 
     const titleEl = $("#quiz-title");
     if (titleEl) titleEl.textContent = (meta && meta.title) || "練習";
@@ -1012,7 +999,7 @@
     $("#quiz-done").classList.add("hidden");
     $("#quiz-body").classList.remove("hidden");
     $("#explain-panel").classList.remove("show");
-    $("#quiz-footer").classList.add("hidden");
+    hideQuizNextControls();
     renderQuestion();
     toast("題庫已洗牌，繼續不重複操練");
   }
@@ -1074,6 +1061,99 @@
     });
   }
 
+
+  /* R2.6: in-flow next button (scrollable) + footer sync */
+  function quizIsLast() {
+    return state.quizCursor + 1 >= state.quizOrder.length;
+  }
+
+  function setQuizNextLabels() {
+    const isLast = quizIsLast();
+    const single = !!(state.quizMeta && state.quizMeta.single);
+    const label = isLast ? (single ? "完成" : "本輪結束") : "下一題";
+    const footerBtn = $("#btn-next");
+    if (footerBtn) footerBtn.textContent = label;
+    const inline = $("#btn-next-inline");
+    if (inline) {
+      const img = inline.querySelector(".next-img");
+      const text = inline.querySelector(".next-text");
+      inline.classList.toggle("is-end", isLast);
+      inline.setAttribute("aria-label", label);
+      if (text) {
+        text.textContent = label;
+        text.classList.toggle("hidden", !isLast);
+      }
+      if (img) img.classList.toggle("hidden", isLast);
+    }
+  }
+
+  function showQuizNextControls() {
+    setQuizNextLabels();
+    const footer = $("#quiz-footer");
+    if (footer) footer.classList.remove("hidden");
+    const box = $("#quiz-next-inline");
+    if (box) {
+      box.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        try {
+          box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (_) {
+          try { box.scrollIntoView(true); } catch (__) {}
+        }
+      });
+    }
+  }
+
+  function hideQuizNextControls() {
+    const footer = $("#quiz-footer");
+    if (footer) footer.classList.add("hidden");
+    const box = $("#quiz-next-inline");
+    if (box) box.classList.add("hidden");
+  }
+
+  function setRetestNextLabels() {
+    const isLast = state.retestIndex + 1 >= state.retestQueue.length;
+    const label = isLast ? "完成本輪" : "下一題";
+    const footerBtn = $("#btn-retest-next");
+    if (footerBtn) footerBtn.textContent = label;
+    const inline = $("#btn-retest-next-inline");
+    if (inline) {
+      const img = inline.querySelector(".next-img");
+      const text = inline.querySelector(".next-text");
+      inline.classList.toggle("is-end", isLast);
+      inline.setAttribute("aria-label", label);
+      if (text) {
+        text.textContent = label;
+        text.classList.toggle("hidden", !isLast);
+      }
+      if (img) img.classList.toggle("hidden", isLast);
+    }
+  }
+
+  function showRetestNextControls() {
+    setRetestNextLabels();
+    const footer = $("#retest-footer");
+    if (footer) footer.classList.remove("hidden");
+    const box = $("#retest-next-inline");
+    if (box) {
+      box.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        try {
+          box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (_) {
+          try { box.scrollIntoView(true); } catch (__) {}
+        }
+      });
+    }
+  }
+
+  function hideRetestNextControls() {
+    const footer = $("#retest-footer");
+    if (footer) footer.classList.add("hidden");
+    const box = $("#retest-next-inline");
+    if (box) box.classList.add("hidden");
+  }
+
   function renderQuestion() {
     const q = currentQuizQuestion();
     if (!q) {
@@ -1082,19 +1162,11 @@
     }
     state.quizLocked = false;
     $("#explain-panel").classList.remove("show");
-    $("#quiz-footer").classList.add("hidden");
+    hideQuizNextControls();
 
     const total = state.quizOrder.length;
     const pos = state.quizCursor + 1;
-    const isLast = pos >= total;
-    const nextBtn = $("#btn-next");
-    if (nextBtn) {
-      nextBtn.textContent = isLast
-        ? state.quizMeta && state.quizMeta.single
-          ? "完成"
-          : "本輪結束"
-        : "下一題";
-    }
+    setQuizNextLabels();
 
     const tip =
       state.quizMeta && state.quizMeta.reshuffled && state.quizCursor === 0
@@ -1188,7 +1260,7 @@
     }
 
     fillExplainPanel($("#explain-panel"), q);
-    $("#quiz-footer").classList.remove("hidden");
+    showQuizNextControls();
   }
 
   function showMark(btn, ok) {
@@ -1206,7 +1278,7 @@
   function showQuizDone() {
     $("#quiz-body").classList.add("hidden");
     $("#explain-panel").classList.remove("show");
-    $("#quiz-footer").classList.add("hidden");
+    hideQuizNextControls();
     $("#quiz-done").classList.remove("hidden");
     const title = $("#quiz-done-title");
     if (title) {
@@ -1402,7 +1474,7 @@
     $("#retest-done").classList.add("hidden");
     $("#retest-body").classList.remove("hidden");
     $("#retest-explain").classList.remove("show");
-    $("#retest-footer").classList.add("hidden");
+    hideRetestNextControls();
     renderRetestQuestion();
     show("retest");
   }
@@ -1412,7 +1484,7 @@
     if (!item) return;
     state.retestLocked = false;
     $("#retest-explain").classList.remove("show");
-    $("#retest-footer").classList.add("hidden");
+    hideRetestNextControls();
     $("#retest-progress").textContent =
       state.retestIndex + 1 + " / " + state.retestQueue.length;
     $("#btn-retest-next").textContent =
@@ -1495,7 +1567,7 @@
       answer: item.correctAnswer,
       optionExplains: item.optionExplains || null,
     });
-    $("#retest-footer").classList.remove("hidden");
+    showRetestNextControls();
   }
 
   function nextRetest() {
@@ -1621,6 +1693,8 @@
 
   $("#btn-start-quiz").addEventListener("click", startQuiz);
   $("#btn-next").addEventListener("click", nextQuestion);
+  const btnNextInline = $("#btn-next-inline");
+  if (btnNextInline) btnNextInline.addEventListener("click", nextQuestion);
   const btnQuizEnd = $("#btn-quiz-end");
   if (btnQuizEnd) btnQuizEnd.addEventListener("click", endQuizRound);
   $("#btn-quiz-close").addEventListener("click", leaveQuiz);
@@ -1661,6 +1735,8 @@
 
   $("#btn-retest-close").addEventListener("click", openWrongBook);
   $("#btn-retest-next").addEventListener("click", nextRetest);
+  const btnRetestNextInline = $("#btn-retest-next-inline");
+  if (btnRetestNextInline) btnRetestNextInline.addEventListener("click", nextRetest);
   $("#btn-retest-prev").addEventListener("click", prevRetest);
   $("#btn-retest-done-back").addEventListener("click", openWrongBook);
 

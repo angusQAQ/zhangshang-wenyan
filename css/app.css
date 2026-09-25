@@ -1504,3 +1504,70 @@ img[src*="art/knowledge/chart_"] {
 .done-card .btn-outline {
   display: block;
 }
+
+
+/* R2.6: home feature entry icons enlarged (~1.5×); grade cards unchanged */
+.nav-card.feat-entry {
+  min-height: 5.25rem;
+  gap: 1rem;
+  padding: 1.05rem 0.95rem;
+}
+.nav-card.feat-entry .icon-wrap {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 14px;
+}
+.nav-card.feat-entry .icon-wrap img {
+  width: 2.35rem;
+  height: 2.35rem;
+  object-fit: contain;
+}
+
+/* R2.6: scrollable in-flow next button (primary); footer remains as secondary */
+.quiz-next-inline {
+  margin: 1rem 0 1.25rem;
+  padding-bottom: 0.5rem;
+}
+.quiz-next-inline.hidden { display: none !important; }
+.btn-next-asset {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn-next-asset .next-img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 999px;
+}
+.btn-next-asset .next-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3rem;
+  border-radius: 999px;
+  background: #1A1A1A;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.btn-next-asset .next-text.hidden { display: none !important; }
+.btn-next-asset.is-end .next-img { display: none !important; }
+.btn-next-asset.is-end .next-text { display: flex !important; }
+.btn-next-asset:active { opacity: 0.92; }
+
+/* Ensure quiz view can scroll past inline next above tab/home safe area */
+.view-quiz.active {
+  padding-bottom: calc(5.5rem + var(--safe-bottom));
+}
+
+/* R2.6: deco assets must not appear even if leftover markup */
+.know-deco { display: none !important; }
+
