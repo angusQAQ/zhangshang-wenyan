@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""R2.7 data fix: pos/gloss, scrub 選「話術, add 原文+語譯, scrub knowledge grades."""
+"""R2.7(+R2.7.1) data fix: pos/gloss, scrub 選「, cite 原文 (no 語譯 dump), scrub grades."""
 import json, re
 from pathlib import Path
 
@@ -251,20 +251,22 @@ def section_trans_for_quote(passage, quote):
 
 
 def ensure_orig_trans(body, quote, trans, is_correct):
+    """R2.7.1: cite 原文「…」 only; do NOT append 語譯 dumps."""
     body = (body or "").strip()
-    has_orig = "原文" in body
-    has_trans = ("語譯" in body) or ("今釋" in body)
+    # strip any leftover 語譯／今釋 blocks if re-run
+    body = re.sub(r"語譯／今釋[：:]?「[^」]*」。?", "", body)
+    body = re.sub(r"語譯[：:]?「[^」]*」。?", "", body)
+    has_quote = "「" in body
     parts = []
-    if quote and not has_orig:
-        parts.append("原文：「" + quote + "」。")
-    if trans and not has_trans:
-        parts.append("語譯：「" + trans + "」。")
+    if quote and "原文「" not in body and not has_quote:
+        parts.append("原文「" + quote + "」。")
+    elif quote and "原文「" not in body and "原文" not in body:
+        # body has quotes but not labeled — leave body; prepend label only if bare
+        pass
     if body:
-        if body.startswith("原文") or body.startswith("語譯"):
-            return body if (has_trans or not trans) else (body + ("語譯：「" + trans + "」。" if trans else ""))
         parts.append(body)
     else:
-        parts.append("此項正確。" if is_correct else "此項與文意不符。")
+        parts.append("此項正確。" if is_correct else "錯在與此文意不符。")
     out = "".join(parts)
     out = re.sub(r"[。．]{2,}", "。", out)
     return out
@@ -305,21 +307,12 @@ def rewrite_knowledge_oe(oe, is_correct, topic_html, stem, explain):
     if body in ("。", ""):
         body = "此項正確。" if is_correct else "此項與要點不符。"
     quote, gloss = extract_knowledge_example(topic_html, stem, explain, body)
-    has_orig = "原文" in body
-    has_trans = ("語譯" in body) or ("今釋" in body)
     parts = []
-    if quote and not has_orig:
-        parts.append("原文例：「" + quote + "」。")
-    if not has_trans:
-        if gloss:
-            parts.append("語譯／今釋：「" + gloss + "」。")
-        elif explain:
-            short = scrub_grade_words(explain.strip())
-            if len(short) > 40:
-                short = short[:40] + "……"
-            parts.append("語譯／今釋：「" + short + "」。")
+    if quote and "「" not in body:
+        parts.append("原文例「" + quote + "」" + (("：" + gloss) if gloss else "") + "。")
     if body.startswith("原文") or body.startswith("語譯"):
-        out = body
+        out = re.sub(r"語譯／今釋[：:]?「[^」]*」。?", "", body)
+        out = re.sub(r"語譯[：:]?「[^」]*」。?", "", out)
     else:
         parts.append(body)
         out = "".join(parts)
@@ -364,12 +357,7 @@ def fix_passages():
                         )
                     )
                 q["optionExplains"] = new_oes
-                ex = q.get("explain") or ""
-                if ex and "語譯" not in ex:
-                    quote = pick_quote(p.get("text") or "", q.get("stem"), ex, "")
-                    tr = section_trans_for_quote(p, quote)
-                    if tr:
-                        q["explain"] = ex.rstrip("。") + "。語譯：「" + tr + "」。"
+                # R2.7.1: do not append 語譯 to explain
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print("passages.json OK")
 
@@ -428,27 +416,25 @@ def fix_vocab():
         for i, opt in enumerate(opts):
             if i == ans:
                 oes.append(
-                    "原文：「"
+                    "答案取「"
+                    + opt
+                    + "」。原文「"
                     + sentence
-                    + "」。語譯／釋義：「"
-                    + trans
-                    + "」。句中「"
+                    + "」中「"
                     + word
                     + "」取「"
                     + opt
-                    + "」義，故此項正確。"
+                    + "」義，故選此項。"
                 )
             else:
                 oes.append(
-                    "原文：「"
-                    + sentence
-                    + "」。語譯／釋義：「"
-                    + trans
-                    + "」。此處「"
+                    "錯在把「"
                     + word
-                    + "」並非「"
+                    + "」理解成「"
                     + opt
-                    + "」之義，故此項不正確。"
+                    + "」；原文「"
+                    + sentence
+                    + "」此處並非此義，學生易因古今義或通假混淆而誤選。"
                 )
         q["optionExplains"] = oes
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

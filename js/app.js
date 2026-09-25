@@ -148,31 +148,79 @@
     return out.replace(/[。．]{2,}/g, "。").trim();
   }
 
-  /** Ensure rationale cites 原文 + 語譯 when context is available (R2.7). */
+  /** Strip leftover 語譯／今釋 quote dumps (R2.7.1 — ban translation fluff). */
+  function stripYuanyiDump(s) {
+    let t = String(s || "");
+    const labels = ["語譯／今釋", "語譯/今釋", "語譯", "今釋"];
+    let changed = true;
+    while (changed) {
+      changed = false;
+      for (const lab of labels) {
+        let from = 0;
+        let i = -1;
+        while ((i = t.indexOf(lab, from)) >= 0) {
+          let j = i + lab.length;
+          // label must be followed by ：／/「 (not bare word inside option text like「只讀語譯」)
+          while (j < t.length && (t[j] === " " || t[j] === "\t")) j++;
+          if (j < t.length && t.slice(j, j + 2) === "今釋") j += 2;
+          while (j < t.length && "／/：:".indexOf(t[j]) >= 0) j++;
+          while (j < t.length && (t[j] === " " || t[j] === "\t")) j++;
+          if (j >= t.length || t[j] !== "「") {
+            from = i + lab.length;
+            continue;
+          }
+          let endPos = -1;
+          let depth = 0;
+          let k = j;
+          while (k < t.length) {
+            if (t[k] === "「") depth++;
+            else if (t[k] === "」") {
+              depth--;
+              k++;
+              if (depth === 0) {
+                endPos = k;
+                break;
+              }
+              continue;
+            }
+            k++;
+          }
+          if (endPos < 0) {
+            const rest = t.slice(j);
+            const m = rest.match(/故選|答案取|錯在|學生易/);
+            endPos = m ? j + m.index : t.length;
+          }
+          while (endPos < t.length && (t[endPos] === "。" || t[endPos] === "．")) endPos++;
+          t = t.slice(0, i) + t.slice(endPos);
+          changed = true;
+          break;
+        }
+        if (changed) break;
+      }
+    }
+    return t.replace(/[。．]{2,}/g, "。").trim();
+  }
+
+  /** R2.7.1: keep sharp rationale; cite 原文「…」; never append 語譯 dumps. */
   function enrichRationale(text, q, optIndex) {
-    let body = stripXuanFormula(text);
-    if (!body) body = optIndex === q.answer ? "此項正確。" : "此項與文意不符。";
-    const hasOrig = body.indexOf("原文") >= 0;
-    const hasTrans = body.indexOf("語譯") >= 0 || body.indexOf("今釋") >= 0;
-    if (hasOrig && hasTrans) return body;
+    let body = stripYuanyiDump(stripXuanFormula(text));
+    if (!body) {
+      body =
+        optIndex === q.answer
+          ? "此項正確，切合原文。"
+          : "錯在與此文意不符；宜對照原文關鍵句。";
+    }
+    if (body.indexOf("「") >= 0) return body;
     const full = q.passageFullText || q.sentence || "";
-    const trans = q.passageTranslation || "";
     let quote = "";
-    const qm = body.match(/「([^」]{2,30})」/);
-    if (qm) quote = qm[1];
-    if (!quote && full) {
-      const sent = full.split(/[。！？]/).find((s) => s && s.trim().length >= 4);
-      quote = sent ? sent.trim().slice(0, 28) : full.slice(0, 24);
+    if (full) {
+      const sent = String(full)
+        .split(/[。！？]/)
+        .find((s) => s && s.trim().length >= 4);
+      quote = sent ? sent.trim().slice(0, 24) : String(full).slice(0, 20);
     }
-    const parts = [];
-    if (!hasOrig && quote) parts.push("原文：「" + quote + "」。");
-    if (!hasTrans && trans) {
-      let tr = String(trans).trim();
-      if (tr.length > 48) tr = tr.slice(0, 48) + "……";
-      parts.push("語譯：「" + tr + "」。");
-    }
-    parts.push(body);
-    return parts.join("");
+    if (quote) return "原文「" + quote + "」。" + body;
+    return body;
   }
 
   /** Build HTML for overall explain + per-option paragraphs (trusted JSON → escapeHtml). */
@@ -2046,7 +2094,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r27";
+  const DATA_V = "r271";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
