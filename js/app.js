@@ -8,6 +8,19 @@
   ];
 
   const LETTERS = ["A", "B", "C", "D"];
+  const LAST_GRADE_KEY = "zw_last_grade";
+  const STATS_KEY = "zw_stats_v1";
+
+  const PREVIEW_TOPICS = [
+    { id: "features", label: "特點", icon: "art/ui/icon_line_book.png" },
+    { id: "howto-read", label: "閱讀", icon: "art/ui/icon_line_doc.png" },
+    { id: "particles", label: "虛詞", icon: "art/ui/icon_line_chat.png" },
+    { id: "polysemy", label: "多義", icon: "art/ui/icon_line_list.png" },
+    { id: "ancient-modern", label: "古今", icon: "art/ui/icon_line_pencil.png" },
+    { id: "loan-chars", label: "通假", icon: "art/ui/icon_line_mail.png" },
+    { id: "sentence-patterns", label: "句式", icon: "art/ui/icon_line_bookmark.png" },
+    { id: "__practice__", label: "練習", icon: "art/ui/icon_line_list.png" },
+  ];
 
   const state = {
     grade: null,
@@ -36,7 +49,25 @@
     Object.keys(views).forEach((k) => {
       views[k].classList.toggle("active", k === name);
     });
+    const quizMode = name === "quiz";
+    $("#app").classList.toggle("quiz-mode", quizMode);
     window.scrollTo(0, 0);
+    syncTab(name);
+  }
+
+  function syncTab(name) {
+    let tab = "home";
+    if (name === "knowledge-list" || name === "knowledge") tab = "practice";
+    else if (
+      name === "hub" ||
+      name === "passage-list" ||
+      name === "passage" ||
+      name === "quiz"
+    )
+      tab = "practice";
+    document.querySelectorAll(".tabbar .tab").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.tab === tab);
+    });
   }
 
   function gradeLabel(id) {
@@ -44,24 +75,108 @@
     return g ? g.label : id;
   }
 
+  function toast(msg) {
+    const el = $("#toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove("show"), 1800);
+  }
+
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function rememberGrade(id) {
+    state.grade = id;
+    try {
+      localStorage.setItem(LAST_GRADE_KEY, id);
+    } catch (_) {}
+  }
+
+  function lastGrade() {
+    try {
+      return localStorage.getItem(LAST_GRADE_KEY) || state.grade || "s1";
+    } catch (_) {
+      return state.grade || "s1";
+    }
+  }
+
+  /* Full passage body: never truncate; prefer paragraph markup */
+  function renderClassicalText(raw) {
+    const el = $("#pass-text");
+    const text = String(raw == null ? "" : raw);
+    const blocks = text.split(/\n\s*\n/).map((s) => s.replace(/^\n+|\n+$/g, ""));
+    const meaningful = blocks.filter((b) => b.length > 0);
+
+    if (meaningful.length > 1) {
+      el.innerHTML = meaningful
+        .map((p) => "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>")
+        .join("");
+      return;
+    }
+
+    if (text.indexOf("\n") !== -1) {
+      el.innerHTML = text
+        .split("\n")
+        .map((line) => {
+          if (!line.trim()) return "";
+          return "<p>" + escapeHtml(line) + "</p>";
+        })
+        .join("");
+      return;
+    }
+
+    /* No newlines: soft-split on dialogue／句號邊界，字符一個不丟 */
+    const soft = softParagraphs(text);
+    if (soft.length > 1) {
+      el.innerHTML = soft.map((p) => "<p>" + escapeHtml(p) + "</p>").join("");
+    } else {
+      el.textContent = text;
+    }
+  }
+
+  function softParagraphs(text) {
+    const parts = [];
+    let buf = "";
+    for (let i = 0; i < text.length; i++) {
+      buf += text[i];
+      const ch = text[i];
+      const next = text[i + 1] || "";
+      if (
+        (ch === "。" || ch === "！" || ch === "？") &&
+        (next === "" || next === "「" || next === "（" || /[^\s」）]/.test(next))
+      ) {
+        /* break after sentence if next starts new speaker or clause length enough */
+        if (buf.length >= 28 && (next === "「" || next === "" || /[A-Za-z一-龥]/.test(next))) {
+          if (next === "「" || buf.length >= 40) {
+            parts.push(buf);
+            buf = "";
+          }
+        }
+      }
+    }
+    if (buf) parts.push(buf);
+    /* Verify no character loss */
+    if (parts.join("") !== text) return [text];
+    return parts.length ? parts : [text];
+  }
+
   /* ---------- Home ---------- */
   function renderHome() {
     const list = $("#grade-list");
     list.innerHTML = GRADES.map((g) => {
-      if (g.coming) {
-        return `<button type="button" class="nav-card" data-grade="${g.id}">
-          <div class="icon-wrap"><img src="art/ui/icon_grade.png" alt="" /></div>
-          <div class="body"><strong>${g.label}</strong><span>${g.desc}</span></div>
-          <img class="coming-badge" src="art/ui/badge_coming_soon.png" alt="內容即將推出" />
-        </button>`;
-      }
+      const sub = g.coming ? "內容即將推出" : g.desc;
       return `<button type="button" class="nav-card" data-grade="${g.id}">
         <div class="icon-wrap"><img src="art/ui/icon_grade.png" alt="" /></div>
-        <div class="body"><strong>${g.label}</strong><span>${g.desc}</span></div>
+        <div class="body"><strong>${g.label}</strong><span>${sub}</span></div>
         <span class="chev">›</span>
       </button>`;
     }).join("");
-
     list.querySelectorAll("[data-grade]").forEach((btn) => {
       btn.addEventListener("click", () => openHub(btn.dataset.grade));
     });
@@ -69,11 +184,14 @@
 
   /* ---------- Hub ---------- */
   function openHub(gradeId) {
-    state.grade = gradeId;
+    rememberGrade(gradeId);
     $("#hub-title").textContent = gradeLabel(gradeId);
     const body = $("#hub-body");
+    const hasKnowledge = !!(state.knowledge && state.knowledge[gradeId]);
+    const passages = (state.passages && state.passages[gradeId]) || [];
+    const passageReady = passages.length > 0;
 
-    if (gradeId === "s3") {
+    if (gradeId === "s3" && !hasKnowledge && !passageReady) {
       $("#hub-sub").textContent = "內容即將推出";
       body.innerHTML = `<div class="placeholder-s3">
         <img src="art/ui/badge_coming_soon.png" alt="內容即將推出" />
@@ -83,14 +201,26 @@
       return;
     }
 
-    $("#hub-sub").textContent = "請選擇學習內容";
+    $("#hub-sub").textContent = passageReady
+      ? "請選擇學習內容"
+      : hasKnowledge
+        ? "文言知識可學 · 篇章即將推出"
+        : "請選擇學習內容";
+
+    const knowDesc = gradeId === "s3"
+      ? "進階虛詞、句式與活用等<br/>主題已按年級分級"
+      : "特點、虛詞、句式、通假等";
+    const passDesc = passageReady
+      ? "字詞語譯 · 主旨 · 判斷題"
+      : "內容即將推出";
+
     body.innerHTML = `
       <div class="card-list">
         <button type="button" class="mode-card" id="btn-mode-knowledge">
           <img class="mode-icon" src="art/ui/icon_knowledge.png" alt="" />
           <div class="body">
             <strong>文言知識</strong>
-            <span>特點、虛詞、句式、通假等<br/>以文字說明，可附小練</span>
+            <span>${knowDesc}</span>
           </div>
           <span class="chev">›</span>
         </button>
@@ -98,29 +228,73 @@
           <img class="mode-icon" src="art/ui/icon_passage.png" alt="" />
           <div class="body">
             <strong>文言篇章</strong>
-            <span>選篇閱讀與選擇題練習<br/>字詞語譯、主旨、判斷題</span>
+            <span>${passDesc}</span>
           </div>
           <span class="chev">›</span>
         </button>
-      </div>`;
+      </div>
+      ${hasKnowledge ? renderPreviewGridHtml() : ""}`;
+
     $("#btn-mode-knowledge").addEventListener("click", openKnowledgeList);
     $("#btn-mode-passage").addEventListener("click", openPassageList);
+    bindPreviewGrid(body);
     show("hub");
   }
 
+  function renderPreviewGridHtml() {
+    return `<h3 class="preview-label">知識主題預覽</h3>
+      <div class="topic-preview" id="topic-preview">
+        ${PREVIEW_TOPICS.map(
+          (t) => `<button type="button" class="topic-cell" data-preview="${t.id}">
+            <img src="${t.icon}" alt="" />
+            <span>${t.label}</span>
+          </button>`
+        ).join("")}
+      </div>`;
+  }
+
+  function bindPreviewGrid(root) {
+    const box = root.querySelector("#topic-preview");
+    if (!box) return;
+    box.querySelectorAll("[data-preview]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.preview;
+        if (id === "__practice__") {
+          openKnowledgeList();
+          return;
+        }
+        openKnowledge(id);
+      });
+    });
+  }
+
   /* ---------- Knowledge ---------- */
+  function gradeKnowledge() {
+    if (!state.knowledge || !state.grade) return null;
+    return state.knowledge[state.grade] || null;
+  }
+
   function openKnowledgeList() {
-    const topics = state.knowledge.topics.slice().sort((a, b) => a.order - b.order);
-    $("#know-list-sub").textContent = gradeLabel(state.grade) + " · 七個主題";
+    const topics = (state.knowledge.topics || [])
+      .slice()
+      .sort((a, b) => a.order - b.order);
+    const gk = gradeKnowledge();
+    if (!gk) {
+      toast("此年級知識尚未載入");
+      return;
+    }
+    $("#know-list-sub").textContent =
+      gradeLabel(state.grade) + " · 七個主題（按年級分級）";
     const box = $("#knowledge-list");
     box.innerHTML = topics
-      .map(
-        (t, i) => `<button type="button" class="list-row" data-topic="${t.id}">
+      .map((t, i) => {
+        const has = !!gk[t.id];
+        return `<button type="button" class="list-row" data-topic="${t.id}" ${has ? "" : "disabled"}>
         <span class="num">${i + 1}.</span>
-        <span class="label">${t.title}</span>
+        <span class="label">${escapeHtml(t.title)}</span>
         <span class="chev">›</span>
-      </button>`
-      )
+      </button>`;
+      })
       .join("");
     box.querySelectorAll("[data-topic]").forEach((btn) => {
       btn.addEventListener("click", () => openKnowledge(btn.dataset.topic));
@@ -130,9 +304,13 @@
 
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
-    const gradeData = state.knowledge[state.grade];
+    const gradeData = gradeKnowledge();
+    if (!gradeData) return;
     const topic = gradeData[topicId];
-    if (!topic) return;
+    if (!topic) {
+      toast("此主題內容即將推出");
+      return;
+    }
     $("#know-title").textContent = topic.title;
     $("#know-content").innerHTML = topic.html;
 
@@ -161,6 +339,7 @@
               b.disabled = true;
             });
             const correct = oi === q.answer;
+            recordAnswer(correct);
             if (correct) {
               btn.classList.add("correct");
               btn.querySelector('[data-mark="ok"]').style.display = "block";
@@ -191,13 +370,24 @@
     show("knowledge");
   }
 
+  function recordAnswer(ok) {
+    try {
+      const raw = localStorage.getItem(STATS_KEY);
+      const s = raw ? JSON.parse(raw) : { attempted: 0, correct: 0 };
+      s.attempted = (Number(s.attempted) || 0) + 1;
+      if (ok) s.correct = (Number(s.correct) || 0) + 1;
+      localStorage.setItem(STATS_KEY, JSON.stringify(s));
+    } catch (_) {}
+  }
+
   /* ---------- Passages ---------- */
   function openPassageList() {
-    const list = state.passages[state.grade] || [];
-    $("#pass-list-sub").textContent = gradeLabel(state.grade) + " · 共 " + list.length + " 篇";
+    const list = (state.passages && state.passages[state.grade]) || [];
+    $("#pass-list-sub").textContent =
+      gradeLabel(state.grade) + " · 共 " + list.length + " 篇";
     const box = $("#passage-list");
     if (!list.length) {
-      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="" /><p>內容即將推出</p></div>`;
+      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習本級文言知識，或選讀中一、中二篇章。</p></div>`;
     } else {
       box.innerHTML = list
         .map(
@@ -222,7 +412,7 @@
     state.currentPassage = p;
     $("#pass-title").textContent = p.title;
     $("#pass-source").textContent = p.source;
-    $("#pass-text").textContent = p.text;
+    renderClassicalText(p.text);
     $("#pass-notes").textContent = p.notes ? "提要：" + p.notes : "";
     show("passage");
   }
@@ -247,16 +437,19 @@
     const p = state.currentPassage;
     const q = p.questions[state.quizIndex];
     state.quizLocked = false;
-    $("#quiz-progress").textContent = state.quizIndex + 1 + " / " + state.quizTotal;
     $("#explain-panel").classList.remove("show");
     $("#quiz-footer").classList.add("hidden");
     $("#btn-next").textContent =
       state.quizIndex + 1 >= state.quizTotal ? "完成本篇" : "下一題";
+    $("#btn-prev").disabled = state.quizIndex === 0;
+
+    $("#quiz-meta").innerHTML = `
+      <span class="chip chip-orange">${escapeHtml(q.tag || "練習")}</span>
+      <span class="quiz-count">${state.quizIndex + 1} / ${state.quizTotal}</span>`;
 
     const letters = q.options.length === 3 ? ["A", "B", "C"] : LETTERS;
     const body = $("#quiz-body");
     body.innerHTML = `
-      <span class="q-tag">${escapeHtml(q.tag || "練習")}</span>
       <div class="q-ref">《${escapeHtml(p.title)}》</div>
       <div class="q-stem">${escapeHtml(q.stem)}</div>
       <div id="options"></div>`;
@@ -281,6 +474,7 @@
     state.quizLocked = true;
     const correct = oi === q.answer;
     if (correct) state.quizCorrect += 1;
+    recordAnswer(correct);
 
     opts.querySelectorAll(".option-card").forEach((b) => {
       b.disabled = true;
@@ -328,33 +522,55 @@
     renderQuestion();
   }
 
-  function escapeHtml(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+  function prevQuestion() {
+    if (state.quizIndex <= 0) return;
+    state.quizIndex -= 1;
+    renderQuestion();
   }
 
-  /* ---------- Nav bindings ---------- */
+  /* ---------- Nav ---------- */
   document.querySelectorAll("[data-go]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const go = btn.dataset.go;
       if (go === "home") show("home");
-      else if (go === "hub") openHub(state.grade);
+      else if (go === "hub") openHub(state.grade || lastGrade());
       else if (go === "knowledge-list") openKnowledgeList();
       else if (go === "passage-list") openPassageList();
     });
   });
 
+  document.querySelectorAll("[data-toast]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      if (btn.dataset.tab === "practice" || btn.dataset.tab === "home") return;
+      e.preventDefault();
+      toast(btn.dataset.toast || "即將推出");
+    });
+  });
+
+  document.querySelectorAll(".tabbar .tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.tab;
+      if (btn.dataset.toast) {
+        toast(btn.dataset.toast);
+        return;
+      }
+      if (tab === "home") {
+        show("home");
+        return;
+      }
+      if (tab === "practice") {
+        const g = lastGrade();
+        rememberGrade(g);
+        openHub(g);
+      }
+    });
+  });
+
   $("#btn-start-quiz").addEventListener("click", startQuiz);
   $("#btn-next").addEventListener("click", nextQuestion);
-  $("#btn-quiz-close").addEventListener("click", () => {
-    show("passage");
-  });
-  $("#btn-done-back").addEventListener("click", () => {
-    openPassageList();
-  });
+  $("#btn-prev").addEventListener("click", prevQuestion);
+  $("#btn-quiz-close").addEventListener("click", () => show("passage"));
+  $("#btn-done-back").addEventListener("click", () => openPassageList());
 
   /* ---------- Boot ---------- */
   Promise.all([
@@ -365,6 +581,7 @@
       state.passages = passages;
       state.knowledge = knowledge;
       renderHome();
+      show("home");
     })
     .catch((err) => {
       console.error(err);

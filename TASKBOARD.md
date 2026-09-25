@@ -44,3 +44,12 @@ Plan 待核實（`approved_by_user` ≠ true → 禁止寫程式／批量生圖�
 - 中三：佔位，不 invent 篇章
 - 產出：可開網頁＋永久 Pages 連結
 - 順序：RIN DESIGN 鎖定 → NOA 正式 UI 素材 → GIDEON 靜態站＋自測＋部署
+
+## R1 UI 打回（用戶：不合格／簡陋／要一模一樣參考圖）
+硬要求：深度學習 `ref/ui-home.png` `ui-list.png` `ui-quiz.png` `ui-explain.png`，頁面結構與質感對齊，唔准簡陋文字牆。
+- @NOA：重做 hero／icon 網格／列表列／選項卡／解釋卡素材，pretty，對齊 ref
+- @GIDEON：CSS／DOM 重排至接近參考（hero、icon grid、chevron list、MCQ 色態、底欄）；接完自測直向；更新 Pages
+- 資訊架構仍：年級→文言知識／文言篇章；中三佔位。底欄視覺可有，功能唔開錯題本／訂閱
+
+## R1.1 Logo
+- 卡通古代小人物快樂讀書；NOA 出 app_icon／apple-touch／favicon；GIDEON 首頁＋manifest 接上

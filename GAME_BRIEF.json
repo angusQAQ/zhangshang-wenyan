@@ -48,7 +48,18 @@
       "ink_wash_heavy",
       "paper_grid_cream",
       "simplified_glyphs_in_art"
-    ]
+    ],
+    "logo": {
+      "spec": "標誌性卡通：古代小人物快樂讀書（港繁 App icon／啟動圖）",
+      "style": "可愛扁平卡通，清晰剪影，白底或圓角方標，可作 apple-touch-icon",
+      "forbid": [
+        "寫實人像",
+        "簡體字入圖",
+        "複雜背景"
+      ],
+      "owner": "NOA",
+      "revision": "R1.1_logo"
+    }
   },
   "ia": {
     "home": [

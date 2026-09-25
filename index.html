@@ -2,24 +2,29 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="掌上文言" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="theme-color" content="#FFFFFF" />
+  <meta name="description" content="初中文言文自學：文言知識與篇章練習。無計時，本機自學。" />
   <title>掌上文言</title>
   <link rel="icon" type="image/png" sizes="32x32" href="art/ui/favicon-32.png" />
   <link rel="apple-touch-icon" href="art/ui/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
   <div id="app">
     <!-- Home -->
     <section id="view-home" class="view active">
-      <div class="home-brand">
-        <h1>掌上文言</h1>
+      <header class="brand-row">
+        <img class="brand-logo" src="art/ui/logo_master.png" alt="掌上文言" width="40" height="40" />
+        <h1 class="brand-title">掌上文言</h1>
         <span class="tag-pill">中學文言文</span>
-      </div>
+      </header>
       <p class="home-caption">通勤自學 · 無倒數 · 本機使用</p>
+
       <div class="hero">
         <img src="art/ui/hero_home.png" alt="" />
         <div class="hero-overlay">
@@ -27,42 +32,38 @@
           <span>文言知識 · 文言篇章</span>
         </div>
       </div>
+
+      <h3 class="section-label">選擇年級</h3>
       <div class="card-list" id="grade-list"></div>
+
       <p class="footer-note">內容依據教局及校本材料整理；不代表考試局立場。僅供自學參考。</p>
     </section>
 
     <!-- Grade hub -->
     <section id="view-hub" class="view">
       <button type="button" class="btn-back" data-go="home">返回</button>
-      <div class="page-header">
-        <div class="titles">
-          <h2 class="page-title" id="hub-title">中一</h2>
-          <p class="page-sub" id="hub-sub">請選擇學習內容</p>
-        </div>
-      </div>
+      <h2 class="page-title" id="hub-title">中一</h2>
+      <p class="page-sub" id="hub-sub">請選擇學習內容</p>
       <div id="hub-body"></div>
     </section>
 
     <!-- Knowledge topic list -->
     <section id="view-knowledge-list" class="view">
       <button type="button" class="btn-back" data-go="hub">返回</button>
-      <div class="page-header">
-        <div class="titles">
-          <h2 class="page-title">文言知識</h2>
-          <p class="page-sub" id="know-list-sub">七個主題 · 掃讀與小練</p>
-        </div>
-      </div>
-      <div id="knowledge-list"></div>
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <h2 class="page-title">文言知識</h2>
+      <p class="page-sub" id="know-list-sub">七個主題 · 掃讀與小練</p>
+      <div class="list-block" id="knowledge-list"></div>
     </section>
 
     <!-- Knowledge reader -->
     <section id="view-knowledge" class="view">
       <button type="button" class="btn-back" data-go="knowledge-list">返回</button>
-      <div class="page-header">
-        <div class="titles">
-          <h2 class="page-title" id="know-title">主題</h2>
-        </div>
-      </div>
+      <h2 class="page-title" id="know-title">主題</h2>
       <article class="reader" id="know-content"></article>
       <div class="practice-box hidden" id="know-practice">
         <h3>練習</h3>
@@ -73,23 +74,20 @@
     <!-- Passage list -->
     <section id="view-passage-list" class="view">
       <button type="button" class="btn-back" data-go="hub">返回</button>
-      <div class="page-header">
-        <div class="titles">
-          <h2 class="page-title">文言篇章</h2>
-          <p class="page-sub" id="pass-list-sub">選篇閱讀與選擇題</p>
-        </div>
-      </div>
-      <div id="passage-list"></div>
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <h2 class="page-title">文言篇章</h2>
+      <p class="page-sub" id="pass-list-sub">選篇閱讀與選擇題</p>
+      <div class="list-block" id="passage-list"></div>
     </section>
 
     <!-- Passage reader -->
     <section id="view-passage" class="view">
       <button type="button" class="btn-back" data-go="passage-list">返回</button>
-      <div class="page-header">
-        <div class="titles">
-          <h2 class="page-title" id="pass-title">篇目</h2>
-        </div>
-      </div>
+      <h2 class="page-title" id="pass-title">篇目</h2>
       <div class="passage-card">
         <div class="source" id="pass-source"></div>
         <div class="classical" id="pass-text"></div>
@@ -99,28 +97,56 @@
     </section>
 
     <!-- Quiz -->
-    <section id="view-quiz" class="view">
+    <section id="view-quiz" class="view view-quiz">
       <div class="quiz-top">
         <button type="button" class="quiz-close" id="btn-quiz-close" aria-label="關閉">✕</button>
         <div class="quiz-title">練習</div>
-        <div style="width:44px"></div>
+        <button type="button" class="quiz-top-link" data-toast="即將推出">選題</button>
       </div>
-      <div class="quiz-progress" id="quiz-progress">1 / 6</div>
+      <div class="quiz-meta" id="quiz-meta"></div>
       <div id="quiz-body"></div>
       <div class="explain-panel" id="explain-panel">
         <h4>解釋</h4>
         <p id="explain-text"></p>
       </div>
-      <div class="quiz-footer hidden" id="quiz-footer">
-        <button type="button" class="btn-primary" id="btn-next">下一題</button>
+      <div class="quiz-done-wrap hidden" id="quiz-done">
+        <div class="done-card">
+          <h2>本篇練習完成</h2>
+          <p id="quiz-score"></p>
+          <button type="button" class="btn-primary" id="btn-done-back">返回篇目列表</button>
+        </div>
       </div>
-      <div class="done-card hidden" id="quiz-done">
-        <h2>本篇練習完成</h2>
-        <p id="quiz-score"></p>
-        <button type="button" class="btn-primary" id="btn-done-back">返回篇目列表</button>
+      <div class="quiz-actionbar hidden" id="quiz-footer">
+        <button type="button" class="btn-prev-text" id="btn-prev">上一題</button>
+        <button type="button" class="btn-next-pill" id="btn-next">下一題</button>
       </div>
     </section>
   </div>
+
+  <nav class="tabbar" id="tabbar" aria-label="主導航">
+    <button type="button" class="tab active" data-tab="home">
+      <img src="art/ui/icon_line_home.png" alt="" />
+      <span>首頁</span>
+    </button>
+    <button type="button" class="tab" data-tab="practice">
+      <img src="art/ui/icon_line_list.png" alt="" />
+      <span>練習</span>
+    </button>
+    <button type="button" class="tab" data-tab="wrong" data-toast="即將推出">
+      <img src="art/ui/icon_line_wrongset.png" alt="" />
+      <span>錯題</span>
+    </button>
+    <button type="button" class="tab" data-tab="bookmark" data-toast="即將推出">
+      <img src="art/ui/icon_line_bookmark.png" alt="" />
+      <span>書籤</span>
+    </button>
+    <button type="button" class="tab" data-tab="me" data-toast="即將推出">
+      <img src="art/ui/icon_line_me.png" alt="" />
+      <span>我的</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="js/app.js"></script>
 </body>
 </html>

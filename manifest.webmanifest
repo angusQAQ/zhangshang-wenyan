@@ -1,0 +1,17 @@
+{
+  "name": "掌上文言",
+  "short_name": "掌上文言",
+  "description": "初中文言文自學：文言知識與篇章練習",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "lang": "zh-HK",
+  "icons": [
+    { "src": "art/ui/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "art/ui/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "art/ui/app_icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "art/ui/logo_master.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
