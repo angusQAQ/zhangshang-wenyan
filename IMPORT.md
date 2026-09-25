@@ -138,3 +138,37 @@ CSS：`--r24-mark-rare-fill` / `--r24-mark-rare-line`；生僻可點播粵語。
 | teach_passive | art/knowledge/teach/teach_passive.png |
 
 **Note：** `deco_*` 仍 unused／不顯示；`teach_*` **ARE for display** mid-article（使動／意動優先）。commercial_ok: true。
+
+
+## R2.10 hero teach + interactive chrome（NOA）
+
+commercial_ok: true
+
+`deco_*` 仍 unused／不顯示。`hero_*` 與下列 interactive chrome **ARE for display**。GIDEON：於圖形／色塊／步驟圓／翻面區掛 tap targets；步驟揭曉／翻卡／點揭定義。長正文保持 HTML。
+
+### HERO teach（知識主題）
+| entity_id | path | topic_id |
+|-----------|------|----------|
+| hero_features | art/knowledge/teach/hero_features.png | features |
+| hero_howto_read | art/knowledge/teach/hero_howto-read.png | howto-read |
+| hero_particles | art/knowledge/teach/hero_particles.png | particles |
+| hero_polysemy | art/knowledge/teach/hero_polysemy.png | polysemy |
+| hero_ancient_modern | art/knowledge/teach/hero_ancient-modern.png | ancient-modern |
+| hero_loan_chars | art/knowledge/teach/hero_loan-chars.png | loan-chars |
+| hero_sentence_patterns | art/knowledge/teach/hero_sentence-patterns.png | sentence-patterns |
+| hero_shi_dong | art/knowledge/teach/hero_shi_dong.png | sentence-patterns（使動） |
+| hero_yi_dong | art/knowledge/teach/hero_yi_dong.png | sentence-patterns（意動） |
+| hero_compare_shi_yi | art/knowledge/teach/hero_compare_shi_yi.png | sentence-patterns（對照） |
+| _ref_hero | art/knowledge/teach/_ref_hero.png | （內部參考＝logo_master 副本） |
+
+### Interactive chrome
+| entity_id | path |
+|-----------|------|
+| tap_hint_ring | art/ui/tap_hint_ring.png |
+| hotspot_dot | art/ui/hotspot_dot.png |
+| card_flip_hint | art/ui/card_flip_hint.png |
+| immersive_panel_bg | art/ui/immersive_panel_bg.png |
+| btn_reveal | art/ui/btn_reveal.png |
+| legend_knowledge_dots | art/ui/legend_knowledge_dots.png |
+
+（`legend_explain` 保留。）舊 `teach_*` 仍可進包作備援；R2.10 顯示優先 `hero_*`。

@@ -1918,10 +1918,11 @@ img[src*="art/knowledge/chart_"] {
   margin: 0 0 1rem;
   padding: 0.75rem 0.85rem;
   border-radius: 16px;
-  background:
-    linear-gradient(135deg, #FFF8EE 0%, #F7F2FC 100%);
+  background-color: #FFF8EE;
+  background-image: url("../art/ui/immersive_panel_bg.png");
+  background-size: cover;
+  background-position: center;
   border: 1px solid #E8E0D0;
-  /* reserved: art/ui/immersive_panel_bg.png */
 }
 .reader .know-hero-art {
   position: relative;
@@ -1940,11 +1941,10 @@ img[src*="art/knowledge/chart_"] {
 .reader .know-hero-art img.hero-fallback { padding: 6px; }
 .reader .tap-hint-ring {
   position: absolute;
-  inset: -4px;
+  inset: -6px;
   border-radius: 18px;
-  border: 2px dashed rgba(196, 92, 122, 0.45);
   pointer-events: none;
-  /* reserved asset: art/ui/tap_hint_ring.png */
+  background: url("../art/ui/tap_hint_ring.png") center / contain no-repeat;
 }
 .reader .know-hero-cap {
   margin: 0;
@@ -1989,12 +1989,11 @@ img[src*="art/knowledge/chart_"] {
   transform: translateY(-1px);
 }
 .reader .hotspot-dot {
-  width: 0.55rem;
-  height: 0.55rem;
+  width: 0.7rem;
+  height: 0.7rem;
   border-radius: 999px;
-  background: #C45C7A;
-  box-shadow: 0 0 0 3px rgba(196, 92, 122, 0.18);
-  /* reserved: art/ui/hotspot_dot.png */
+  background: url("../art/ui/hotspot_dot.png") center / contain no-repeat;
+  background-color: transparent;
 }
 .reader .chip-lab {
   font-weight: 800;
@@ -2008,9 +2007,10 @@ img[src*="art/knowledge/chart_"] {
   margin-top: 0.15rem;
   padding: 0.45rem 0.5rem;
   border-radius: 10px;
-  background: rgba(255,255,255,0.72);
+  background-color: rgba(255,255,255,0.78);
+  background-image: url("../art/ui/immersive_panel_bg.png");
+  background-size: cover;
   border: 1px solid rgba(0,0,0,0.05);
-  /* reserved: art/ui/immersive_panel_bg.png */
 }
 .reader .color-hotspot .immersive-panel[hidden],
 .reader .compare-card .immersive-panel[hidden] {

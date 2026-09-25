@@ -178,3 +178,64 @@ CSS 建議：`--r24-mark-rare-fill: #FDE2E8; --r24-mark-rare-line: #C45C7A;`；�
 | teach_passive | `art/knowledge/teach/teach_passive.png` | 被動；句式／活用相關段 |
 
 **規則：** `deco_*` 仍 **不顯示／optional unused**。`teach_*` **要顯示**於知識文中（教學多媒體層）。勿把長正文燒進 PNG。
+
+
+## R2.10 主人翁知識教學卡＋互動 chrome（NOA）
+
+commercial_ok: true
+
+> GenerateImage 本環境不可用；本批以 `logo_master.png` 圓形裁切主角合成（`art/knowledge/teach/_ref_hero.png`／`_hero_extract.png`）。短繁中標籤 ≤短句；**長正文仍 HTML（GIDEON）**。
+
+### 規則
+- `deco_*` 仍 **不顯示／optional unused**（R2.6 起）。
+- `hero_*` 教學卡 **ARE for display**（知識主題頁頂／文中多媒體層）。
+- Interactive chrome（`tap_hint_ring` 等）**ARE for display**；供點揭／翻面／步驟揭曉。
+- GIDEON 應在圖中色塊／浮粒／步驟圓／對照板／翻面區掛 tap targets；正文勿燒進 PNG。
+
+### Per-topic HERO teach cards（~1200×780 landscape）
+
+| entity_id | path | topic_id | 隱喻／短標 |
+|-----------|------|----------|------------|
+| hero_features | `art/knowledge/teach/hero_features.png` | features | 卷軸＋放大鏡；單音／省略／語序 |
+| hero_howto_read | `art/knowledge/teach/hero_howto-read.png` | howto-read | 1–5 步路徑：斷句→賞析 |
+| hero_particles | `art/knowledge/teach/hero_particles.png` | particles | 浮粒 pill：而／也／者／乎／之／於／其 |
+| hero_polysemy | `art/knowledge/teach/hero_polysemy.png` | polysemy | 「之」裂三義泡 |
+| hero_ancient_modern | `art/knowledge/teach/hero_ancient-modern.png` | ancient-modern | 古筆↔今書；箭頭「義變」 |
+| hero_loan_chars | `art/knowledge/teach/hero_loan-chars.png` | loan-chars | 女↔汝 橋接「互通」 |
+| hero_sentence_patterns | `art/knowledge/teach/hero_sentence-patterns.png` | sentence-patterns | 使動／意動兩板＋「對」 |
+
+### 使動／意動 hero remake
+
+| entity_id | path | 用途 |
+|-----------|------|------|
+| hero_shi_dong | `art/knowledge/teach/hero_shi_dong.png` | 使動；主人翁＝A |
+| hero_yi_dong | `art/knowledge/teach/hero_yi_dong.png` | 意動；思想泡「以之為美」 |
+| hero_compare_shi_yi | `art/knowledge/teach/hero_compare_shi_yi.png` | 使動 vs 意動對照 |
+
+（舊 `teach_shi_dong`／`teach_yi_dong`／`teach_compare_shi_yi` 可留作備援；R2.10 優先 `hero_*`。）
+
+### Interactive chrome（`art/ui/`）
+
+| entity_id | path | 規格 |
+|-----------|------|------|
+| tap_hint_ring | `art/ui/tap_hint_ring.png` | 256×256；橄欖虛線圓；CSS pulse |
+| hotspot_dot | `art/ui/hotspot_dot.png` | 128×128；橄欖實心＋白邊 |
+| card_flip_hint | `art/ui/card_flip_hint.png` | ~220×140；雙弧箭＋「翻」 |
+| immersive_panel_bg | `art/ui/immersive_panel_bg.png` | 800×480；奶油圓角 overlay 底 |
+| btn_reveal | `art/ui/btn_reveal.png` | 360×72；橄欖 pill 空白（CSS 疊「揭曉」） |
+
+### Color legend（optional）
+
+| entity_id | path | 用途 |
+|-----------|------|------|
+| legend_explain | `art/ui/legend_explain.png` | 保留（篇章 explain 色標） |
+| legend_knowledge_dots | `art/ui/legend_knowledge_dots.png` | 意／使／tip 色點（知識互動） |
+
+### GIDEON wire 建議（per topic_id）
+- **features**：三色塊（單音／省略／語序）→ tap 揭定義；放大鏡／卷軸可做 intro hotspot。
+- **howto-read**：步驟圓 1–5 → 依序 reveal；路徑線可進度高亮。
+- **particles**：各浮粒 pill → tap 揭用法卡（`immersive_panel_bg`＋`btn_reveal`）。
+- **polysemy**：「之」＋三義泡 → tap 泡揭例句；可配 `card_flip_hint`。
+- **ancient-modern**：古／今兩欄＋「義變」箭 → flip 或雙欄對照。
+- **loan-chars**：兩字形＋橋 → 配對／揭本字。
+- **sentence-patterns**／**shi／yi／compare**：使動／意動板 → flip 對照；hotspot on 例句。

@@ -15,6 +15,9 @@
 ## 校對
 - 字詞 150 條全數重切；多義／多例對齊約 100 條；義項或例句／出處修正約 30+ 處（詳見 commit message）。
 
+## NOA 資產
+- 已接入 `hero_<topic>.png`、`tap_hint_ring`、`hotspot_dot`、`immersive_panel_bg`（另有 `btn_reveal`／`card_flip_hint`／`legend_knowledge_dots` 預留）。
+
 ## 風險
 - NOA `hero_*`／`tap_hint_ring` 等未齊時靠 CSS＋logo 佔位；圖到位即自動換（onerror fallback）。
 - 練習「全部篇章」列表較長，手機需捲動；主頁年級入口仍可分流。
