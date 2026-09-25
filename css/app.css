@@ -1524,15 +1524,18 @@ img[src*="art/knowledge/chart_"] {
   object-fit: contain;
 }
 
-/* R2.6: scrollable in-flow next button (primary); footer remains as secondary */
+/* R2.7.2: compact secondary next button (art 360×72 → ~180×36 @2x; tap ≥44px tall) */
 .quiz-next-inline {
-  margin: 1rem 0 1.25rem;
-  padding-bottom: 0.5rem;
+  margin: 0.75rem 0 1rem;
+  padding-bottom: 0.25rem;
+  display: flex;
+  justify-content: center;
 }
 .quiz-next-inline.hidden { display: none !important; }
 .btn-next-asset {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 13.75rem; /* 220px ≈ 360@~1.64×; height ~44px */
   border: none;
   background: transparent;
   padding: 0;
@@ -1541,7 +1544,7 @@ img[src*="art/knowledge/chart_"] {
 }
 .btn-next-asset .next-img {
   display: block;
-  width: 100%;
+  width: 13.75rem;
   max-width: 100%;
   height: auto;
   border-radius: 999px;
@@ -1550,14 +1553,17 @@ img[src*="art/knowledge/chart_"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 3rem;
+  width: 13.75rem;
+  max-width: 100%;
+  min-height: 2.75rem;
   border-radius: 999px;
   background: #1A1A1A;
   color: #fff;
-  font-size: 1.05rem;
+  font-size: 0.9375rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 .btn-next-asset .next-text.hidden { display: none !important; }
 .btn-next-asset.is-end .next-img { display: none !important; }

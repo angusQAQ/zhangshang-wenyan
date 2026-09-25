@@ -21,7 +21,7 @@ commercial_ok: true
 
 | entity_id | path | 規格 |
 |-----------|------|------|
-| btn_next_question | `art/ui/btn_next_question.png` | 600×128 RGBA；黑色 pill、白色「下一題」 |
+| btn_next_question | `art/ui/btn_next_question.png` | R2.7.2：360×72 RGBA；黑色 pill、白色「下一題」（縮細） |
 
 ### 知識主題頁（R2.6 規則）
 `deco_*.png` **不顯示**於 knowledge topic pages；檔案可以留在磁碟，但一律標記為「不顯示／optional unused」，不可由主題頁引用。知識頁以可跟 `rem` 的 HTML 真字、table/list 為主。

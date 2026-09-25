@@ -148,7 +148,7 @@
     return out.replace(/[。．]{2,}/g, "。").trim();
   }
 
-  /** Strip leftover 語譯／今釋 quote dumps (R2.7.1 — ban translation fluff). */
+  /** Strip leftover 語譯／今釋 quote dumps (R2.7.1／R2.7.2 — ban translation fluff). */
   function stripYuanyiDump(s) {
     let t = String(s || "");
     const labels = ["語譯／今釋", "語譯/今釋", "語譯", "今釋"];
@@ -201,25 +201,15 @@
     return t.replace(/[。．]{2,}/g, "。").trim();
   }
 
-  /** R2.7.1: keep sharp rationale; cite 原文「…」; never append 語譯 dumps. */
+  /** R2.7.2: paragraph rationale as-is; strip 語譯 dumps; do NOT force-append 原文 quotes. */
   function enrichRationale(text, q, optIndex) {
     let body = stripYuanyiDump(stripXuanFormula(text));
     if (!body) {
       body =
         optIndex === q.answer
-          ? "此項正確，切合原文。"
-          : "錯在與此文意不符；宜對照原文關鍵句。";
+          ? "此項正確：切合題意與原文關鍵，理由見上。"
+          : "此項不符題意：錯位在於未扣原文關鍵，宜對照相關句再判。";
     }
-    if (body.indexOf("「") >= 0) return body;
-    const full = q.passageFullText || q.sentence || "";
-    let quote = "";
-    if (full) {
-      const sent = String(full)
-        .split(/[。！？]/)
-        .find((s) => s && s.trim().length >= 4);
-      quote = sent ? sent.trim().slice(0, 24) : String(full).slice(0, 20);
-    }
-    if (quote) return "原文「" + quote + "」。" + body;
     return body;
   }
 
