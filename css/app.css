@@ -714,7 +714,7 @@ body {
   line-height: 1.55;
 }
 
-/* Tab bar — R2.8：五等分、白底、頂細灰線、線稿＋二字標（跟 04-tabbar） */
+/* Tab bar — R2.8.1：五等分、白底、頂細灰線、正式 tab_*.png＋二字標（跟 04-tabbar） */
 .tabbar {
   position: fixed;
   left: 50%;
@@ -756,17 +756,15 @@ body {
   width: 1.625rem; /* ~26px，介於 24–30 */
   height: 1.625rem;
   object-fit: contain;
-  /* 線稿原色為 accent 綠 → 轉近黑，再以 opacity 做灰／黑態 */
-  filter: brightness(0);
+  /* R2.8.1：正式 tab_*.png 線稿已是 #373737；僅用 opacity 分態，唔再 brightness(0) */
   opacity: 0.42;
 }
 .tab.active {
-  color: #1A1A1A; /* 選中近黑 */
+  color: #1A1A1A; /* 選中近黑（跟 04-tabbar） */
   font-weight: 600;
 }
 .tab.active img {
-  opacity: 0.92;
-  filter: brightness(0);
+  opacity: 1; /* 原色 #373737 近黑 */
 }
 
 .toast {
