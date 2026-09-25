@@ -12,18 +12,24 @@
   const STATS_KEY = "zw_stats_v1";
   const FONT_KEY = "zw_font_scale";
   const WRONG_KEY = "zw_wrong_v1";
+  const BOOKMARK_KEY = "zw_bookmarks_v1";
 
   const state = {
     grade: null,
     passages: null,
     knowledge: null,
+    vocabQuiz: null,
     jyutping: {},
     currentPassage: null,
     guideOpen: false,
-    quizIndex: 0,
+    quizKind: null,
+    quizPool: [],
+    quizOrder: [],
+    quizCursor: 0,
     quizLocked: false,
     quizCorrect: 0,
-    quizTotal: 0,
+    quizAnswered: 0,
+    quizMeta: null,
     knowledgeTopicId: null,
     retestQueue: [],
     retestIndex: 0,
@@ -42,6 +48,7 @@
     "passage-list": $("#view-passage-list"),
     passage: $("#view-passage"),
     quiz: $("#view-quiz"),
+    bookmarks: $("#view-bookmarks"),
     wrong: $("#view-wrong"),
     settings: $("#view-settings"),
     retest: $("#view-retest"),
@@ -60,6 +67,7 @@
   function syncTab(name) {
     let tab = "home";
     if (name === "wrong" || name === "retest") tab = "wrong";
+    else if (name === "bookmarks") tab = "bookmark";
     else if (name === "settings") tab = "me";
     else if (
       name === "hub" ||
@@ -232,6 +240,82 @@
   function clearWrongs() {
     saveWrongs([]);
   }
+
+
+  /* ---------- Bookmarks (local) ---------- */
+  function loadBookmarks() {
+    try {
+      const raw = localStorage.getItem(BOOKMARK_KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveBookmarks(arr) {
+    try {
+      localStorage.setItem(BOOKMARK_KEY, JSON.stringify(arr));
+    } catch (_) {
+      toast("本機儲存空間不足");
+    }
+  }
+
+  function bookmarkKeyOf(entry) {
+    return [
+      entry.kind || "",
+      entry.grade || "",
+      entry.passageId || "",
+      entry.knowledgeId || "",
+      entry.questionId || "",
+    ].join("|");
+  }
+
+  function isBookmarked(entry) {
+    const key = bookmarkKeyOf(entry);
+    return loadBookmarks().some((x) => bookmarkKeyOf(x) === key);
+  }
+
+  function toggleBookmark(entry) {
+    const list = loadBookmarks();
+    const key = bookmarkKeyOf(entry);
+    const idx = list.findIndex((x) => bookmarkKeyOf(x) === key);
+    if (idx >= 0) {
+      list.splice(idx, 1);
+      saveBookmarks(list);
+      toast("已取消書籤");
+      return false;
+    }
+    const snap = Object.assign({}, entry);
+    snap.id = snap.id || uid();
+    snap.timestamp = Date.now();
+    list.unshift(snap);
+    saveBookmarks(list);
+    toast("已加入書籤");
+    return true;
+  }
+
+  function clearBookmarks() {
+    saveBookmarks([]);
+  }
+
+  function shuffleInPlace(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = arr[i];
+      arr[i] = arr[j];
+      arr[j] = t;
+    }
+    return arr;
+  }
+
+  function buildShuffledOrder(n) {
+    const order = [];
+    for (let i = 0; i < n; i++) order.push(i);
+    return shuffleInPlace(order);
+  }
+
 
   function recordAnswer(ok) {
     try {
@@ -543,70 +627,21 @@
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
+    if (practiceBody) {
+      practiceBody.innerHTML = "";
+      practiceBody.classList.add("hidden");
+    }
     if (topic.practice && topic.practice.length) {
       practiceBox.classList.remove("hidden");
-      practiceBody.innerHTML = "";
-      topic.practice.forEach((q, qi) => {
-        const wrap = document.createElement("div");
-        wrap.style.marginBottom = "18px";
-        wrap.innerHTML = `<p class="q-stem" style="margin-bottom:0.625rem">${qi + 1}. ${escapeHtml(q.stem)}</p>`;
-        const opts = document.createElement("div");
-        q.options.forEach((opt, oi) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "option-card";
-          btn.innerHTML = `<span class="letter">${LETTERS[oi]}</span><span class="opt-text">${escapeHtml(opt)}</span>
-            <img class="mark" src="art/ui/mark_correct.png" alt="" data-mark="ok" />
-            <img class="mark" src="art/ui/mark_wrong.png" alt="" data-mark="bad" style="display:none" />
-            <span class="your-choice">你的選擇</span>`;
-          btn.addEventListener("click", () => {
-            if (btn.dataset.locked) return;
-            opts.querySelectorAll(".option-card").forEach((b) => {
-              b.dataset.locked = "1";
-              b.disabled = true;
-            });
-            const correct = oi === q.answer;
-            recordAnswer(correct);
-            if (correct) {
-              btn.classList.add("correct");
-              btn.querySelector('[data-mark="ok"]').style.display = "block";
-              btn.querySelector('[data-mark="bad"]').style.display = "none";
-            } else {
-              btn.classList.add("wrong");
-              btn.querySelector('[data-mark="ok"]').style.display = "none";
-              btn.querySelector('[data-mark="bad"]').style.display = "block";
-              const right = opts.children[q.answer];
-              right.classList.add("correct");
-              right.querySelector('[data-mark="ok"]').style.display = "block";
-              right.querySelector('[data-mark="bad"]').style.display = "none";
-              addWrong({
-                type: "knowledge",
-                grade: state.grade,
-                knowledgeId: topicId,
-                questionId: topicId + "_q" + qi,
-                stem: q.stem,
-                options: q.options.slice(),
-                userAnswer: oi,
-                correctAnswer: q.answer,
-                explanation: q.explain,
-                optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
-                tag: "知識小練",
-                passageTitle: topic.title,
-                passageFullText: "",
-                sourceLabel: gradeLabel(state.grade) + " · " + topic.title,
-              });
-            }
-            const exp = document.createElement("div");
-            exp.className = "explain-panel show";
-            exp.style.marginTop = "8px";
-            exp.innerHTML = buildExplainHtml(q);
-            wrap.appendChild(exp);
-          });
-          opts.appendChild(btn);
-        });
-        wrap.appendChild(opts);
-        practiceBody.appendChild(wrap);
-      });
+      const sub = $("#know-practice-sub");
+      if (sub) {
+        sub.textContent =
+          "共 " + topic.practice.length + " 題 · 局內不重複 · 可連續操練";
+      }
+      const startBtn = $("#btn-start-know-quiz");
+      if (startBtn) {
+        startBtn.onclick = () => startKnowledgeQuiz(topicId);
+      }
     } else {
       practiceBox.classList.add("hidden");
     }
@@ -653,42 +688,291 @@
     show("passage");
   }
 
-  /* ---------- Quiz ---------- */
-  function startQuiz() {
-    const p = state.currentPassage;
-    if (!p) return;
-    state.quizIndex = 0;
-    state.quizCorrect = 0;
-    state.quizTotal = p.questions.length;
+  /* ---------- Quiz (unified infinite pool) ---------- */
+  function normalizePassageQuestion(p, qi, q) {
+    return {
+      kind: "passage",
+      grade: state.grade,
+      passageId: p.id,
+      knowledgeId: "",
+      questionId: p.id + "_q" + qi,
+      stem: q.stem,
+      options: (q.options || []).slice(),
+      answer: q.answer,
+      explain: q.explain || "",
+      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
+      tag: q.tag || "篇章練習",
+      refLabel: "《" + p.title + "》",
+      passageTitle: p.title,
+      passageFullText: p.text || "",
+      sourceLabel: gradeLabel(state.grade) + " · 《" + p.title + "》",
+    };
+  }
+
+  function normalizeKnowledgeQuestion(topicId, topic, qi, q) {
+    return {
+      kind: "knowledge",
+      grade: state.grade,
+      passageId: "",
+      knowledgeId: topicId,
+      questionId: topicId + "_q" + qi,
+      stem: q.stem,
+      options: (q.options || []).slice(),
+      answer: q.answer,
+      explain: q.explain || "",
+      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
+      tag: "知識小練",
+      refLabel: topic.title,
+      passageTitle: topic.title,
+      passageFullText: "",
+      sourceLabel: gradeLabel(state.grade) + " · " + topic.title,
+    };
+  }
+
+  function normalizeVocabQuestion(q) {
+    const word = q.targetWord || "";
+    return {
+      kind: "vocab",
+      grade: "",
+      passageId: "",
+      knowledgeId: "",
+      questionId: q.id,
+      stem: "「" + word + "」在句中的意思是？",
+      options: (q.options || []).slice(),
+      answer: q.answer,
+      explain: q.explain || "",
+      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
+      tag: "字詞考核",
+      refLabel: q.source || "",
+      sentence: q.sentence || "",
+      targetWord: word,
+      source: q.source || "",
+      passageTitle: "文言字詞考核",
+      passageFullText: q.sentence || "",
+      sourceLabel: "字詞考核 · " + (q.source || ""),
+    };
+  }
+
+  function normalizeBookmarkEntry(item) {
+    return {
+      kind: item.kind || item.type || "passage",
+      grade: item.grade || "",
+      passageId: item.passageId || "",
+      knowledgeId: item.knowledgeId || "",
+      questionId: item.questionId || item.id,
+      stem: item.stem,
+      options: (item.options || []).slice(),
+      answer: item.answer != null ? item.answer : item.correctAnswer,
+      explain: item.explain || item.explanation || "",
+      optionExplains: Array.isArray(item.optionExplains) ? item.optionExplains.slice() : null,
+      tag: item.tag || "書籤",
+      refLabel: item.refLabel || item.sourceLabel || "",
+      sentence: item.sentence || "",
+      targetWord: item.targetWord || "",
+      source: item.source || "",
+      passageTitle: item.passageTitle || "",
+      passageFullText: item.passageFullText || "",
+      sourceLabel: item.sourceLabel || "",
+    };
+  }
+
+  function currentQuizQuestion() {
+    if (!state.quizOrder.length || state.quizCursor < 0) return null;
+    if (state.quizCursor >= state.quizOrder.length) return null;
+    const idx = state.quizOrder[state.quizCursor];
+    return state.quizPool[idx] || null;
+  }
+
+  function bookmarkPayloadFromCurrent() {
+    const q = currentQuizQuestion();
+    if (!q) return null;
+    return {
+      kind: q.kind,
+      grade: q.grade,
+      passageId: q.passageId,
+      knowledgeId: q.knowledgeId,
+      questionId: q.questionId,
+      stem: q.stem,
+      options: q.options.slice(),
+      answer: q.answer,
+      explain: q.explain,
+      optionExplains: q.optionExplains,
+      tag: q.tag,
+      refLabel: q.refLabel,
+      sentence: q.sentence || "",
+      targetWord: q.targetWord || "",
+      source: q.source || "",
+      passageTitle: q.passageTitle,
+      passageFullText: q.passageFullText,
+      sourceLabel: q.sourceLabel,
+    };
+  }
+
+  function syncBookmarkButton() {
+    const btn = $("#btn-quiz-bookmark");
+    if (!btn) return;
+    const payload = bookmarkPayloadFromCurrent();
+    if (!payload) {
+      btn.classList.remove("is-on");
+      return;
+    }
+    btn.classList.toggle("is-on", isBookmarked(payload));
+  }
+
+  function beginQuizSession(kind, pool, meta) {
+    if (!pool || !pool.length) {
+      toast("暫無題目");
+      return;
+    }
+    state.quizKind = kind;
+    state.quizPool = pool;
+    state.quizOrder = buildShuffledOrder(pool.length);
+    state.quizCursor = 0;
     state.quizLocked = false;
+    state.quizCorrect = 0;
+    state.quizAnswered = 0;
+    state.quizMeta = meta || {};
+    state.quizMeta.reshuffled = false;
+
+    $("#quiz-done").classList.add("hidden");
+    $("#quiz-body").classList.remove("hidden");
+    $("#explain-panel").classList.remove("show");
+    $("#quiz-footer").classList.add("hidden");
+
+    const titleEl = $("#quiz-title");
+    if (titleEl) titleEl.textContent = (meta && meta.title) || "練習";
+
+    renderQuestion();
+    show("quiz");
+  }
+
+  function reshuffleQuizPool() {
+    state.quizOrder = buildShuffledOrder(state.quizPool.length);
+    state.quizCursor = 0;
+    state.quizLocked = false;
+    state.quizCorrect = 0;
+    state.quizAnswered = 0;
+    if (!state.quizMeta) state.quizMeta = {};
+    state.quizMeta.reshuffled = true;
     $("#quiz-done").classList.add("hidden");
     $("#quiz-body").classList.remove("hidden");
     $("#explain-panel").classList.remove("show");
     $("#quiz-footer").classList.add("hidden");
     renderQuestion();
-    show("quiz");
+    toast("題庫已洗牌，繼續不重複操練");
+  }
+
+  function startQuiz() {
+    const p = state.currentPassage;
+    if (!p || !p.questions || !p.questions.length) {
+      toast("本篇暫無練習題");
+      return;
+    }
+    const pool = p.questions.map((q, qi) => normalizePassageQuestion(p, qi, q));
+    beginQuizSession("passage", pool, {
+      title: "篇章練習",
+      back: "passage",
+      doneBack: "passage-list",
+    });
+  }
+
+  function startKnowledgeQuiz(topicId) {
+    const gradeData = gradeKnowledge();
+    const topic = gradeData && gradeData[topicId];
+    if (!topic || !topic.practice || !topic.practice.length) {
+      toast("此主題暫無練習");
+      return;
+    }
+    state.knowledgeTopicId = topicId;
+    const pool = topic.practice.map((q, qi) =>
+      normalizeKnowledgeQuestion(topicId, topic, qi, q)
+    );
+    beginQuizSession("knowledge", pool, {
+      title: "知識小練",
+      back: "knowledge",
+      doneBack: "knowledge",
+    });
+  }
+
+  function startVocabQuiz() {
+    const raw =
+      (state.vocabQuiz && state.vocabQuiz.questions) ||
+      (Array.isArray(state.vocabQuiz) ? state.vocabQuiz : null);
+    if (!raw || !raw.length) {
+      toast("字詞考核題庫尚未載入");
+      return;
+    }
+    const pool = raw.map(normalizeVocabQuestion);
+    beginQuizSession("vocab", pool, {
+      title: "文言字詞考核",
+      back: "home",
+      doneBack: "home",
+    });
+  }
+
+  function startBookmarkQuiz(entry) {
+    const q = normalizeBookmarkEntry(entry);
+    beginQuizSession("bookmark", [q], {
+      title: "書籤重做",
+      back: "bookmarks",
+      doneBack: "bookmarks",
+      single: true,
+    });
   }
 
   function renderQuestion() {
-    const p = state.currentPassage;
-    const q = p.questions[state.quizIndex];
+    const q = currentQuizQuestion();
+    if (!q) {
+      showQuizDone();
+      return;
+    }
     state.quizLocked = false;
     $("#explain-panel").classList.remove("show");
     $("#quiz-footer").classList.add("hidden");
-    $("#btn-next").textContent =
-      state.quizIndex + 1 >= state.quizTotal ? "完成本篇" : "下一題";
-    $("#btn-prev").disabled = state.quizIndex === 0;
 
-    $("#quiz-meta").innerHTML = `
-      <span class="chip chip-orange">${escapeHtml(q.tag || "練習")}</span>
-      <span class="quiz-count">${state.quizIndex + 1} / ${state.quizTotal}</span>`;
+    const total = state.quizOrder.length;
+    const pos = state.quizCursor + 1;
+    const isLast = pos >= total;
+    const nextBtn = $("#btn-next");
+    if (nextBtn) {
+      nextBtn.textContent = isLast
+        ? state.quizMeta && state.quizMeta.single
+          ? "完成"
+          : "本輪結束"
+        : "下一題";
+    }
+
+    const tip =
+      state.quizMeta && state.quizMeta.reshuffled && state.quizCursor === 0
+        ? '<p class="reshuffle-tip">題庫已洗牌 · 本輪不重複</p>'
+        : "";
+
+    $("#quiz-meta").innerHTML =
+      tip +
+      `<span class="chip chip-orange">${escapeHtml(q.tag || "練習")}</span>` +
+      `<span class="quiz-count">${pos} / ${total}</span>`;
 
     const letters = q.options.length === 3 ? ["A", "B", "C"] : LETTERS;
     const body = $("#quiz-body");
-    body.innerHTML = `
-      <div class="q-ref">《${escapeHtml(p.title)}》</div>
-      <div class="q-stem">${escapeHtml(q.stem)}</div>
-      <div id="options"></div>`;
+    let head = "";
+    if (q.kind === "vocab") {
+      const sent = escapeHtml(q.sentence || "");
+      const tw = escapeHtml(q.targetWord || "");
+      let marked = sent;
+      if (tw && sent.indexOf(tw) >= 0) {
+        marked = sent.replace(tw, '<span class="tw">' + tw + "</span>");
+      }
+      head =
+        `<div class="vocab-sentence">${marked}</div>` +
+        `<div class="vocab-source">${escapeHtml(q.source || q.refLabel || "")}</div>` +
+        `<div class="vocab-ask">${escapeHtml(q.stem)}</div>`;
+    } else {
+      head =
+        (q.refLabel
+          ? `<div class="q-ref">${escapeHtml(q.refLabel)}</div>`
+          : "") + `<div class="q-stem">${escapeHtml(q.stem)}</div>`;
+    }
+    body.innerHTML = head + `<div id="options"></div>`;
 
     const opts = body.querySelector("#options");
     q.options.forEach((opt, oi) => {
@@ -703,12 +987,15 @@
       btn.addEventListener("click", () => selectOption(oi, btn, opts, q));
       opts.appendChild(btn);
     });
+
+    syncBookmarkButton();
   }
 
   function selectOption(oi, btn, opts, q) {
     if (state.quizLocked) return;
     state.quizLocked = true;
     const correct = oi === q.answer;
+    state.quizAnswered += 1;
     if (correct) state.quizCorrect += 1;
     recordAnswer(correct);
 
@@ -723,24 +1010,26 @@
       btn.classList.add("wrong");
       showMark(btn, false);
       const right = opts.children[q.answer];
-      right.classList.add("correct");
-      showMark(right, true);
-      const p = state.currentPassage;
+      if (right) {
+        right.classList.add("correct");
+        showMark(right, true);
+      }
       addWrong({
-        type: "passage",
-        grade: state.grade,
-        passageId: p.id,
-        questionId: p.id + "_q" + state.quizIndex,
-        stem: q.stem,
+        type: q.kind === "vocab" ? "vocab" : q.kind === "knowledge" ? "knowledge" : "passage",
+        grade: q.grade || state.grade,
+        passageId: q.passageId || "",
+        knowledgeId: q.knowledgeId || "",
+        questionId: q.questionId,
+        stem: q.kind === "vocab" ? (q.sentence || "") + " —— " + q.stem : q.stem,
         options: q.options.slice(),
         userAnswer: oi,
         correctAnswer: q.answer,
         explanation: q.explain,
         optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
         tag: q.tag || "練習",
-        passageTitle: p.title,
-        passageFullText: p.text,
-        sourceLabel: gradeLabel(state.grade) + " · 《" + p.title + "》",
+        passageTitle: q.passageTitle || "",
+        passageFullText: q.passageFullText || "",
+        sourceLabel: q.sourceLabel || "",
       });
     }
 
@@ -760,24 +1049,116 @@
     }
   }
 
+  function showQuizDone() {
+    $("#quiz-body").classList.add("hidden");
+    $("#explain-panel").classList.remove("show");
+    $("#quiz-footer").classList.add("hidden");
+    $("#quiz-done").classList.remove("hidden");
+    const title = $("#quiz-done-title");
+    if (title) {
+      title.textContent =
+        state.quizMeta && state.quizMeta.single ? "書籤題完成" : "本輪練習結束";
+    }
+    const answered = state.quizAnswered || 0;
+    $("#quiz-score").textContent =
+      answered > 0
+        ? "本輪答對 " + state.quizCorrect + " / " + answered + " 題"
+        : "尚未作答";
+    const cont = $("#btn-done-continue");
+    if (cont) {
+      const single = !!(state.quizMeta && state.quizMeta.single);
+      cont.classList.toggle("hidden", single || state.quizPool.length < 1);
+      cont.textContent = "繼續練習（洗牌）";
+    }
+  }
+
   function nextQuestion() {
-    if (state.quizIndex + 1 >= state.quizTotal) {
-      $("#quiz-body").classList.add("hidden");
-      $("#explain-panel").classList.remove("show");
-      $("#quiz-footer").classList.add("hidden");
-      $("#quiz-done").classList.remove("hidden");
-      $("#quiz-score").textContent =
-        "答對 " + state.quizCorrect + " / " + state.quizTotal + " 題";
+    if (state.quizCursor + 1 >= state.quizOrder.length) {
+      showQuizDone();
       return;
     }
-    state.quizIndex += 1;
+    state.quizCursor += 1;
     renderQuestion();
   }
 
-  function prevQuestion() {
-    if (state.quizIndex <= 0) return;
-    state.quizIndex -= 1;
-    renderQuestion();
+  function endQuizRound() {
+    showQuizDone();
+  }
+
+  function leaveQuiz() {
+    const back = (state.quizMeta && state.quizMeta.back) || "home";
+    if (back === "passage") show("passage");
+    else if (back === "passage-list") openPassageList();
+    else if (back === "knowledge") show("knowledge");
+    else if (back === "bookmarks") openBookmarks();
+    else show("home");
+  }
+
+  function leaveQuizDone() {
+    const back = (state.quizMeta && state.quizMeta.doneBack) || "home";
+    if (back === "passage-list") openPassageList();
+    else if (back === "knowledge") show("knowledge");
+    else if (back === "bookmarks") openBookmarks();
+    else if (back === "passage") show("passage");
+    else show("home");
+  }
+
+  /* ---------- Bookmarks UI ---------- */
+  function openBookmarks() {
+    renderBookmarkList();
+    show("bookmarks");
+  }
+
+  function renderBookmarkList() {
+    const list = loadBookmarks();
+    const sub = $("#bm-sub");
+    if (sub) sub.textContent = "本機共 " + list.length + " 題 · 點選回看重做";
+    const box = $("#bm-list");
+    if (!box) return;
+    if (!list.length) {
+      box.innerHTML =
+        '<div class="placeholder-s3"><p>暫無書籤。<br/>答題時點右上角書籤即可收藏。</p></div>';
+      return;
+    }
+    box.innerHTML = list
+      .map((item) => {
+        const stem = item.sentence
+          ? item.sentence + "（" + (item.targetWord || "") + "）"
+          : item.stem || "";
+        const stemShort = stem.length > 48 ? stem.slice(0, 48) + "…" : stem;
+        return `<article class="wrong-card" data-bmid="${escapeHtml(item.id)}">
+          <button type="button" class="wrong-card-head" data-bm-open="${escapeHtml(item.id)}">
+            <div class="wrong-card-main">
+              <div class="wrong-badges">
+                <span class="chip chip-orange">${escapeHtml(item.tag || "書籤")}</span>
+              </div>
+              <div class="wrong-stem">${escapeHtml(stemShort)}</div>
+              <div class="wrong-meta">${escapeHtml(item.sourceLabel || item.refLabel || "")}</div>
+            </div>
+            <span class="chev">›</span>
+          </button>
+          <div class="wrong-actions" style="padding:0.5rem 0.75rem 0.75rem">
+            <button type="button" class="link-btn" data-bm-redo="${escapeHtml(item.id)}">重做</button>
+            <button type="button" class="link-btn danger" data-bm-del="${escapeHtml(item.id)}">移除</button>
+          </div>
+        </article>`;
+      })
+      .join("");
+
+    box.querySelectorAll("[data-bm-open], [data-bm-redo]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.bmOpen || btn.dataset.bmRedo;
+        const item = loadBookmarks().find((x) => x.id === id);
+        if (item) startBookmarkQuiz(item);
+      });
+    });
+    box.querySelectorAll("[data-bm-del]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        saveBookmarks(loadBookmarks().filter((x) => x.id !== btn.dataset.bmDel));
+        renderBookmarkList();
+        toast("已移除書籤");
+      });
+    });
   }
 
   /* ---------- Wrong book UI ---------- */
@@ -1046,6 +1427,10 @@
         openWrongBook();
         return;
       }
+      if (tab === "bookmark") {
+        openBookmarks();
+        return;
+      }
       if (tab === "me") {
         openSettings();
       }
@@ -1082,9 +1467,41 @@
 
   $("#btn-start-quiz").addEventListener("click", startQuiz);
   $("#btn-next").addEventListener("click", nextQuestion);
-  $("#btn-prev").addEventListener("click", prevQuestion);
-  $("#btn-quiz-close").addEventListener("click", () => show("passage"));
-  $("#btn-done-back").addEventListener("click", () => openPassageList());
+  const btnQuizEnd = $("#btn-quiz-end");
+  if (btnQuizEnd) btnQuizEnd.addEventListener("click", endQuizRound);
+  $("#btn-quiz-close").addEventListener("click", leaveQuiz);
+  $("#btn-done-back").addEventListener("click", leaveQuizDone);
+  const btnDoneCont = $("#btn-done-continue");
+  if (btnDoneCont) btnDoneCont.addEventListener("click", reshuffleQuizPool);
+
+  const btnBm = $("#btn-quiz-bookmark");
+  if (btnBm) {
+    btnBm.addEventListener("click", () => {
+      const payload = bookmarkPayloadFromCurrent();
+      if (!payload) return;
+      toggleBookmark(payload);
+      syncBookmarkButton();
+    });
+  }
+
+  const btnHomeVocab = $("#btn-home-vocab");
+  if (btnHomeVocab) btnHomeVocab.addEventListener("click", startVocabQuiz);
+  const btnHomeBm = $("#btn-home-bookmarks");
+  if (btnHomeBm) btnHomeBm.addEventListener("click", openBookmarks);
+  const btnBmClear = $("#btn-bm-clear");
+  if (btnBmClear) {
+    btnBmClear.addEventListener("click", () => {
+      if (!loadBookmarks().length) {
+        toast("書籤已是空的");
+        return;
+      }
+      if (window.confirm("確定清空全部書籤？此操作無法復原。")) {
+        clearBookmarks();
+        renderBookmarkList();
+        toast("已清空書籤");
+      }
+    });
+  }
 
   $("#btn-retest-close").addEventListener("click", openWrongBook);
   $("#btn-retest-next").addEventListener("click", nextRetest);
@@ -1111,11 +1528,13 @@
     fetch("data/passages.json").then((r) => r.json()),
     fetch("data/knowledge.json").then((r) => r.json()),
     fetch("data/jyutping.json").then((r) => r.json()).catch(() => ({})),
+    fetch("data/vocab_quiz.json").then((r) => r.json()).catch(() => ({ questions: [] })),
   ])
-    .then(([passages, knowledge, jyutping]) => {
+    .then(([passages, knowledge, jyutping, vocabQuiz]) => {
       state.passages = passages;
       state.knowledge = knowledge;
       state.jyutping = jyutping || {};
+      state.vocabQuiz = vocabQuiz || { questions: [] };
       renderHome();
       show("home");
     })

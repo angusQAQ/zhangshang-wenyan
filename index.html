@@ -37,6 +37,20 @@
       <h3 class="section-label">選擇年級</h3>
       <div class="card-list" id="grade-list"></div>
 
+      <h3 class="section-label">操練與收藏</h3>
+      <div class="card-list" id="home-extra">
+        <button type="button" class="nav-card" id="btn-home-vocab">
+          <div class="icon-wrap"><img src="art/ui/icon_vocab_quiz.png" alt="" /></div>
+          <div class="body"><strong>文言字詞考核</strong><span>有出處文言句 · 詞義四選一</span></div>
+          <span class="chev">›</span>
+        </button>
+        <button type="button" class="nav-card" id="btn-home-bookmarks">
+          <div class="icon-wrap"><img src="art/ui/icon_bookmark.png" alt="" /></div>
+          <div class="body"><strong>書籤</strong><span>本機收藏 · 回看重做</span></div>
+          <span class="chev">›</span>
+        </button>
+      </div>
+
       <p class="footer-note">內容依據教局及校本材料整理；不代表考試局立場。僅供自學參考。</p>
     </section>
 
@@ -67,8 +81,10 @@
       <h2 class="page-title" id="know-title">主題</h2>
       <article class="reader" id="know-content"></article>
       <div class="practice-box hidden" id="know-practice">
-        <h3>練習</h3>
-        <div id="know-practice-body"></div>
+        <h3>知識小練</h3>
+        <p class="page-sub" id="know-practice-sub" style="margin-bottom:0.75rem">局內不重複 · 可連續操練</p>
+        <button type="button" class="btn-primary" id="btn-start-know-quiz">開始練習</button>
+        <div id="know-practice-body" class="hidden"></div>
       </div>
     </section>
 
@@ -137,23 +153,43 @@
     <section id="view-quiz" class="view view-quiz">
       <div class="quiz-top">
         <button type="button" class="quiz-close" id="btn-quiz-close" aria-label="關閉">✕</button>
-        <div class="quiz-title">練習</div>
-        <button type="button" class="quiz-top-link" data-toast="即將推出">選題</button>
+        <div class="quiz-title" id="quiz-title">練習</div>
+        <button type="button" class="btn-bookmark" id="btn-quiz-bookmark" aria-label="書籤" title="書籤">
+          <img class="bm-off" src="art/ui/icon_bookmark.png" alt="" />
+          <img class="bm-on" src="art/ui/icon_bookmark_on.png" alt="" />
+        </button>
       </div>
       <div class="quiz-meta" id="quiz-meta"></div>
       <div id="quiz-body"></div>
       <div class="explain-panel" id="explain-panel"></div>
       <div class="quiz-done-wrap hidden" id="quiz-done">
         <div class="done-card">
-          <h2>本篇練習完成</h2>
+          <h2 id="quiz-done-title">本輪練習結束</h2>
           <p id="quiz-score"></p>
-          <button type="button" class="btn-primary" id="btn-done-back">返回篇目列表</button>
+          <button type="button" class="btn-primary" id="btn-done-continue">繼續練習</button>
+          <button type="button" class="btn-outline" id="btn-done-back" style="margin-top:10px;width:100%">結束並返回</button>
         </div>
       </div>
       <div class="quiz-actionbar hidden" id="quiz-footer">
-        <button type="button" class="btn-prev-text" id="btn-prev">上一題</button>
+        <button type="button" class="btn-prev-text" id="btn-quiz-end">結束練習</button>
         <button type="button" class="btn-next-pill" id="btn-next">下一題</button>
       </div>
+    </section>
+
+
+    <!-- Bookmarks -->
+    <section id="view-bookmarks" class="view">
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">中學文言文</span>
+      </header>
+      <div class="page-head-row">
+        <h2 class="page-title">書籤</h2>
+        <button type="button" class="link-btn danger" id="btn-bm-clear">清空</button>
+      </div>
+      <p class="page-sub" id="bm-sub">本機收藏 · 點選回看重做</p>
+      <div id="bm-list" class="wrong-list"></div>
     </section>
 
     <!-- Wrong book -->
@@ -242,7 +278,7 @@
       <img src="art/ui/icon_line_wrongset.png" alt="" />
       <span>錯題</span>
     </button>
-    <button type="button" class="tab" data-tab="bookmark" data-toast="即將推出">
+    <button type="button" class="tab" data-tab="bookmark">
       <img src="art/ui/icon_line_bookmark.png" alt="" />
       <span>書籤</span>
     </button>

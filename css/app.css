@@ -1350,6 +1350,7 @@ html[data-font="xl"] { font-size: 20px; }
   font-family: inherit;
 }
 
+
 /* R2.1 — knowledge charts never clip */
 img.know-chart,
 .reader .know-chart,
@@ -1357,5 +1358,66 @@ img[src*="art/knowledge/chart_"] {
   width: 100%;
   max-width: 100%;
   height: auto;
+  display: block;
+}
+
+/* ---------- R2 P3: bookmark + vocab（rem 對齊 R2.1） ---------- */
+.btn-bookmark {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.btn-bookmark img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+  display: block;
+}
+.btn-bookmark .bm-on { display: none; }
+.btn-bookmark.is-on .bm-off { display: none; }
+.btn-bookmark.is-on .bm-on { display: block; }
+
+.vocab-sentence {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+  padding: 0.875rem 1rem;
+  background: #FAFAFA;
+  border-radius: 0.875rem;
+  border: 1px solid var(--border);
+}
+.vocab-sentence .tw {
+  color: var(--accent);
+  border-bottom: 0.12em solid var(--accent);
+  padding: 0 0.06em;
+}
+.vocab-source {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  margin-bottom: 0.875rem;
+}
+.vocab-ask {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.reshuffle-tip {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.done-card .btn-outline {
   display: block;
 }
