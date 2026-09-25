@@ -18,6 +18,7 @@
     grade: null,
     passages: null,
     knowledge: null,
+    unifiedKnowledge: null,
     vocabQuiz: null,
     jyutping: {},
     currentPassage: null,
@@ -526,62 +527,69 @@
     });
   }
 
-  /* ---------- Knowledge grade select (hub shell) ---------- */
-  function openKnowledgeGradeSelect() {
-    $("#hub-title").textContent = "文言知識";
-    $("#hub-sub").textContent = "請選擇年級";
-    const body = $("#hub-body");
-    body.innerHTML =
-      `<div class="card-list">` +
-      GRADES.map((g) => {
-        const has = !!(state.knowledge && state.knowledge[g.id]);
-        const sub = has
-          ? g.id === "s3"
-            ? "進階虛詞、句式與活用等"
-            : "特點、虛詞、句式、通假等"
-          : "內容即將推出";
-        return `<button type="button" class="nav-card" data-know-grade="${g.id}" ${has ? "" : "disabled"}>
-        <div class="icon-wrap"><img src="art/ui/icon_grade.png" alt="" /></div>
-        <div class="body"><strong>${g.label}</strong><span>${sub}</span></div>
-        <span class="chev">›</span>
-      </button>`;
-      }).join("") +
-      `</div>`;
-    body.querySelectorAll("[data-know-grade]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        rememberGrade(btn.dataset.knowGrade);
-        openKnowledgeList();
-      });
+  /* ---------- Knowledge (unified; grade UI retired) ---------- */
+  /** Prefer s3 → s2 → s1 for explanation HTML; practice merges s1→s2→s3 by stem. */
+  function buildUnifiedKnowledge(knowledge) {
+    const unified = {};
+    if (!knowledge) return unified;
+    const topics = knowledge.topics || [];
+    topics.forEach((meta) => {
+      const tid = meta.id;
+      let title = meta.title || tid;
+      let html = "";
+      for (const g of ["s3", "s2", "s1"]) {
+        const t = knowledge[g] && knowledge[g][tid];
+        if (t && t.html) {
+          html = t.html;
+          title = t.title || title;
+          break;
+        }
+      }
+      const practice = [];
+      const seen = Object.create(null);
+      for (const g of ["s1", "s2", "s3"]) {
+        const t = knowledge[g] && knowledge[g][tid];
+        if (!t || !Array.isArray(t.practice)) continue;
+        t.practice.forEach((q) => {
+          const stem = q && q.stem != null ? String(q.stem) : "";
+          if (!stem || seen[stem]) return;
+          seen[stem] = true;
+          practice.push(q);
+        });
+      }
+      unified[tid] = { title: title, html: html, practice: practice };
     });
-    show("hub");
+    return unified;
+  }
+
+  function getUnifiedTopic(topicId) {
+    return (state.unifiedKnowledge && state.unifiedKnowledge[topicId]) || null;
+  }
+
+  /** @deprecated knowledge no longer uses grade select; alias → list */
+  function openKnowledgeGradeSelect() {
+    openKnowledgeList();
   }
 
   /** @deprecated hub no longer splits knowledge/passage; keep alias for back nav */
   function openHub(_gradeId) {
-    openKnowledgeGradeSelect();
-  }
-
-  /* ---------- Knowledge ---------- */
-  function gradeKnowledge() {
-    if (!state.knowledge || !state.grade) return null;
-    return state.knowledge[state.grade] || null;
+    openKnowledgeList();
   }
 
   function openKnowledgeList() {
+    if (!state.knowledge || !state.unifiedKnowledge) {
+      toast("文言知識尚未載入");
+      return;
+    }
     const topics = (state.knowledge.topics || [])
       .slice()
       .sort((a, b) => a.order - b.order);
-    const gk = gradeKnowledge();
-    if (!gk) {
-      toast("此年級知識尚未載入");
-      return;
-    }
-    $("#know-list-sub").textContent =
-      gradeLabel(state.grade) + " · 七個主題（按年級分級）";
+    const gk = state.unifiedKnowledge;
+    $("#know-list-sub").textContent = "七個主題 · 掃讀與小練";
     const box = $("#knowledge-list");
     box.innerHTML = topics
       .map((t, i) => {
-        const has = !!gk[t.id];
+        const has = !!(gk[t.id] && (gk[t.id].html || (gk[t.id].practice && gk[t.id].practice.length)));
         return `<button type="button" class="list-row" data-topic="${t.id}" ${has ? "" : "disabled"}>
         <span class="num">${i + 1}.</span>
         <span class="label">${escapeHtml(t.title)}</span>
@@ -597,15 +605,13 @@
 
   function openKnowledge(topicId) {
     state.knowledgeTopicId = topicId;
-    const gradeData = gradeKnowledge();
-    if (!gradeData) return;
-    const topic = gradeData[topicId];
+    const topic = getUnifiedTopic(topicId);
     if (!topic) {
       toast("此主題內容即將推出");
       return;
     }
     $("#know-title").textContent = topic.title;
-    $("#know-content").innerHTML = topic.html;
+    $("#know-content").innerHTML = topic.html || "";
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -637,7 +643,7 @@
       gradeLabel(state.grade) + " · 共 " + list.length + " 篇";
     const box = $("#passage-list");
     if (!list.length) {
-      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習本級文言知識，或選讀中一、中二篇章。</p></div>`;
+      box.innerHTML = `<div class="placeholder-s3"><img src="art/ui/badge_coming_soon.png" alt="內容即將推出" /><p>文言篇章內容即將推出。<br/>請先研習文言知識，或選讀中一、中二篇章。</p></div>`;
     } else {
       box.innerHTML = list
         .map(
@@ -694,7 +700,7 @@
   function normalizeKnowledgeQuestion(topicId, topic, qi, q) {
     return {
       kind: "knowledge",
-      grade: state.grade,
+      grade: "",
       passageId: "",
       knowledgeId: topicId,
       questionId: topicId + "_q" + qi,
@@ -707,7 +713,7 @@
       refLabel: topic.title,
       passageTitle: topic.title,
       passageFullText: "",
-      sourceLabel: gradeLabel(state.grade) + " · " + topic.title,
+      sourceLabel: "文言知識 · " + topic.title,
     };
   }
 
@@ -859,8 +865,7 @@
   }
 
   function startKnowledgeQuiz(topicId) {
-    const gradeData = gradeKnowledge();
-    const topic = gradeData && gradeData[topicId];
+    const topic = getUnifiedTopic(topicId);
     if (!topic || !topic.practice || !topic.practice.length) {
       toast("此主題暫無練習");
       return;
@@ -998,7 +1003,7 @@
       }
       addWrong({
         type: q.kind === "vocab" ? "vocab" : q.kind === "knowledge" ? "knowledge" : "passage",
-        grade: q.grade || state.grade,
+        grade: q.grade != null ? q.grade : state.grade || "",
         passageId: q.passageId || "",
         knowledgeId: q.knowledgeId || "",
         questionId: q.questionId,
@@ -1370,7 +1375,7 @@
     btn.addEventListener("click", () => {
       const go = btn.dataset.go;
       if (go === "home") show("home");
-      else if (go === "hub" || go === "knowledge-grades") openKnowledgeGradeSelect();
+      else if (go === "hub" || go === "knowledge-grades") openKnowledgeList();
       else if (go === "knowledge-list") openKnowledgeList();
       else if (go === "passage-list") openPassageList();
     });
@@ -1467,7 +1472,7 @@
   }
 
   const btnHomeKnow = $("#btn-home-knowledge");
-  if (btnHomeKnow) btnHomeKnow.addEventListener("click", openKnowledgeGradeSelect);
+  if (btnHomeKnow) btnHomeKnow.addEventListener("click", openKnowledgeList);
   const btnHomeVocab = $("#btn-home-vocab");
   if (btnHomeVocab) btnHomeVocab.addEventListener("click", startVocabQuiz);
   const btnHomeBm = $("#btn-home-bookmarks");
@@ -1517,6 +1522,7 @@
     .then(([passages, knowledge, jyutping, vocabQuiz]) => {
       state.passages = passages;
       state.knowledge = knowledge;
+      state.unifiedKnowledge = buildUnifiedKnowledge(knowledge);
       state.jyutping = jyutping || {};
       state.vocabQuiz = vocabQuiz || { questions: [] };
       renderHome();
