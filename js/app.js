@@ -59,6 +59,7 @@
     Object.keys(views).forEach((k) => {
       if (views[k]) views[k].classList.toggle("active", k === name);
     });
+    /* R2.8：全屏答題態暫藏底欄；離開 quiz／retest 即還原 */
     const quizMode = name === "quiz" || name === "retest";
     $("#app").classList.toggle("quiz-mode", quizMode);
     window.scrollTo(0, 0);
