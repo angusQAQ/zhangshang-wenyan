@@ -684,12 +684,19 @@
       el.textContent = "";
       return;
     }
+    /* R2.10.1: explain=off (highlights == null) → pure text, zero .hl / rare color */
+    if (highlights == null) {
+      el.innerHTML = paras
+        .map(function (p) {
+          return "<p>" + escapeHtml(p).replace(/\n/g, "<br>") + "</p>";
+        })
+        .join("");
+      return;
+    }
     el.innerHTML = paras
       .map((p) => "<p>" + wrapHighlights(p, highlights) + "</p>")
       .join("");
-    if (highlights && highlights.length) {
-      bindHighlightClicks(el);
-    }
+    bindHighlightClicks(el);
   }
 
   function renderClassicalText(raw, highlights) {
@@ -2278,6 +2285,14 @@
 
 
   /* ---------- Glossary (R2.10: 疏朗卡片 · ①②③ 義／例／出處同號) ---------- */
+  /** R2.10.1: wrap example with 「」 once (skip empty / em-dash). */
+  function formatGlossaryExample(ex) {
+    const t = String(ex == null ? "" : ex).trim();
+    if (!t || t === "—" || t === "－" || t === "-") return "—";
+    if (t.charAt(0) === "「" && t.indexOf("」") !== -1) return t;
+    return "「" + t + "」";
+  }
+
   function glossaryItems(e) {
     if (Array.isArray(e.items) && e.items.length) return e.items;
     const senses = Array.isArray(e.senses)
@@ -2335,7 +2350,7 @@
                   "</span></div>" +
                   '<div class="gl-ex"><span class="gl-k">例</span>' +
                   (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                  escapeHtml(it.example || "—") +
+                  escapeHtml(formatGlossaryExample(it.example)) +
                   "</div>" +
                   '<div class="gl-src"><span class="gl-k">出</span>' +
                   (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
@@ -2363,7 +2378,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r210";
+  const DATA_V = "r2101";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
