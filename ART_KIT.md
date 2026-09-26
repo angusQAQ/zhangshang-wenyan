@@ -239,3 +239,6 @@ commercial_ok: true
 - **ancient-modern**：古／今兩欄＋「義變」箭 → flip 或雙欄對照。
 - **loan-chars**：兩字形＋橋 → 配對／揭本字。
 - **sentence-patterns**／**shi／yi／compare**：使動／意動板 → flip 對照；hotspot on 例句。
+
+## R2.11.1 被動
+`teach_passive`／`hero_passive`：Logo 主人翁卡通重畫；清爽筆記本風。舊檔已覆蓋。

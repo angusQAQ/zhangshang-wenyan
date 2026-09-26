@@ -12,7 +12,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="art/ui/favicon-32.png" />
   <link rel="apple-touch-icon" href="art/ui/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/app.css?v=r2101" />
+  <link rel="stylesheet" href="css/app.css?v=r2111" />
 </head>
 <body>
   <div id="app">
@@ -56,6 +56,11 @@
         <button type="button" class="nav-card feat-entry" id="btn-home-glossary">
           <div class="icon-wrap"><img src="art/ui/icon_home_glossary.png" alt="" onerror="this.src='art/ui/icon_line_doc.png'" /></div>
           <div class="body"><strong>文言字詞表</strong><span>字眼 · 解釋 · 例句 · 出處</span></div>
+          <span class="chev">›</span>
+        </button>
+        <button type="button" class="nav-card feat-entry" id="btn-home-particles">
+          <div class="icon-wrap"><img src="art/ui/icon_home_knowledge.png" alt="" onerror="this.src='art/ui/icon_line_doc.png'" /></div>
+          <div class="body"><strong>文言虛詞表</strong><span>多義 ①②③ · 句式 · 教局初中</span></div>
           <span class="chev">›</span>
         </button>
       </div>
@@ -205,6 +210,19 @@
       <div id="glossary-body" class="glossary-wrap"></div>
     </section>
 
+    <!-- Function words (R2.11) -->
+    <section id="view-particles-lex" class="view">
+      <button type="button" class="btn-back" data-go="home">返回</button>
+      <header class="brand-row compact list-brand">
+        <img class="brand-logo sm" src="art/ui/logo_master.png" alt="" width="28" height="28" />
+        <h1 class="brand-title sm">掌上文言</h1>
+        <span class="tag-pill">文言虛詞</span>
+      </header>
+      <h2 class="page-title">文言虛詞表</h2>
+      <p class="page-sub" id="particles-lex-sub">多義 ①②③ · 句式 · 香港初中</p>
+      <div id="particles-lex-body" class="glossary-wrap"></div>
+    </section>
+
     <!-- Bookmarks -->
     <section id="view-bookmarks" class="view">
       <header class="brand-row compact list-brand">
@@ -303,28 +321,28 @@
 
   <nav class="tabbar" id="tabbar" aria-label="主導航">
     <button type="button" class="tab active" data-tab="home">
-      <img src="art/ui/tab_home.png?v=r2101" alt="" />
+      <img src="art/ui/tab_home.png?v=r2111" alt="" />
       <span>首頁</span>
     </button>
     <button type="button" class="tab" data-tab="practice">
-      <img src="art/ui/tab_practice.png?v=r2101" alt="" />
+      <img src="art/ui/tab_practice.png?v=r2111" alt="" />
       <span>練習</span>
     </button>
     <button type="button" class="tab" data-tab="wrong">
-      <img src="art/ui/tab_wrong.png?v=r2101" alt="" />
+      <img src="art/ui/tab_wrong.png?v=r2111" alt="" />
       <span>錯題</span>
     </button>
     <button type="button" class="tab" data-tab="bookmark">
-      <img src="art/ui/tab_bookmark.png?v=r2101" alt="" />
+      <img src="art/ui/tab_bookmark.png?v=r2111" alt="" />
       <span>書籤</span>
     </button>
     <button type="button" class="tab" data-tab="me">
-      <img src="art/ui/tab_me.png?v=r2101" alt="" />
+      <img src="art/ui/tab_me.png?v=r2111" alt="" />
       <span>我的</span>
     </button>
   </nav>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/app.js?v=r2101"></script>
+  <script src="js/app.js?v=r2111"></script>
 </body>
 </html>

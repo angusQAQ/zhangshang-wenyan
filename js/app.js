@@ -21,6 +21,7 @@
     unifiedKnowledge: null,
     vocabQuiz: null,
     glossary: null,
+    functionWords: null,
     rareChars: {},
     jyutping: {},
     currentPassage: null,
@@ -59,6 +60,7 @@
     passage: $("#view-passage"),
     quiz: $("#view-quiz"),
     glossary: $("#view-glossary"),
+    particlesLex: $("#view-particles-lex"),
     bookmarks: $("#view-bookmarks"),
     wrong: $("#view-wrong"),
     settings: $("#view-settings"),
@@ -79,7 +81,7 @@
   function syncTab(name) {
     let tab = "home";
     if (name === "wrong" || name === "retest") tab = "wrong";
-    else if (name === "glossary") tab = "home";
+    else if (name === "glossary" || name === "particlesLex") tab = "home";
     else if (name === "bookmarks") tab = "bookmark";
     else if (name === "settings") tab = "me";
     else if (
@@ -2240,6 +2242,8 @@
   if (btnHomeVocab) btnHomeVocab.addEventListener("click", startVocabQuiz);
   const btnHomeGlossary = $("#btn-home-glossary");
   if (btnHomeGlossary) btnHomeGlossary.addEventListener("click", openGlossary);
+  const btnHomeParticles = $("#btn-home-particles");
+  if (btnHomeParticles) btnHomeParticles.addEventListener("click", openParticlesLex);
   const btnHomeBm = $("#btn-home-bookmarks");
   if (btnHomeBm) btnHomeBm.addEventListener("click", openBookmarks);
   const btnBmClear = $("#btn-bm-clear");
@@ -2284,7 +2288,7 @@
   });
 
 
-  /* ---------- Glossary (R2.10: 疏朗卡片 · ①②③ 義／例／出處同號) ---------- */
+  /* ---------- Glossary / Function words (R2.10→R2.11: ①②③＋句式 pattern) ---------- */
   /** R2.10.1: wrap example with 「」 once (skip empty / em-dash). */
   function formatGlossaryExample(ex) {
     const t = String(ex == null ? "" : ex).trim();
@@ -2301,15 +2305,95 @@
       ? [e.sense]
       : [];
     if (!senses.length) {
-      return [{ sense: "", example: e.example || "", source: e.source || "" }];
+      return [{ sense: e.sense || "", example: e.example || "", source: e.source || "", pattern: e.pattern || "" }];
     }
     return senses.map(function (s, i) {
+      if (s && typeof s === "object") {
+        return {
+          sense: s.sense || s.def || s.meaning || "",
+          example: s.example || s.ex || "",
+          source: s.source || "",
+          pattern: s.pattern || "",
+        };
+      }
       return {
         sense: s,
         example: i === 0 ? e.example || "" : "",
         source: i === 0 ? e.source || "" : "",
+        pattern: i === 0 ? e.pattern || "" : "",
       };
     });
+  }
+
+  function renderSenseCards(entries, opts) {
+    opts = opts || {};
+    const CIRCLES = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
+    const showCat = !!opts.showCat;
+    return (
+      '<div class="glossary-cards">' +
+      entries
+        .map(function (e) {
+          const items = glossaryItems(e);
+          const multi = items.length > 1;
+          const rows = items
+            .map(function (it, i) {
+              const idx = multi
+                ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>"
+                : "";
+              const pat = it.pattern
+                ? '<div class="gl-pat"><span class="gl-k">式</span>' +
+                  (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                  '<span class="gl-pat-text">' +
+                  escapeHtml(it.pattern) +
+                  "</span></div>"
+                : "";
+              return (
+                '<div class="gl-item">' +
+                '<div class="gl-sense">' +
+                idx +
+                '<span class="gl-sense-text">' +
+                escapeHtml(it.sense || "—") +
+                "</span></div>" +
+                pat +
+                '<div class="gl-ex"><span class="gl-k">例</span>' +
+                (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                escapeHtml(formatGlossaryExample(it.example)) +
+                "</div>" +
+                '<div class="gl-src"><span class="gl-k">出</span>' +
+                (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                escapeHtml(it.source || "—") +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+          const cat = showCat && e.cat
+            ? '<span class="gl-cat">' + escapeHtml(e.cat) + "</span>"
+            : "";
+          const alias = e.alias
+            ? '<span class="gl-alias">亦作 ' +
+              escapeHtml(Array.isArray(e.alias) ? e.alias.join("／") : String(e.alias)) +
+              "</span>"
+            : "";
+          const note = e.note
+            ? '<p class="gl-note">' + escapeHtml(e.note) + "</p>"
+            : "";
+          return (
+            '<article class="glossary-card">' +
+            '<header class="gl-word">' +
+            escapeHtml(e.word || "") +
+            cat +
+            alias +
+            "</header>" +
+            note +
+            '<div class="gl-body">' +
+            rows +
+            "</div></article>"
+          );
+        })
+        .join("") +
+      "</div>"
+    );
   }
 
   function openGlossary() {
@@ -2329,56 +2413,44 @@
     if (!entries.length) {
       box.innerHTML = '<p class="page-sub">字詞表尚未載入。</p>';
     } else {
-      const CIRCLES = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮";
-      box.innerHTML =
-        '<div class="glossary-cards">' +
-        entries
-          .map(function (e) {
-            const items = glossaryItems(e);
-            const multi = items.length > 1;
-            const rows = items
-              .map(function (it, i) {
-                const idx = multi
-                  ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>"
-                  : "";
-                return (
-                  '<div class="gl-item">' +
-                  '<div class="gl-sense">' +
-                  idx +
-                  '<span class="gl-sense-text">' +
-                  escapeHtml(it.sense || "—") +
-                  "</span></div>" +
-                  '<div class="gl-ex"><span class="gl-k">例</span>' +
-                  (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                  escapeHtml(formatGlossaryExample(it.example)) +
-                  "</div>" +
-                  '<div class="gl-src"><span class="gl-k">出</span>' +
-                  (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                  escapeHtml(it.source || "—") +
-                  "</div>" +
-                  "</div>"
-                );
-              })
-              .join("");
-            return (
-              '<article class="glossary-card">' +
-              '<header class="gl-word">' +
-              escapeHtml(e.word || "") +
-              "</header>" +
-              '<div class="gl-body">' +
-              rows +
-              "</div></article>"
-            );
-          })
-          .join("") +
-        "</div>";
+      box.innerHTML = renderSenseCards(entries, { showCat: false });
     }
     show("glossary");
   }
 
+  function openParticlesLex() {
+    const box = $("#particles-lex-body");
+    const sub = $("#particles-lex-sub");
+    const fw = state.functionWords || {};
+    const entries = fw.entries || [];
+    if (sub) {
+      const multi = entries.filter(function (e) {
+        return glossaryItems(e).length > 1;
+      }).length;
+      sub.textContent =
+        "共 " +
+        entries.length +
+        " 詞 · 其中 " +
+        multi +
+        " 詞多義 · 句式見「式」";
+    }
+    if (!box) {
+      show("particlesLex");
+      return;
+    }
+    if (!entries.length) {
+      box.innerHTML = '<p class="page-sub">虛詞表尚未載入。</p>';
+    } else {
+      box.innerHTML =
+        '<p class="fw-banner">按香港初中《建議學習重點》整理；每義含定義＋例句＋句式（若有）。與字詞表重疊時虛實分流、互指不矛盾。</p>' +
+        renderSenseCards(entries, { showCat: true });
+    }
+    show("particlesLex");
+  }
+
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2101";
+  const DATA_V = "r2111";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
@@ -2386,14 +2458,16 @@
     fetch("data/vocab_quiz.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ questions: [] })),
     fetch("data/glossary.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
     fetch("data/rare_chars.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ chars: [] })),
+    fetch("data/function_words.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
   ])
-    .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare]) => {
+    .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare, functionWords]) => {
       state.passages = passages;
       state.knowledge = knowledge;
       state.unifiedKnowledge = buildUnifiedKnowledge(knowledge);
       state.jyutping = jyutping || {};
       state.vocabQuiz = vocabQuiz || { questions: [] };
       state.glossary = glossary || { entries: [] };
+      state.functionWords = functionWords || { entries: [] };
       const map = Object.create(null);
       const chars = (rare && rare.chars) || [];
       for (let i = 0; i < chars.length; i++) map[chars[i]] = true;

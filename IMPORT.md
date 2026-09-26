@@ -172,3 +172,11 @@ commercial_ok: true
 | legend_knowledge_dots | art/ui/legend_knowledge_dots.png |
 
 （`legend_explain` 保留。）舊 `teach_*` 仍可進包作備援；R2.10 顯示優先 `hero_*`。
+
+## R2.11.1 被動重畫（NOA）
+| entity_id | path |
+|-----------|------|
+| teach_passive | art/knowledge/teach/teach_passive.png |
+| hero_passive | art/knowledge/teach/hero_passive.png |
+
+Logo 主人翁卡通；舊醜圖已覆蓋。commercial_ok: true

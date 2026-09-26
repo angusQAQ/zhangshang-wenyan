@@ -2068,3 +2068,59 @@ img[src*="art/knowledge/chart_"] {
   display: none;
 }
 .reader .teach-art img[src*="hero_"] { max-height: 160px; }
+
+
+/* R2.11 function words — pattern / cat / note */
+.glossary-card .gl-cat {
+  margin-left: 0.55rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7A8F6A;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+.glossary-card .gl-alias {
+  margin-left: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #8A6A3A;
+}
+.glossary-card .gl-note {
+  margin: 0 0 0.55rem;
+  font-size: 0.82rem;
+  color: #6A6A6A;
+  line-height: 1.5;
+}
+.glossary-card .gl-pat {
+  font-size: 0.88rem;
+  color: #3A5A4A;
+  padding-left: 0.1rem;
+}
+.glossary-card .gl-pat-text {
+  font-weight: 700;
+  color: #2F6B4F;
+  background: #EAF4E5;
+  border-radius: 6px;
+  padding: 0.05rem 0.35rem;
+}
+.fw-banner {
+  margin: 0 0 0.85rem;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: #4A4A4A;
+  background: #F3F7F0;
+  border: 1px solid #D5E2CF;
+  border-radius: 12px;
+}
+.know-table .pat-tag {
+  display: inline-block;
+  margin-left: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2F6B4F;
+  background: #EAF4E5;
+  border-radius: 6px;
+  padding: 0.05rem 0.35rem;
+  white-space: nowrap;
+}
