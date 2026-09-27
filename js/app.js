@@ -969,10 +969,19 @@
       );
     }
 
-    /* R2.6.1 hard gate: sections drive table count when present */
+    /* R2.19: prefer explicit \n\n body paragraphs; only soft/splitTextToCount when absent */
     if (sections) {
       const n = sections.length;
-      const paras = splitTextToCount(p.text || "", n);
+      const rawText = p.text || "";
+      let paras;
+      if (/\n\n+/.test(rawText)) {
+        paras = rawText
+          .split(/\n\n+/)
+          .map((s) => s.replace(/^\n+|\n+$/g, ""))
+          .filter((b) => b.length > 0);
+      } else {
+        paras = splitTextToCount(rawText, n);
+      }
       const fallbackTrans = splitTranslationToCount(g.translation || "", n);
       box.innerHTML =
         buildColorLegendHtml() +
@@ -2870,7 +2879,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2119";
+  const DATA_V = "r2120";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

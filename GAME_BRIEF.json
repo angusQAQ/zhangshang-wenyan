@@ -207,6 +207,16 @@
       "note": "暫停後再開；照原鎖",
       "version": "r2119",
       "senses_with_translation": 87
+    },
+    "R2.19": {
+      "approved_by_user": true,
+      "phrase": "重新審視全部文章…分段合理，符合原文格式",
+      "status": "shipped",
+      "examples": [
+        "鄒忌諷齊王納諫",
+        "自護其短"
+      ],
+      "ship_version": "r2120"
     }
   }
 }
