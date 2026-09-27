@@ -1045,10 +1045,19 @@
   /** Merge s1+s2+s3 explanation HTML in order; practice merges s1→s2→s3 by stem. */
   /** R2.7: strip residual grade / tier labels from knowledge HTML (safety net). */
   function scrubKnowledgeHtml(html) {
-    return String(html || "")
+    let s = String(html || "")
       .replace(/<p class="level-badge"><strong>[^<]*<\/strong><\/p>/g, "")
       .replace(/<h3 class="know-tier-title">[^<]*<\/h3>/g, "")
       .replace(/程度說明：中[一二三][^。<]*/g, "");
+    /* R2.16: knowledge = pure text; strip residual hero/teach/chart media */
+    s = s.replace(/<div class="know-hero"[^>]*>[\s\S]*?<\/div>\s*<p class="know-hero-cap">[\s\S]*?<\/p>\s*<\/div>/g, "");
+    s = s.replace(/<div class="know-hero"[^>]*>[\s\S]*?<\/div>/g, "");
+    s = s.replace(/<figure[^>]*class="[^"]*teach-art[^"]*"[\s\S]*?<\/figure>/g, "");
+    s = s.replace(/<figure[^>]*class="[^"]*know-chart[^"]*"[\s\S]*?<\/figure>/g, "");
+    s = s.replace(/<img[^>]*art\/knowledge[^>]*>/gi, "");
+    s = s.replace(/<div class="teach-art-row">\s*<\/div>/g, "");
+    s = s.replace(/<div class="know-media-block">\s*<\/div>/g, "");
+    return s;
   }
 
   function buildUnifiedKnowledge(knowledge) {
@@ -1376,10 +1385,19 @@
     if (img.getAttribute("aria-label") === "放大圖片") img.removeAttribute("aria-label");
   }
 
-  /** Mark teach/hero/chart: system-font captions; R2.13 hotspots + corner zoom on knowledge media. */
+  /** R2.16: knowledge pure text — strip residual media; no image hotspots / zoom badge. */
   function enhanceKnowledgeMedia(root, topicId) {
     if (!root) return;
     bindContentLightboxOnce();
+    root.querySelectorAll(".know-hero, figure.teach-art, .know-chart-slot, .teach-art-row, .know-media-block").forEach((el) => {
+      el.remove();
+    });
+    root.querySelectorAll("img[src*='art/knowledge']").forEach((img) => {
+      const host = img.closest("figure, .know-hero, .teach-media-frame") || img;
+      host.remove();
+    });
+    root.querySelectorAll(".img-hotspot, .media-zoom-badge, .img-hotspot-reveal").forEach((el) => el.remove());
+    return; /* R2.13 image immersion cancelled */
     const hotspots = getTopicHotspots(topicId);
 
     root.querySelectorAll("figure.teach-art").forEach((fig) => {
@@ -2639,21 +2657,31 @@
     return "「" + t + "」";
   }
 
-  /** R2.14: display glossary source as 《篇名》作者 (never blank title). */
-  function formatGlossarySource(src) {
+  /** R2.14/R2.15: display glossary source as 《篇名》作者; pending → 【待補】 visible. */
+  function formatGlossarySource(src, status) {
     let t = String(src == null ? "" : src).trim();
     if (!t || t === "—" || t === "－" || t === "-") return "—";
+    const pending =
+      status === "pending" ||
+      t.indexOf("【待補】") === 0 ||
+      t.indexOf("待補") === 0;
+    if (t.indexOf("【待補】") === 0) t = t.slice(4).trim();
+    else if (t.indexOf("待補") === 0) t = t.replace(/^待補[:：]?\s*/, "");
+    let out;
     const m = t.match(/^《([^》]+)》(.*)$/);
     if (m) {
       const title = (m[1] || "").trim();
       let author = (m[2] || "").trim();
-      if (!title) return "《佚名篇》佚名";
-      if (!author) author = "佚名";
-      return "《" + title + "》" + author;
+      if (!title) out = "《佚名篇》佚名";
+      else {
+        if (!author) author = "佚名";
+        out = "《" + title + "》" + author;
+      }
+    } else {
+      t = t.replace(/^[《「『]/, "").replace(/[》」』].*$/, "").trim() || "佚名篇";
+      out = "《" + t + "》佚名";
     }
-    /* bare title → wrap; author unknown at display time */
-    t = t.replace(/^[《「『]/, "").replace(/[》」』].*$/, "").trim() || "佚名篇";
-    return "《" + t + "》佚名";
+    return pending ? "【待補】" + out : out;
   }
 
   function glossaryItems(e) {
@@ -2673,6 +2701,7 @@
           example: s.example || s.ex || "",
           source: s.source || "",
           pattern: s.pattern || "",
+          source_status: s.source_status || "",
         };
       }
       return {
@@ -2718,9 +2747,14 @@
                 (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
                 escapeHtml(formatGlossaryExample(it.example)) +
                 "</div>" +
-                '<div class="gl-src"><span class="gl-k">出</span>' +
+                '<div class="gl-src' +
+                (it.source_status === "pending" ||
+                String(it.source || "").indexOf("【待補】") === 0
+                  ? " gl-src-pending"
+                  : "") +
+                '"><span class="gl-k">出</span>' +
                 (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                escapeHtml(formatGlossarySource(it.source || "—")) +
+                escapeHtml(formatGlossarySource(it.source || "—", it.source_status)) +
                 "</div>" +
                 "</div>"
               );
@@ -2809,7 +2843,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2116";
+  const DATA_V = "r2117";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
@@ -2818,9 +2852,7 @@
     fetch("data/glossary.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
     fetch("data/rare_chars.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ chars: [] })),
     fetch("data/function_words.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
-    fetch("art/knowledge/hotspots/HOTSPOT_LAYOUT.json?v=" + DATA_V)
-      .then((r) => r.json())
-      .catch(() => null),
+    Promise.resolve(null), /* R2.16: no knowledge image hotspots */
   ])
     .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare, functionWords, hotspotLayout]) => {
       state.passages = passages;

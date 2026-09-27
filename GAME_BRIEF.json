@@ -61,7 +61,7 @@
       "revision": "R1.1_logo"
     },
     "knowledge_media": {
-      "revision": "R2.13",
+      "revision": "R2.16",
       "style": "可愛扁平卡通、清晰剪影、白底教育語彙",
       "text_in_image": false,
       "text_owner": "HTML_system_font",
@@ -71,7 +71,8 @@
       "topics": 7,
       "hotspots_per_topic": "3-5",
       "hotspot_layout": "art/knowledge/hotspots/HOTSPOT_LAYOUT.json",
-      "zoom_badge": "art/ui/btn_zoom_corner.png"
+      "zoom_badge": "art/ui/btn_zoom_corner.png",
+      "images_enabled": false
     }
   },
   "ia": {
@@ -156,7 +157,7 @@
       "status": "shipped",
       "version_target": "r2115",
       "version": "r2116",
-      "commit": "4f08a2a",
+      "commit": "f5642cd",
       "commits": [
         "fa3d792",
         "4f08a2a"
@@ -169,7 +170,26 @@
       "source_format": "《篇名》作者",
       "unknown_author": "《篇名》佚名",
       "version": "r2116",
-      "commit": "fa3d792"
+      "commit": "f5642cd"
+    },
+    "R2.15": {
+      "approved_by_user": true,
+      "phrase": "照這個做：R2.15 A …",
+      "status": "shipped",
+      "tier": "full_audit",
+      "version": "r2117",
+      "audit": {
+        "fixed": 14,
+        "pending": 0,
+        "senses": 314
+      }
+    },
+    "R2.16": {
+      "approved_by_user": true,
+      "phrase": "文言知識刪除圖片部分",
+      "status": "shipped",
+      "knowledge_images": false,
+      "version": "r2117"
     }
   }
 }

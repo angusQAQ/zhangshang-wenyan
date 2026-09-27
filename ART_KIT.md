@@ -265,3 +265,11 @@ commercial_ok: true
   | btn_reveal | art/ui/btn_reveal.png | 揭曉 pill（CSS 疊字） |
 - **規則：** 熱點優先；整圖唔再一點放大；`text_in_image: false`；commercial_ok true。
 
+
+## R2.16 — 文言知識刪圖（NOA）
+
+- **停畫：** 不再產出／重畫 knowledge 插圖（hero／teach／deco／chart／熱點場景）。
+- **進包：** 知識頁 **零圖**；純 HTML＋系統字。R2.13 圖上熱點作廢。
+- **資產：** `art/knowledge/**` 與知識專用 chrome 可留磁碟，IMPORT 標「不顯示／勿進包」。
+- **保留：** `art/ui/icon_home_knowledge.png` 等主頁導航 icon；篇章／練習 UI 不動。
+- 上文 R2.9–R2.13「要顯示」條款，**以本節為準作廢顯示義務**。

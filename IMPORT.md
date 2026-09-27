@@ -207,3 +207,20 @@ Logo 主人翁卡通；舊醜圖已覆蓋。commercial_ok: true
 - 熱點資料寫入 `data/knowledge.json` → `topics[].hotspots`（座標採 NOA `HOTSPOT_LAYOUT.json`；body 由現有教學文切片）
 - 角標：`art/ui/btn_zoom_corner.png`＋「放大」；熱點點：`hotspot_dot.png`
 - 字詞出處：`glossary.json` 全表 `《篇名》作者`；版本 `r2116`
+
+## R2.16 — 文言知識刪圖（NOA 2026-09-27）
+
+**鎖：** 知識模組 **禁止** 再載入任何插圖。檔可留 repo，**視同不能進包／不得引用**。
+
+### 自 R2.16 起「不顯示／勿進包」
+- 全部 `art/knowledge/deco_*.png`
+- 全部 `art/knowledge/chart_*.png`（本已 DEPRECATED）
+- 全部 `art/knowledge/teach/hero_*.png`、`teach_*.png`、`_ref_*`／`_hero_*`
+- `art/knowledge/hotspots/HOTSPOT_LAYOUT.json`（R2.13 圖上熱點作廢）
+- 知識專用 chrome（僅知識頁用）：`hotspot_dot`、`tap_hint_ring`、`btn_zoom_corner`、`card_flip_hint`、`immersive_panel_bg`、`btn_reveal`、`legend_knowledge_dots`
+
+### 仍進包（非知識插圖）
+- 主頁入口 `icon_home_knowledge`／`icon_knowledge`（導航 icon，不是知識頁插圖）
+- 篇章／字詞／底欄／色標等其他模組 UI 不動
+
+上方 R2.9–R2.13 列「ARE for display」之 knowledge 圖／熱點 chrome，**一律被本節覆蓋為不顯示**。
