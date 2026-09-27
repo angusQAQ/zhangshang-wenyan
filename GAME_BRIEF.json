@@ -190,6 +190,23 @@
       "status": "shipped",
       "knowledge_images": false,
       "version": "r2117"
+    },
+    "R2.17": {
+      "approved_by_user": true,
+      "phrase": "文言虛詞表為什麼全部都是佚名？…修改",
+      "status": "shipped",
+      "root_cause": "bare title → formatGlossarySource appends 佚名; function_words not on R2.14 format",
+      "version": "r2118"
+    },
+    "R2.18": {
+      "approved_by_user": true,
+      "phrase": "文言虛詞表：刪除所有出處，改為例句語譯解釋",
+      "status": "shipped",
+      "scope": "function_words only; drop source; add example vernacular translation",
+      "paused_by_user": false,
+      "note": "暫停後再開；照原鎖",
+      "version": "r2119",
+      "senses_with_translation": 87
     }
   }
 }

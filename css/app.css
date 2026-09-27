@@ -1692,6 +1692,7 @@ img[src*="art/knowledge/chart_"] {
 }
 .glossary-card .gl-sense-text { font-weight: 600; }
 .glossary-card .gl-ex,
+.glossary-card .gl-tr,
 .glossary-card .gl-src {
   font-size: 0.9rem;
   color: #4A4A4A;

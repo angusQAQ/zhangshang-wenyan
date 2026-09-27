@@ -2706,7 +2706,13 @@
       ? [e.sense]
       : [];
     if (!senses.length) {
-      return [{ sense: e.sense || "", example: e.example || "", source: e.source || "", pattern: e.pattern || "" }];
+      return [{
+        sense: e.sense || "",
+        example: e.example || "",
+        source: e.source || "",
+        pattern: e.pattern || "",
+        translation: e.translation || "",
+      }];
     }
     return senses.map(function (s, i) {
       if (s && typeof s === "object") {
@@ -2716,6 +2722,7 @@
           source: s.source || "",
           pattern: s.pattern || "",
           source_status: s.source_status || "",
+          translation: s.translation || s.gloss || "",
         };
       }
       return {
@@ -2723,6 +2730,7 @@
         example: i === 0 ? e.example || "" : "",
         source: i === 0 ? e.source || "" : "",
         pattern: i === 0 ? e.pattern || "" : "",
+        translation: i === 0 ? e.translation || "" : "",
       };
     });
   }
@@ -2761,15 +2769,20 @@
                 (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
                 escapeHtml(formatGlossaryExample(it.example)) +
                 "</div>" +
-                '<div class="gl-src' +
-                (it.source_status === "pending" ||
-                String(it.source || "").indexOf("【待補】") === 0
-                  ? " gl-src-pending"
-                  : "") +
-                '"><span class="gl-k">出</span>' +
-                (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                escapeHtml(formatGlossarySource(it.source || "—", it.source_status)) +
-                "</div>" +
+                (opts.showTranslation
+                  ? '<div class="gl-tr"><span class="gl-k">譯</span>' +
+                    (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                    escapeHtml(it.translation || "—") +
+                    "</div>"
+                  : '<div class="gl-src' +
+                    (it.source_status === "pending" ||
+                    String(it.source || "").indexOf("【待補】") === 0
+                      ? " gl-src-pending"
+                      : "") +
+                    '"><span class="gl-k">出</span>' +
+                    (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
+                    escapeHtml(formatGlossarySource(it.source || "—", it.source_status)) +
+                    "</div>") +
                 "</div>"
               );
             })
@@ -2849,15 +2862,15 @@
       box.innerHTML = '<p class="page-sub">虛詞表尚未載入。</p>';
     } else {
       box.innerHTML =
-        '<p class="fw-banner">按香港初中《建議學習重點》整理；每義含定義＋例句＋句式（若有）。與字詞表重疊時虛實分流、互指不矛盾。</p>' +
-        renderSenseCards(entries, { showCat: true });
+        '<p class="fw-banner">按香港初中《建議學習重點》整理；每義含定義＋例句＋語譯＋句式（若有）。與字詞表重疊時虛實分流、互指不矛盾。</p>' +
+        renderSenseCards(entries, { showCat: true, showTranslation: true });
     }
     show("particlesLex");
   }
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2118";
+  const DATA_V = "r2119";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
