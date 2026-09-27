@@ -155,7 +155,12 @@
       "phrase": "照這個做：A 圖上熱點沉浸（7 主題；點熱點出知識；放大改角標；禁焗字）",
       "status": "shipped",
       "version_target": "r2115",
-      "version": "r2116"
+      "version": "r2116",
+      "commit": "4f08a2a",
+      "commits": [
+        "fa3d792",
+        "4f08a2a"
+      ]
     },
     "R2.14": {
       "approved_by_user": true,
@@ -163,7 +168,8 @@
       "status": "shipped",
       "source_format": "《篇名》作者",
       "unknown_author": "《篇名》佚名",
-      "version": "r2116"
+      "version": "r2116",
+      "commit": "fa3d792"
     }
   }
 }
