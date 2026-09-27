@@ -2657,31 +2657,45 @@
     return "「" + t + "」";
   }
 
-  /** R2.14/R2.15: display glossary source as 《篇名》作者; pending → 【待補】 visible. */
+  /** R2.14/R2.15/R2.17: 《篇名》作者; bare/unverified → 【待補】 (never silent 佚名). */
   function formatGlossarySource(src, status) {
     let t = String(src == null ? "" : src).trim();
     if (!t || t === "—" || t === "－" || t === "-") return "—";
-    const pending =
+    let pending =
       status === "pending" ||
       t.indexOf("【待補】") === 0 ||
       t.indexOf("待補") === 0;
     if (t.indexOf("【待補】") === 0) t = t.slice(4).trim();
     else if (t.indexOf("待補") === 0) t = t.replace(/^待補[:：]?\s*/, "");
+    if (!t) return "【待補】";
     let out;
     const m = t.match(/^《([^》]+)》(.*)$/);
     if (m) {
       const title = (m[1] || "").trim();
-      let author = (m[2] || "").trim();
-      if (!title) out = "《佚名篇》佚名";
-      else {
-        if (!author) author = "佚名";
+      const author = (m[2] || "").trim();
+      if (!title) {
+        pending = true;
+        out = "";
+      } else if (!author) {
+        // bare 《篇名》 — do not invent 佚名; show pending
+        pending = true;
+        out = "《" + title + "》";
+      } else {
+        // explicit author (incl. real 佚名 for 禮記 etc.)
         out = "《" + title + "》" + author;
       }
+    } else if (/^[（(]/.test(t)) {
+      // e.g. （篇名待核） after 【待補】 strip
+      pending = true;
+      out = t;
     } else {
-      t = t.replace(/^[《「『]/, "").replace(/[》」』].*$/, "").trim() || "佚名篇";
-      out = "《" + t + "》佚名";
+      // bare title without 《》 — pending, not silent 佚名
+      pending = true;
+      const title = t.replace(/^[《「『]/, "").replace(/[》」』].*$/, "").trim();
+      out = title ? "《" + title + "》" : "";
     }
-    return pending ? "【待補】" + out : out;
+    if (pending) return out ? "【待補】" + out : "【待補】";
+    return out;
   }
 
   function glossaryItems(e) {
@@ -2843,7 +2857,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2117";
+  const DATA_V = "r2118";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
