@@ -802,18 +802,45 @@
     if (posEl) posEl.textContent = resolvePos(hl, p);
     $("#ws-gloss").textContent = resolveWordMeaning(hl, p);
     sheet.dataset.speak = word;
+    if (sheet._hideTimer) {
+      clearTimeout(sheet._hideTimer);
+      sheet._hideTimer = null;
+    }
     sheet.classList.remove("hidden");
     sheet.hidden = false;
+    /* double rAF so enter scale/opacity from ui-motion.css can run */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        sheet.classList.add("is-open");
+      });
+    });
   }
 
   function hideWordSheet() {
     const sheet = $("#word-sheet");
     if (!sheet) return;
-    sheet.classList.add("hidden");
-    sheet.hidden = true;
     try {
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     } catch (_) {}
+    const finish = () => {
+      sheet.classList.add("hidden");
+      sheet.hidden = true;
+      sheet._hideTimer = null;
+    };
+    if (!sheet.classList.contains("is-open")) {
+      finish();
+      return;
+    }
+    sheet.classList.remove("is-open");
+    const reduce =
+      typeof matchMedia === "function" &&
+      matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) {
+      finish();
+      return;
+    }
+    if (sheet._hideTimer) clearTimeout(sheet._hideTimer);
+    sheet._hideTimer = setTimeout(finish, 260);
   }
 
   function setGuideOpen(open) {

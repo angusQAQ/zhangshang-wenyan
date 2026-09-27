@@ -1,0 +1,334 @@
+/* ui-motion.css — Emil Kowalski + Apple: press feedback, ease-out, <300ms,
+   transform/opacity only, prefers-reduced-motion, no transition:all, hover gated.
+   Mobile-first chrome polish for 《掌上文言》. Does not touch passage .hl colors (R2.4). */
+
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-fast: 120ms;
+  --motion-press: 160ms;
+  --motion-ui: 180ms;
+  --motion-sheet: 240ms;
+}
+
+/* ---------- Shared press / chrome transitions (transform + opacity only) ---------- */
+.nav-card,
+.mode-card,
+.list-row,
+.tab,
+.chip,
+.font-opt,
+.btn-primary,
+.btn-outline,
+.btn-back,
+.btn-explain,
+.btn-next-pill,
+.btn-next-asset,
+.btn-gear,
+.btn-bookmark,
+.btn-prev-text,
+.quiz-close,
+.quiz-top-link,
+.link-btn,
+.topic-cell,
+.option-card,
+.ws-play,
+.ws-close-btn,
+.feat-entry,
+.color-hotspot,
+.note-hot,
+.viz-circle {
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-press);
+  transition-timing-function: var(--ease-out);
+}
+
+.tab {
+  transition-property: transform, color, opacity;
+  transition-duration: var(--motion-ui);
+  transition-timing-function: var(--ease-out);
+}
+.tab img {
+  transition-property: opacity;
+  transition-duration: var(--motion-ui);
+  transition-timing-function: var(--ease-out);
+}
+
+/* Press: scale(0.97) — never scale(0) */
+.nav-card:active,
+.mode-card:active,
+.list-row:active,
+.tab:active,
+.chip:active,
+.font-opt:active,
+.btn-primary:active,
+.btn-outline:active,
+.btn-back:active,
+.btn-explain:active,
+.btn-next-pill:active,
+.btn-next-asset:active,
+.btn-gear:active,
+.btn-bookmark:active,
+.btn-prev-text:active:not(:disabled),
+.quiz-close:active,
+.quiz-top-link:active,
+.link-btn:active,
+.topic-cell:active,
+.option-card:active:not(:disabled),
+.ws-play:active,
+.ws-close-btn:active,
+.feat-entry:active,
+.color-hotspot:active,
+.note-hot:active {
+  transform: scale(0.97);
+}
+
+/* Keep opacity feedback mild; prefer scale as primary press cue */
+.btn-primary:active,
+.btn-next-pill:active,
+.btn-explain:active,
+.ws-close-btn:active {
+  opacity: 0.92;
+}
+.btn-gear:active,
+.topic-cell:active {
+  opacity: 0.85;
+}
+.btn-next-asset:active,
+.ws-play:active {
+  opacity: 0.92;
+}
+
+/* ---------- Tab bar selection: opacity / color only ≤180ms ---------- */
+.tab {
+  color: #8E8E93;
+}
+.tab img {
+  opacity: 0.42;
+}
+.tab.active {
+  color: #1A1A1A;
+}
+.tab.active img {
+  opacity: 1;
+}
+
+/* ---------- Toast: ease-out (override generic ease) ---------- */
+.toast {
+  transition: opacity var(--motion-ui) var(--ease-out),
+              transform var(--motion-ui) var(--ease-out);
+}
+
+/* ---------- Explain panel slide-in: ease-out ---------- */
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+#explain-panel.show,
+.explain-panel.show {
+  animation: slideIn var(--motion-ui) var(--ease-out);
+}
+
+/* ---------- Word bottom sheet: scale(0.96)+opacity, origin bottom, ≤250ms ---------- */
+.word-sheet-mask {
+  opacity: 0;
+  transition: opacity var(--motion-sheet) var(--ease-out);
+}
+.word-sheet.is-open .word-sheet-mask {
+  opacity: 1;
+}
+.word-sheet-panel {
+  transform: scale(0.96);
+  opacity: 0;
+  transform-origin: bottom center;
+  transition: transform var(--motion-sheet) var(--ease-out),
+              opacity var(--motion-sheet) var(--ease-out);
+  will-change: transform, opacity;
+}
+.word-sheet.is-open .word-sheet-panel {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ---------- Knowledge chrome: drop layout-prop transitions; transform/opacity only ---------- */
+.reader .color-hotspot {
+  transition: transform var(--motion-fast) var(--ease-out),
+              opacity var(--motion-fast) var(--ease-out);
+}
+.reader .color-hotspot.is-open {
+  /* keep open cue via existing box-shadow in app.css (instant, not transitioned) */
+  transform: translateY(-1px);
+}
+.reader .note-hot {
+  transition: transform var(--motion-fast) var(--ease-out),
+              opacity var(--motion-fast) var(--ease-out);
+}
+.reader table.know-table-hot tbody tr {
+  /* background change stays instant — do not transition background */
+  transition: none;
+}
+.reader .viz-circle {
+  transition: transform var(--motion-press) var(--ease-out),
+              opacity var(--motion-press) var(--ease-out);
+}
+.reader .viz-circle.is-hot {
+  transform: scale(1.04);
+}
+
+/* ---------- Hover transforms: only fine pointer + real hover ---------- */
+@media (hover: hover) and (pointer: fine) {
+  .nav-card:hover,
+  .mode-card:hover,
+  .feat-entry:hover {
+    transform: translateY(-1px);
+  }
+  .nav-card:active,
+  .mode-card:active,
+  .feat-entry:active {
+    transform: scale(0.97);
+  }
+  .list-row:hover {
+    opacity: 0.88;
+  }
+  .list-row:active {
+    transform: scale(0.97);
+    opacity: 1;
+  }
+  .tab:hover {
+    opacity: 0.9;
+  }
+  .tab:active {
+    transform: scale(0.97);
+    opacity: 1;
+  }
+  .btn-outline:hover,
+  .font-opt:hover:not(.active) {
+    opacity: 0.92;
+  }
+  .btn-outline:active,
+  .font-opt:active {
+    transform: scale(0.97);
+    opacity: 1;
+  }
+  .color-hotspot:hover {
+    transform: translateY(-1px);
+  }
+  .color-hotspot:active {
+    transform: scale(0.97);
+  }
+}
+
+/* ---------- prefers-reduced-motion: shorten / kill movement, keep opacity ---------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 1ms;
+    --motion-press: 1ms;
+    --motion-ui: 80ms;
+    --motion-sheet: 80ms;
+  }
+
+  .nav-card,
+  .mode-card,
+  .list-row,
+  .tab,
+  .chip,
+  .font-opt,
+  .btn-primary,
+  .btn-outline,
+  .btn-back,
+  .btn-explain,
+  .btn-next-pill,
+  .btn-next-asset,
+  .btn-gear,
+  .btn-bookmark,
+  .btn-prev-text,
+  .quiz-close,
+  .quiz-top-link,
+  .link-btn,
+  .topic-cell,
+  .option-card,
+  .ws-play,
+  .ws-close-btn,
+  .feat-entry,
+  .color-hotspot,
+  .note-hot,
+  .viz-circle,
+  .tab img,
+  .toast,
+  .word-sheet-mask,
+  .word-sheet-panel,
+  .reader .color-hotspot,
+  .reader .note-hot,
+  .reader .viz-circle {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .nav-card:active,
+  .mode-card:active,
+  .list-row:active,
+  .tab:active,
+  .chip:active,
+  .font-opt:active,
+  .btn-primary:active,
+  .btn-outline:active,
+  .btn-back:active,
+  .btn-explain:active,
+  .btn-next-pill:active,
+  .btn-next-asset:active,
+  .btn-gear:active,
+  .btn-bookmark:active,
+  .btn-prev-text:active:not(:disabled),
+  .quiz-close:active,
+  .quiz-top-link:active,
+  .link-btn:active,
+  .topic-cell:active,
+  .option-card:active:not(:disabled),
+  .ws-play:active,
+  .ws-close-btn:active,
+  .feat-entry:active,
+  .color-hotspot:active,
+  .note-hot:active {
+    transform: none;
+  }
+
+  .word-sheet-panel {
+    transform: none;
+  }
+  .word-sheet.is-open .word-sheet-panel {
+    transform: none;
+    opacity: 1;
+  }
+  .word-sheet-mask {
+    opacity: 0;
+  }
+  .word-sheet.is-open .word-sheet-mask {
+    opacity: 1;
+  }
+
+  .reader .color-hotspot.is-open,
+  .reader .viz-circle.is-hot {
+    transform: none;
+  }
+
+  #explain-panel.show,
+  .explain-panel.show {
+    animation: none;
+  }
+
+  .toast {
+    transform: translateX(-50%);
+  }
+  .toast.show {
+    transform: translateX(-50%);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .nav-card:hover,
+    .mode-card:hover,
+    .feat-entry:hover,
+    .color-hotspot:hover {
+      transform: none;
+    }
+  }
+}

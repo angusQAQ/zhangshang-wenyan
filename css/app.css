@@ -20,6 +20,7 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --max: 430px;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -621,7 +622,7 @@ body {
   border-radius: var(--radius);
   border: 1px solid var(--border-soft);
   background: #FAFAFA;
-  animation: slideIn 180ms ease;
+  animation: slideIn 180ms var(--ease-out);
 }
 .explain-panel.show { display: block; }
 .explain-panel h4 {
@@ -780,7 +781,7 @@ body {
   border-radius: 999px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
   z-index: 60;
   white-space: nowrap;
 }
@@ -1978,7 +1979,8 @@ img[src*="art/knowledge/chart_"] {
   font: inherit;
   color: inherit;
   min-height: 3.2rem;
-  transition: box-shadow 0.15s ease, transform 0.12s ease;
+  /* motion moved to ui-motion.css (transform/opacity only) */
+  transition: none;
 }
 .reader .color-hotspot:focus-visible {
   outline: 2px solid #C45C7A;
@@ -2019,7 +2021,7 @@ img[src*="art/knowledge/chart_"] {
 
 .reader .note-hot {
   cursor: pointer;
-  transition: box-shadow 0.15s ease;
+  transition: none; /* ui-motion: no box-shadow transitions */
 }
 .reader .note-hot .tap-mini {
   margin-left: 0.35rem;
@@ -2038,7 +2040,7 @@ img[src*="art/knowledge/chart_"] {
 
 .reader table.know-table-hot tbody tr {
   cursor: pointer;
-  transition: background 0.12s ease;
+  transition: none; /* ui-motion: no background transitions */
 }
 .reader table.know-table-hot tbody tr.is-hot {
   background: #FFF3D6;
