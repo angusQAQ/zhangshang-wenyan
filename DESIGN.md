@@ -181,4 +181,4 @@ btn_grade｜btn_knowledge｜btn_glossary｜card_option｜panel_explain｜btn_fon
 - 粵音：中大漢語多功能字庫標準（離線表＋標來源；舊方案 A 升級為此）
 
 # 狀態
-**R2.2–R2.16 DESIGN 已改**。R2.15：出處零錯誤全表核。R2.16：知識删圖改純文（R2.13 圖熱點作廢）。待 `r2117`。
+**R2.2–R2.16 DESIGN 已改**。R2.15：出處零錯誤全表核（GLOSSARY_AUDIT：314 義項、修正 14、待補 0）。R2.16：知識删圖改純文（R2.13 圖熱點作廢）。已上線 `?v=r2117`／`5a775d7`。
