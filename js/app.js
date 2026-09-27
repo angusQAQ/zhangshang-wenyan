@@ -1212,10 +1212,13 @@
     if (lb.mask) lb.mask.addEventListener("click", closeImgLightbox);
     if (lb.close) lb.close.addEventListener("click", closeImgLightbox);
     document.addEventListener("click", (e) => {
+      if (e.target && e.target.closest && e.target.closest(".img-hotspot, .media-zoom-badge")) return;
       const img = e.target && e.target.closest && e.target.closest("img.content-zoomable");
       if (!img) return;
       /* exclude chrome / tabs / marks if somehow classed */
       if (img.closest(".tabbar, .quiz-top, .brand-row, .icon-wrap, .btn-bookmark, .quiz-next-inline")) return;
+      /* R2.13: knowledge teach/hero use corner badge, not full-image tap */
+      if (img.closest(".know-hero-art, figure.teach-art, .teach-media-frame.has-img-hotspots")) return;
       e.preventDefault();
       e.stopPropagation();
       openImgLightbox(img.currentSrc || img.src, captionForZoomable(img));
@@ -1229,27 +1232,139 @@
     });
   }
 
-  /** Mark teach/hero/chart as zoomable; keep system-font captions below the image. */
-  function enhanceKnowledgeMedia(root) {
+  function getTopicHotspots(topicId) {
+    const topics = (state.knowledge && state.knowledge.topics) || [];
+    const meta = topics.find((t) => t.id === topicId);
+    const list = meta && Array.isArray(meta.hotspots) ? meta.hotspots : [];
+    return list.filter((h) => h && (h.label || h.body));
+  }
+
+  function ensureMediaFrame(host) {
+    if (!host) return null;
+    host.classList.add("teach-media-frame");
+    if (getComputedStyle(host).position === "static") {
+      host.style.position = "relative";
+    }
+    return host;
+  }
+
+  /** R2.13: corner 「放大」 badge — knowledge media no longer opens lightbox on blank image tap. */
+  function mountZoomBadge(frame, img) {
+    if (!frame || !img || frame.querySelector(".media-zoom-badge")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "media-zoom-badge";
+    btn.setAttribute("aria-label", "放大圖片");
+    btn.innerHTML =
+      '<img class="media-zoom-badge-icon" src="art/ui/btn_zoom_corner.png" alt="" />' +
+      "<span>放大</span>";
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openImgLightbox(img.currentSrc || img.src, captionForZoomable(img));
+    });
+    frame.appendChild(btn);
+  }
+
+  /** R2.13: absolute hotspots over teach/hero; reveal HTML panel (system font). */
+  function mountImageHotspots(frame, hotspots) {
+    if (!frame || !hotspots || !hotspots.length) return;
+    if (frame.dataset.hotspotsMounted) return;
+    frame.dataset.hotspotsMounted = "1";
+    frame.classList.add("has-img-hotspots");
+
+    let reveal = frame._imgHotspotReveal;
+    if (!reveal || !reveal.isConnected) {
+      reveal = document.createElement("div");
+      reveal.className = "img-hotspot-reveal";
+      reveal.setAttribute("hidden", "");
+      reveal.innerHTML =
+        '<p class="img-hotspot-reveal-lab"></p><div class="img-hotspot-reveal-body"></div>';
+      /* unique panel per media frame, directly after it */
+      if (frame.parentElement) {
+        frame.parentElement.insertBefore(reveal, frame.nextSibling);
+      } else {
+        frame.appendChild(reveal);
+      }
+      frame._imgHotspotReveal = reveal;
+    }
+    const labEl = reveal.querySelector(".img-hotspot-reveal-lab");
+    const bodyEl = reveal.querySelector(".img-hotspot-reveal-body");
+
+    const showHotspot = (h, btn) => {
+      frame.querySelectorAll(".img-hotspot.is-open").forEach((b) => {
+        if (b !== btn) {
+          b.classList.remove("is-open");
+          b.setAttribute("aria-expanded", "false");
+        }
+      });
+      const open = btn.classList.contains("is-open");
+      if (open) {
+        btn.classList.remove("is-open");
+        btn.setAttribute("aria-expanded", "false");
+        reveal.setAttribute("hidden", "");
+        if (labEl) labEl.textContent = "";
+        if (bodyEl) bodyEl.textContent = "";
+        return;
+      }
+      btn.classList.add("is-open");
+      btn.setAttribute("aria-expanded", "true");
+      if (labEl) labEl.textContent = h.label || "";
+      if (bodyEl) {
+        /* system-font HTML reveal — body is plain text from data; allow simple breaks */
+        bodyEl.textContent = h.body || "";
+      }
+      reveal.removeAttribute("hidden");
+    };
+
+    hotspots.forEach((h) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "img-hotspot";
+      btn.dataset.hotspot = h.id || "";
+      btn.style.left = (h.x != null ? h.x : 50) + "%";
+      btn.style.top = (h.y != null ? h.y : 50) + "%";
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-label", (h.label || "知識熱點") + "（點選揭曉）");
+      btn.innerHTML =
+        '<span class="hotspot-dot" aria-hidden="true"></span>' +
+        '<span class="img-hotspot-lab">' +
+        escapeHtml(h.label || "") +
+        "</span>";
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation(); /* hotspot priority over any parent / lightbox */
+        showHotspot(h, btn);
+      });
+      frame.appendChild(btn);
+    });
+  }
+
+  function stripImageZoomChrome(img) {
+    if (!img) return;
+    img.classList.remove("content-zoomable");
+    img.removeAttribute("role");
+    img.removeAttribute("tabindex");
+    if (img.getAttribute("aria-label") === "放大圖片") img.removeAttribute("aria-label");
+  }
+
+  /** Mark teach/hero/chart: system-font captions; R2.13 hotspots + corner zoom on knowledge media. */
+  function enhanceKnowledgeMedia(root, topicId) {
     if (!root) return;
     bindContentLightboxOnce();
+    const hotspots = getTopicHotspots(topicId);
 
     root.querySelectorAll("figure.teach-art").forEach((fig) => {
       if (fig.dataset.mediaEnhanced) return;
       fig.dataset.mediaEnhanced = "1";
       const img = fig.querySelector("img");
       if (!img) return;
-      img.classList.add("content-zoomable");
-      img.setAttribute("tabindex", "0");
-      img.setAttribute("role", "button");
-      if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
 
       const fc = fig.querySelector("figcaption");
       let label = (fc && fc.textContent.trim()) || (img.getAttribute("alt") || "").trim();
       const chartKey = fig.getAttribute("data-chart");
       if (chartKey && CHART_SYS_LABEL[chartKey]) label = CHART_SYS_LABEL[chartKey];
 
-      /* Keep the caption in normal flow, below the image; never cover the art. */
       if (fc) {
         fc.classList.add("teach-sys-caption");
         if (chartKey && CHART_SYS_LABEL[chartKey]) fc.textContent = label;
@@ -1267,6 +1382,14 @@
         fig.appendChild(note);
       }
 
+      /* R2.13: knowledge media — corner badge only; no full-image lightbox */
+      stripImageZoomChrome(img);
+      const frame = ensureMediaFrame(fig);
+      mountZoomBadge(frame, img);
+      if (!fig.classList.contains("know-chart-slot") && hotspots.length) {
+        mountImageHotspots(frame, hotspots);
+      }
+
       if (!img.dataset.errBound) {
         img.dataset.errBound = "1";
         img.addEventListener("error", () => {
@@ -1282,13 +1405,13 @@
       const img = art && art.querySelector("img");
       const cap = hero.querySelector(".know-hero-cap");
       if (!img) return;
-      img.classList.add("content-zoomable");
-      img.setAttribute("tabindex", "0");
-      img.setAttribute("role", "button");
-      if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
 
-      /* .know-hero-cap already is the single HTML caption below the image. */
       if (cap) cap.classList.add("teach-sys-caption");
+
+      stripImageZoomChrome(img);
+      const frame = ensureMediaFrame(art);
+      mountZoomBadge(frame, img);
+      if (hotspots.length) mountImageHotspots(frame, hotspots);
 
       if (!img.dataset.errBound) {
         img.dataset.errBound = "1";
@@ -1383,7 +1506,7 @@
     $("#know-title").textContent = topic.title;
     $("#know-content").innerHTML = topic.html || "";
     bindKnowledgeImmerse($("#know-content"), topicId);
-    enhanceKnowledgeMedia($("#know-content"));
+    enhanceKnowledgeMedia($("#know-content"), topicId);
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -2488,6 +2611,23 @@
     return "「" + t + "」";
   }
 
+  /** R2.14: display glossary source as 《篇名》作者 (never blank title). */
+  function formatGlossarySource(src) {
+    let t = String(src == null ? "" : src).trim();
+    if (!t || t === "—" || t === "－" || t === "-") return "—";
+    const m = t.match(/^《([^》]+)》(.*)$/);
+    if (m) {
+      const title = (m[1] || "").trim();
+      let author = (m[2] || "").trim();
+      if (!title) return "《佚名篇》佚名";
+      if (!author) author = "佚名";
+      return "《" + title + "》" + author;
+    }
+    /* bare title → wrap; author unknown at display time */
+    t = t.replace(/^[《「『]/, "").replace(/[》」』].*$/, "").trim() || "佚名篇";
+    return "《" + t + "》佚名";
+  }
+
   function glossaryItems(e) {
     if (Array.isArray(e.items) && e.items.length) return e.items;
     const senses = Array.isArray(e.senses)
@@ -2552,7 +2692,7 @@
                 "</div>" +
                 '<div class="gl-src"><span class="gl-k">出</span>' +
                 (multi ? '<span class="gl-idx">' + CIRCLES.charAt(i) + "</span>" : "") +
-                escapeHtml(it.source || "—") +
+                escapeHtml(formatGlossarySource(it.source || "—")) +
                 "</div>" +
                 "</div>"
               );
@@ -2641,7 +2781,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2114";
+  const DATA_V = "r2116";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

@@ -61,12 +61,15 @@
       "revision": "R1.1_logo"
     },
     "knowledge_media": {
-      "revision": "R2.12",
+      "revision": "R2.13",
       "style": "可愛扁平卡通、清晰剪影、白底教育語彙",
       "text_in_image": false,
       "text_owner": "HTML_system_font",
-      "lightbox": "content_images_only",
-      "note": "teach/hero 無焗字；說明用系統字；非整 UI 換畫風"
+      "lightbox": "corner_zoom_only_on_knowledge_hero",
+      "note": "teach/hero 無焗字；說明用系統字；非整 UI 換畫風",
+      "interaction": "image_hotspots",
+      "topics": 7,
+      "hotspots_per_topic": "3-5"
     }
   },
   "ia": {
@@ -103,7 +106,8 @@
     "s1_passages": "content/s1-passages-qa.md",
     "s2_passages": "content/s2-passages-qa.md",
     "s3_passages": null,
-    "s3_placeholder": "中三稍後補充；UI 顯示「內容即將推出」"
+    "s3_placeholder": "中三稍後補充；UI 顯示「內容即將推出」",
+    "glossary_source_format": "《篇名》作者"
   },
   "core_verb": "點選",
   "modifier": "即時對錯回饋＋簡短解釋",
@@ -143,6 +147,21 @@
       "status": "shipped",
       "version": "r2114",
       "commit": "a4ddc19"
+    },
+    "R2.13": {
+      "approved_by_user": true,
+      "phrase": "照這個做：A 圖上熱點沉浸（7 主題；點熱點出知識；放大改角標；禁焗字）",
+      "status": "shipped",
+      "version_target": "r2115",
+      "version": "r2116"
+    },
+    "R2.14": {
+      "approved_by_user": true,
+      "phrase": "照這個做：R2.14 出處格式《篇名》作者",
+      "status": "shipped",
+      "source_format": "《篇名》作者",
+      "unknown_author": "《篇名》佚名",
+      "version": "r2116"
     }
   }
 }

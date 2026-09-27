@@ -250,3 +250,18 @@ commercial_ok: true
 - **路徑：** `art/knowledge/teach/hero_*.png`（11）＋`teach_*.png`（7）；覆蓋同路徑。
 - **commercial_ok：** true（自生圖）。
 - **系統字說明速查：** features→單音／省略／語序；howto-read→斷句→釋詞→通譯→章旨→賞析；particles→而／也／者／乎／之／於／其；polysemy→之三義；ancient-modern→古義↔今義；loan→本字↔通假；sentence／shi／yi／compare→使動／意動；passive→受事／施事。
+
+## R2.13 — 知識圖上熱點沉浸（NOA）
+
+- **Hero 場景：** 沿用 R2.12b `art/knowledge/teach/hero_*.png`（無焗字）。
+- **熱點座標：** `art/knowledge/hotspots/HOTSPOT_LAYOUT.json`（% 座標；每主題 3–5 點；`label` 僅 HTML）。
+- **Chrome：**
+  | id | path | 用途 |
+  | --- | --- | --- |
+  | hotspot_dot | art/ui/hotspot_dot.png | 熱點實心色圈 |
+  | tap_hint_ring | art/ui/tap_hint_ring.png | 虛線提示圈／pulse |
+  | btn_zoom_corner | art/ui/btn_zoom_corner.png | **角標放大**（唯此開 lightbox） |
+  | immersive_panel_bg | art/ui/immersive_panel_bg.png | 揭曉面板底 |
+  | btn_reveal | art/ui/btn_reveal.png | 揭曉 pill（CSS 疊字） |
+- **規則：** 熱點優先；整圖唔再一點放大；`text_in_image: false`；commercial_ok true。
+

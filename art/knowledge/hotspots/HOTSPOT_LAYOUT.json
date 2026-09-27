@@ -1,0 +1,75 @@
+{
+  "revision": "R2.13",
+  "coordinate": "percent of hero image, origin top-left",
+  "chrome": {
+    "hotspot_dot": "art/ui/hotspot_dot.png",
+    "tap_hint_ring": "art/ui/tap_hint_ring.png",
+    "btn_zoom_corner": "art/ui/btn_zoom_corner.png",
+    "immersive_panel_bg": "art/ui/immersive_panel_bg.png",
+    "btn_reveal": "art/ui/btn_reveal.png",
+    "zoom_placement": "top-right corner of .know-hero-art; only this opens lightbox"
+  },
+  "topics": {
+    "features": {
+      "hero": "art/knowledge/teach/hero_features.png",
+      "hotspots": [
+        {"id": "mono", "label": "單音", "x": 58, "y": 38, "w": 10, "h": 12},
+        {"id": "omit", "label": "省略", "x": 58, "y": 52, "w": 10, "h": 12},
+        {"id": "order", "label": "語序", "x": 58, "y": 66, "w": 10, "h": 12}
+      ]
+    },
+    "howto-read": {
+      "hero": "art/knowledge/teach/hero_howto-read.png",
+      "hotspots": [
+        {"id": "step1", "label": "斷句", "x": 28, "y": 62, "w": 9, "h": 12},
+        {"id": "step2", "label": "釋詞", "x": 42, "y": 52, "w": 9, "h": 12},
+        {"id": "step3", "label": "通譯", "x": 55, "y": 44, "w": 9, "h": 12},
+        {"id": "step4", "label": "章旨", "x": 68, "y": 36, "w": 9, "h": 12},
+        {"id": "step5", "label": "賞析", "x": 80, "y": 28, "w": 9, "h": 12}
+      ]
+    },
+    "particles": {
+      "hero": "art/knowledge/teach/hero_particles.png",
+      "hotspots": [
+        {"id": "er", "label": "而", "x": 62, "y": 28, "w": 9, "h": 12},
+        {"id": "ye", "label": "也", "x": 78, "y": 32, "w": 9, "h": 12},
+        {"id": "zhe", "label": "者", "x": 70, "y": 48, "w": 9, "h": 12},
+        {"id": "hu", "label": "乎", "x": 55, "y": 55, "w": 9, "h": 12},
+        {"id": "zhi", "label": "之", "x": 82, "y": 58, "w": 9, "h": 12}
+      ]
+    },
+    "polysemy": {
+      "hero": "art/knowledge/teach/hero_polysemy.png",
+      "hotspots": [
+        {"id": "sense_pronoun", "label": "代詞", "x": 68, "y": 28, "w": 12, "h": 14},
+        {"id": "sense_struct", "label": "結構助詞", "x": 78, "y": 48, "w": 12, "h": 14},
+        {"id": "sense_verb", "label": "往・到", "x": 68, "y": 68, "w": 12, "h": 14}
+      ]
+    },
+    "ancient-modern": {
+      "hero": "art/knowledge/teach/hero_ancient-modern.png",
+      "hotspots": [
+        {"id": "ancient", "label": "古義", "x": 18, "y": 48, "w": 14, "h": 18},
+        {"id": "bridge", "label": "義變", "x": 48, "y": 48, "w": 12, "h": 16},
+        {"id": "modern", "label": "今義", "x": 78, "y": 48, "w": 14, "h": 18}
+      ]
+    },
+    "loan-chars": {
+      "hero": "art/knowledge/teach/hero_loan-chars.png",
+      "hotspots": [
+        {"id": "orig", "label": "本字", "x": 22, "y": 45, "w": 14, "h": 22},
+        {"id": "bridge", "label": "互通", "x": 48, "y": 48, "w": 10, "h": 14},
+        {"id": "loan", "label": "通假", "x": 76, "y": 45, "w": 14, "h": 22}
+      ]
+    },
+    "sentence-patterns": {
+      "hero": "art/knowledge/teach/hero_sentence-patterns.png",
+      "hotspots": [
+        {"id": "shi", "label": "使動", "x": 28, "y": 42, "w": 18, "h": 22},
+        {"id": "yi", "label": "意動", "x": 62, "y": 42, "w": 18, "h": 22},
+        {"id": "check", "label": "對照", "x": 48, "y": 48, "w": 10, "h": 12}
+      ]
+    }
+  },
+  "panel_copy_rule": "GIDEON slices existing knowledge HTML per hotspot id; no inventing exam points; system font only; no burned text in PNG"
+}
