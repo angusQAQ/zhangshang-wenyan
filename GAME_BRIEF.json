@@ -69,7 +69,9 @@
       "note": "teach/hero 無焗字；說明用系統字；非整 UI 換畫風",
       "interaction": "image_hotspots",
       "topics": 7,
-      "hotspots_per_topic": "3-5"
+      "hotspots_per_topic": "3-5",
+      "hotspot_layout": "art/knowledge/hotspots/HOTSPOT_LAYOUT.json",
+      "zoom_badge": "art/ui/btn_zoom_corner.png"
     }
   },
   "ia": {

@@ -18,6 +18,7 @@
     grade: null,
     passages: null,
     knowledge: null,
+    hotspotLayout: null,
     unifiedKnowledge: null,
     vocabQuiz: null,
     glossary: null,
@@ -1232,11 +1233,38 @@
     });
   }
 
+  /** R2.13: coords/labels MUST come from HOTSPOT_LAYOUT.json; body from knowledge topics[].hotspots. */
   function getTopicHotspots(topicId) {
+    const layoutRoot = state.hotspotLayout && state.hotspotLayout.topics;
+    const layoutTopic = layoutRoot && layoutRoot[topicId];
+    const layoutList =
+      layoutTopic && Array.isArray(layoutTopic.hotspots) ? layoutTopic.hotspots : [];
+    if (!layoutList.length) return [];
+
     const topics = (state.knowledge && state.knowledge.topics) || [];
     const meta = topics.find((t) => t.id === topicId);
-    const list = meta && Array.isArray(meta.hotspots) ? meta.hotspots : [];
-    return list.filter((h) => h && (h.label || h.body));
+    const bodies = meta && Array.isArray(meta.hotspots) ? meta.hotspots : [];
+    const byId = Object.create(null);
+    const byLabel = Object.create(null);
+    bodies.forEach((b) => {
+      if (!b) return;
+      if (b.id) byId[b.id] = b;
+      if (b.label) byLabel[b.label] = b;
+    });
+
+    return layoutList
+      .map((h) => {
+        if (!h) return null;
+        const bodySrc = byId[h.id] || byLabel[h.label] || null;
+        return {
+          id: h.id,
+          label: h.label || (bodySrc && bodySrc.label) || "",
+          x: h.x,
+          y: h.y,
+          body: (bodySrc && bodySrc.body) || h.body || "",
+        };
+      })
+      .filter((h) => h && (h.label || h.body));
   }
 
   function ensureMediaFrame(host) {
@@ -2790,11 +2818,15 @@
     fetch("data/glossary.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
     fetch("data/rare_chars.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ chars: [] })),
     fetch("data/function_words.json?v=" + DATA_V).then((r) => r.json()).catch(() => ({ entries: [] })),
+    fetch("art/knowledge/hotspots/HOTSPOT_LAYOUT.json?v=" + DATA_V)
+      .then((r) => r.json())
+      .catch(() => null),
   ])
-    .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare, functionWords]) => {
+    .then(([passages, knowledge, jyutping, vocabQuiz, glossary, rare, functionWords, hotspotLayout]) => {
       state.passages = passages;
       state.knowledge = knowledge;
       state.unifiedKnowledge = buildUnifiedKnowledge(knowledge);
+      state.hotspotLayout = hotspotLayout || null;
       state.jyutping = jyutping || {};
       state.vocabQuiz = vocabQuiz || { questions: [] };
       state.glossary = glossary || { entries: [] };

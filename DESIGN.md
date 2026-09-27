@@ -116,7 +116,7 @@
 4. 破圖：路徑可載；載失敗要有可讀提示。
 
 ## R2.13 知識圖上熱點沉浸（硬規格）
-1. 七主題 teach／hero：**每圖 3–5 可點熱點**（資料 `topics[].hotspots`：id／label／x%／y%／body；座標對齊 `art/knowledge/hotspots/HOTSPOT_LAYOUT.json`）。
+1. 七主題 teach／hero：**每圖 3–5 可點熱點**；**座標／label 以** `art/knowledge/hotspots/HOTSPOT_LAYOUT.json` **為準（執行時載入）**；知識正文 body 由 `topics[].hotspots` 對 id／label 補上（HTML 系統字）。
 2. **點熱點**→展開該點知識（HTML＋系統字）；**熱點優先**，唔開 lightbox。
 3. **放大**改為圖面角標「放大」；知識媒體**整圖空白處點擊不再**開 lightbox。
 4. 同一動詞「點選」；勿加第二機制。缺新環形美術時沿用 `hotspot_dot`／色點。
