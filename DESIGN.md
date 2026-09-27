@@ -198,4 +198,4 @@ btn_grade｜btn_knowledge｜btn_glossary｜card_option｜panel_explain｜btn_fon
 - 粵音：中大漢語多功能字庫標準（離線表＋標來源；舊方案 A 升級為此）
 
 # 狀態
-**R2.2–R2.19 DESIGN 已改**。R2.18 已上線 `?v=r2119`。**R2.19**：段界以正文 `\n\n` 為準；`guide.sections` 必須對齊段數與語譯。待 `r2120`。
+**R2.2–R2.19 DESIGN 已改**。R2.18 已上線 `?v=r2119`。**R2.19** 已上線 `?v=r2120`：段界以正文 `\n\n` 為準；`guide.sections` 對齊段數與語譯。
