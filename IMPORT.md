@@ -180,3 +180,11 @@ commercial_ok: true
 | hero_passive | art/knowledge/teach/hero_passive.png |
 
 Logo 主人翁卡通；舊醜圖已覆蓋。commercial_ok: true
+
+## R2.12b — pretty GenerateImage 無焗字（NOA 2026-09-27）
+
+- **方法：** Cursor GenerateImage＋`logo_master` 參考；**禁止** Pillow 色塊骨架上線。
+- **規則：** `text_in_image: false`；說明由 GIDEON 圖下 HTML 系統字 caption；可 lightbox。
+- **路徑：** `art/knowledge/teach/hero_*.png`（11）＋`teach_*.png`（7）；覆蓋同路徑。
+- **commercial_ok：** true（自生圖）。
+- **系統字說明速查：** features→單音／省略／語序；howto-read→斷句→釋詞→通譯→章旨→賞析；particles→而／也／者／乎／之／於／其；polysemy→之三義；ancient-modern→古義↔今義；loan→本字↔通假；sentence／shi／yi／compare→使動／意動；passive→受事／施事。

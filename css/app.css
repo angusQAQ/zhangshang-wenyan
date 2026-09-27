@@ -2207,49 +2207,13 @@ img.content-zoomable:focus-visible {
   outline-offset: 2px;
 }
 
-.reader .teach-media-frame {
-  position: relative;
+.reader .teach-sys-caption {
   display: block;
-  width: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #fff;
-}
-.reader .teach-media-frame > img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 240px;
-  object-fit: contain;
-  margin: 0 auto;
-}
-.reader .teach-art-wide .teach-media-frame > img { max-height: 300px; }
-
-.reader .teach-sys-overlay {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1.4rem 0.65rem 0.55rem;
-  background: linear-gradient(
-    to top,
-    rgba(255, 254, 250, 0.97) 0%,
-    rgba(255, 254, 250, 0.88) 45%,
-    rgba(255, 254, 250, 0) 100%
-  );
-  pointer-events: none;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #6F5A3A;
   text-align: center;
-}
-.reader .teach-sys-title {
-  display: inline-block;
-  font-size: 0.9375rem; /* scales with App 字級 */
-  line-height: 1.35;
-  font-weight: 800;
-  color: #2A2A2A;
-  padding: 0.2rem 0.55rem;
-  border-radius: 8px;
-  background: rgba(255, 248, 238, 0.92);
-  border: 1px solid #E8E0D0;
 }
 .reader .teach-sys-note {
   margin: 0.35rem 0 0;
@@ -2293,14 +2257,11 @@ img.content-zoomable:focus-visible {
 .reader .know-hero-art .tap-hint-ring {
   display: none; /* 寬圖唔再用細熱點環 */
 }
-.reader .know-hero-art .teach-sys-overlay {
-  border-radius: 0 0 14px 14px;
-}
 .reader .know-hero-cap {
   font-size: 0.9375rem; /* system font; follows data-font */
 }
 
-/* chart：焗字圖暫留可放大；系統字說明優先（色塊＋表） */
+/* chart：圖下系統字說明＋可放大；色塊與表格仍是主說明 */
 .reader .know-chart-slot .teach-sys-note {
   font-weight: 600;
 }

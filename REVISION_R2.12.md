@@ -20,7 +20,7 @@
 | 帽 | 產出 |
 | --- | --- |
 | NOA | 無字卡通 teach／hero → `art/knowledge/teach/`；`ART_KIT`／`IMPORT` 更新 |
-| GIDEON | lightbox；知識頁 HTML 系統字疊文；接新圖；修破圖；推 Pages `?v=r2113` |
+| GIDEON | lightbox；知識頁圖下 HTML 系統字 caption；接新圖；修破圖；推 Pages `?v=r2114` |
 | RIN | DESIGN 不動 |
 
 ## GIDEON 本輪（r2113）
@@ -37,29 +37,29 @@
 ### 改動檔
 | 檔 | 內容 |
 | --- | --- |
-| `index.html` | `#img-lightbox`；`?v=r2113` |
-| `css/app.css` | lightbox；teach 系統字 overlay；hero 寬幅；object-fit／破圖態 |
-| `js/app.js` | lightbox（點圖／Esc／關閉）；`enhanceKnowledgeMedia`；`DATA_V=r2113` |
+| `index.html` | `#img-lightbox`；`?v=r2114` |
+| `css/app.css` | lightbox；teach 圖下系統字 caption；hero 寬幅；object-fit／破圖態 |
+| `js/app.js` | lightbox（點圖／Esc／關閉）；`enhanceKnowledgeMedia` 圖下 caption；`DATA_V=r2114` |
 | `GAME_BRIEF.json` | `knowledge_media`／`revisions.R2.12`（已有） |
 | `REVISION_R2.12.md` | 本檔 |
 
 ### Lightbox
 - 目標：`#know-content` 內 `.teach-art img`、`.know-hero-art img`（class `content-zoomable`）
 - 開：點圖或 Enter／空白；關：遮罩、關閉掣、**Esc**
-- caption 用系統字（`.teach-sys-title`／figcaption／know-hero-cap）；**rem** 跟 `html[data-font]`
+- caption 用圖下系統字（`.teach-sys-caption`／figcaption／know-hero-cap）；**rem** 跟 `html[data-font]`
 - 除外：tabbar／quiz chrome／brand／bookmark 等（選擇器擋）
 
-### 疊字（等 NOA 前）
-- 每張 teach／hero：底欄 **系統字** `.teach-sys-overlay` 蓋過焗字底緣；文案來自既有 figcaption／alt／`know-hero-cap`／chart 對照表
-- chart 另加 `.teach-sys-note`：提示「系統字優先＝色塊＋表格」
+### 圖下系統字（R2.12b）
+- 每張 teach：沿用／補上圖下 `.teach-sys-caption`／`figcaption`，不再以半透明底欄覆蓋圖片；文案來自既有 figcaption／alt／chart 對照表
+- 每張 hero：沿用既有圖下 `.know-hero-cap`，不重複插入 caption
+- chart 另加 `.teach-sys-note`：提示「系統字說明：請看上方色塊與下方表格」
 - **未改玩法／色標／解釋關零高亮**
 
 ### 部署
-- cache：`?v=r2113`
-- 可獨立上線：**lightbox＋hero 破顯示修＋疊字結構**
-- **等 NOA 無字換皮再 r2114**（焗字仍在 PNG 裡，overlay 只蓋底；完整驗收要無字檔）
+- cache：`?v=r2114`
+- 可獨立上線：**lightbox＋hero 破顯示修＋圖下 caption 結構＋無字新圖**
 
-## 還等 NOA（同路徑覆蓋即可，無需改 JS）
+## NOA 交付記錄（同路徑覆蓋，已完成）
 請交 **無焗中文** 扁平卡通（白底教育語彙），覆蓋：
 
 | 路徑 | 用途 |
@@ -83,10 +83,15 @@
 | `art/knowledge/teach/teach_compare_shi_yi.png` | 使／意對照 |
 | `art/knowledge/chart_*.png`（7） | 可改無字插畫，或廢 PNG 全改 DOM（GIDEON 可跟） |
 
-說明文案繼續由 HTML／系統字（勿燒進圖）。交齊後 GIDEON：換檔＋`?v=r2114`＋更新 `IMPORT.md`。
+說明文案由圖下 HTML／系統字提供（勿燒進圖）；已完成換檔、`?v=r2114`、`IMPORT.md` 更新。
 
 ## 驗收
 - [x] 點內容圖 → 放大；點遮罩／關閉／Esc 還原（結構）
-- [~] 知識頁可見字＝系統字 overlay（焗圖字仍在底層，等 NOA）
+- [x] 知識頁可見字＝圖下 HTML 系統字；無半透明底欄覆蓋圖片
 - [x] 無 404；hero 不再 64×64 破顯示
-- [ ] 卡通無字剪影清晰（等 NOA）
+- [x] 卡通無字剪影清晰（NOA R2.12b：hero×11＋teach×7）
+
+### NOA delivery R2.12b／r2114
+- [x] Pretty GenerateImage 無焗字已覆蓋 hero×11＋teach×7；色塊骨架不上線。
+- [x] GIDEON 改用圖下 HTML 系統字 caption；hero 沿用 `.know-hero-cap`，無重疊蓋圖。
+- [x] 全站 cache、`DATA_V`、tab 圖及 ui-motion 已更新至 `r2114`。

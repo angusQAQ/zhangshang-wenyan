@@ -1194,7 +1194,7 @@
     if (!img) return "";
     const frame = img.closest(".teach-media-frame, .know-hero-art, figure.teach-art, .know-hero");
     if (frame) {
-      const t = frame.querySelector(".teach-sys-title");
+      const t = frame.querySelector(".teach-sys-caption");
       if (t && t.textContent.trim()) return t.textContent.trim();
       const fig = img.closest("figure");
       const fc = fig && fig.querySelector("figcaption");
@@ -1229,7 +1229,7 @@
     });
   }
 
-  /** Mark teach/hero/chart as zoomable; overlay system-font caption over baked PNG text. */
+  /** Mark teach/hero/chart as zoomable; keep system-font captions below the image. */
   function enhanceKnowledgeMedia(root) {
     if (!root) return;
     bindContentLightboxOnce();
@@ -1244,34 +1244,26 @@
       img.setAttribute("role", "button");
       if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
 
-      let frame = img.closest(".teach-media-frame");
-      if (!frame) {
-        frame = document.createElement("div");
-        frame.className = "teach-media-frame";
-        img.parentNode.insertBefore(frame, img);
-        frame.appendChild(img);
-      }
-
       const fc = fig.querySelector("figcaption");
       let label = (fc && fc.textContent.trim()) || (img.getAttribute("alt") || "").trim();
       const chartKey = fig.getAttribute("data-chart");
       if (chartKey && CHART_SYS_LABEL[chartKey]) label = CHART_SYS_LABEL[chartKey];
 
-      if (label && !frame.querySelector(".teach-sys-overlay")) {
-        const overlay = document.createElement("div");
-        overlay.className = "teach-sys-overlay";
-        const span = document.createElement("span");
-        span.className = "teach-sys-title";
-        span.textContent = label;
-        overlay.appendChild(span);
-        frame.appendChild(overlay);
+      /* Keep the caption in normal flow, below the image; never cover the art. */
+      if (fc) {
+        fc.classList.add("teach-sys-caption");
+        if (chartKey && CHART_SYS_LABEL[chartKey]) fc.textContent = label;
+      } else if (label) {
+        const caption = document.createElement("p");
+        caption.className = "teach-sys-caption";
+        caption.textContent = label;
+        fig.appendChild(caption);
       }
 
       if (fig.classList.contains("know-chart-slot") && !fig.querySelector(".teach-sys-note")) {
         const note = document.createElement("p");
         note.className = "teach-sys-note";
-        note.textContent =
-          "系統字說明優先：請看上方色塊與下方表格。圖內焗字待 NOA 無字插畫替換。";
+        note.textContent = "系統字說明：請看上方色塊與下方表格。";
         fig.appendChild(note);
       }
 
@@ -1295,16 +1287,8 @@
       img.setAttribute("role", "button");
       if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
 
-      const label = (cap && cap.textContent.trim()) || "";
-      if (label && art && !art.querySelector(".teach-sys-overlay")) {
-        const overlay = document.createElement("div");
-        overlay.className = "teach-sys-overlay";
-        const span = document.createElement("span");
-        span.className = "teach-sys-title";
-        span.textContent = label;
-        overlay.appendChild(span);
-        art.appendChild(overlay);
-      }
+      /* .know-hero-cap already is the single HTML caption below the image. */
+      if (cap) cap.classList.add("teach-sys-caption");
 
       if (!img.dataset.errBound) {
         img.dataset.errBound = "1";
@@ -2657,7 +2641,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2113";
+  const DATA_V = "r2114";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
