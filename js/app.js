@@ -1136,6 +1136,185 @@
   // R2.9: knowledge HTML may include teaching media (note-cards／色圈／chart)；deco_* 無教學功能仍不自動插入。
 
   /* R2.10: 知識互動＝點選（熱點展開／色表高亮／沉浸面板）；唔加第二機制 */
+  /* ---------- R2.12: content lightbox + knowledge DOM captions ---------- */
+  const CHART_SYS_LABEL = {
+    features: "文言文的特點 · 四條粗線",
+    "howto-read": "如何閱讀 · 穩妥步驟",
+    particles: "文言虛詞 · 路標",
+    polysemy: "一詞多義 · 同字分釋",
+    "ancient-modern": "古今詞義 · 勿以今律古",
+    "loan-chars": "通假字 · 音近可通",
+    "sentence-patterns": "文言句式 · 還原語序",
+  };
+
+  function lightboxEls() {
+    return {
+      root: $("#img-lightbox"),
+      mask: $("#img-lightbox-mask"),
+      img: $("#img-lightbox-img"),
+      cap: $("#img-lightbox-cap"),
+      close: $("#img-lightbox-close"),
+    };
+  }
+
+  function closeImgLightbox() {
+    const lb = lightboxEls();
+    if (!lb.root) return;
+    lb.root.classList.add("hidden");
+    lb.root.setAttribute("hidden", "");
+    if (lb.img) {
+      lb.img.removeAttribute("src");
+      lb.img.alt = "";
+    }
+    if (lb.cap) lb.cap.textContent = "";
+    document.removeEventListener("keydown", onLightboxKeydown);
+  }
+
+  function onLightboxKeydown(e) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeImgLightbox();
+    }
+  }
+
+  function openImgLightbox(src, caption) {
+    if (!src) return;
+    const lb = lightboxEls();
+    if (!lb.root || !lb.img) return;
+    lb.img.src = src;
+    lb.img.alt = caption || "";
+    if (lb.cap) lb.cap.textContent = caption || "";
+    lb.root.classList.remove("hidden");
+    lb.root.removeAttribute("hidden");
+    document.addEventListener("keydown", onLightboxKeydown);
+    if (lb.close) lb.close.focus();
+  }
+
+  function captionForZoomable(img) {
+    if (!img) return "";
+    const frame = img.closest(".teach-media-frame, .know-hero-art, figure.teach-art, .know-hero");
+    if (frame) {
+      const t = frame.querySelector(".teach-sys-title");
+      if (t && t.textContent.trim()) return t.textContent.trim();
+      const fig = img.closest("figure");
+      const fc = fig && fig.querySelector("figcaption");
+      if (fc && fc.textContent.trim()) return fc.textContent.trim();
+      const heroCap = img.closest(".know-hero") && img.closest(".know-hero").querySelector(".know-hero-cap");
+      if (heroCap && heroCap.textContent.trim()) return heroCap.textContent.trim();
+    }
+    return (img.getAttribute("alt") || "").trim();
+  }
+
+  function bindContentLightboxOnce() {
+    if (document.documentElement.dataset.lbBound) return;
+    document.documentElement.dataset.lbBound = "1";
+    const lb = lightboxEls();
+    if (lb.mask) lb.mask.addEventListener("click", closeImgLightbox);
+    if (lb.close) lb.close.addEventListener("click", closeImgLightbox);
+    document.addEventListener("click", (e) => {
+      const img = e.target && e.target.closest && e.target.closest("img.content-zoomable");
+      if (!img) return;
+      /* exclude chrome / tabs / marks if somehow classed */
+      if (img.closest(".tabbar, .quiz-top, .brand-row, .icon-wrap, .btn-bookmark, .quiz-next-inline")) return;
+      e.preventDefault();
+      e.stopPropagation();
+      openImgLightbox(img.currentSrc || img.src, captionForZoomable(img));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      const img = e.target && e.target.closest && e.target.closest("img.content-zoomable");
+      if (!img) return;
+      e.preventDefault();
+      openImgLightbox(img.currentSrc || img.src, captionForZoomable(img));
+    });
+  }
+
+  /** Mark teach/hero/chart as zoomable; overlay system-font caption over baked PNG text. */
+  function enhanceKnowledgeMedia(root) {
+    if (!root) return;
+    bindContentLightboxOnce();
+
+    root.querySelectorAll("figure.teach-art").forEach((fig) => {
+      if (fig.dataset.mediaEnhanced) return;
+      fig.dataset.mediaEnhanced = "1";
+      const img = fig.querySelector("img");
+      if (!img) return;
+      img.classList.add("content-zoomable");
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
+
+      let frame = img.closest(".teach-media-frame");
+      if (!frame) {
+        frame = document.createElement("div");
+        frame.className = "teach-media-frame";
+        img.parentNode.insertBefore(frame, img);
+        frame.appendChild(img);
+      }
+
+      const fc = fig.querySelector("figcaption");
+      let label = (fc && fc.textContent.trim()) || (img.getAttribute("alt") || "").trim();
+      const chartKey = fig.getAttribute("data-chart");
+      if (chartKey && CHART_SYS_LABEL[chartKey]) label = CHART_SYS_LABEL[chartKey];
+
+      if (label && !frame.querySelector(".teach-sys-overlay")) {
+        const overlay = document.createElement("div");
+        overlay.className = "teach-sys-overlay";
+        const span = document.createElement("span");
+        span.className = "teach-sys-title";
+        span.textContent = label;
+        overlay.appendChild(span);
+        frame.appendChild(overlay);
+      }
+
+      if (fig.classList.contains("know-chart-slot") && !fig.querySelector(".teach-sys-note")) {
+        const note = document.createElement("p");
+        note.className = "teach-sys-note";
+        note.textContent =
+          "系統字說明優先：請看上方色塊與下方表格。圖內焗字待 NOA 無字插畫替換。";
+        fig.appendChild(note);
+      }
+
+      if (!img.dataset.errBound) {
+        img.dataset.errBound = "1";
+        img.addEventListener("error", () => {
+          fig.classList.add("media-broken");
+        });
+      }
+    });
+
+    root.querySelectorAll(".know-hero").forEach((hero) => {
+      if (hero.dataset.mediaEnhanced) return;
+      hero.dataset.mediaEnhanced = "1";
+      const art = hero.querySelector(".know-hero-art");
+      const img = art && art.querySelector("img");
+      const cap = hero.querySelector(".know-hero-cap");
+      if (!img) return;
+      img.classList.add("content-zoomable");
+      img.setAttribute("tabindex", "0");
+      img.setAttribute("role", "button");
+      if (!img.getAttribute("aria-label")) img.setAttribute("aria-label", "放大圖片");
+
+      const label = (cap && cap.textContent.trim()) || "";
+      if (label && art && !art.querySelector(".teach-sys-overlay")) {
+        const overlay = document.createElement("div");
+        overlay.className = "teach-sys-overlay";
+        const span = document.createElement("span");
+        span.className = "teach-sys-title";
+        span.textContent = label;
+        overlay.appendChild(span);
+        art.appendChild(overlay);
+      }
+
+      if (!img.dataset.errBound) {
+        img.dataset.errBound = "1";
+        img.addEventListener("error", () => {
+          hero.classList.add("media-broken");
+        });
+      }
+    });
+  }
+
   function bindKnowledgeImmerse(root, topicId) {
     if (!root) return;
     root.querySelectorAll(".color-hotspot").forEach((btn) => {
@@ -1220,6 +1399,7 @@
     $("#know-title").textContent = topic.title;
     $("#know-content").innerHTML = topic.html || "";
     bindKnowledgeImmerse($("#know-content"), topicId);
+    enhanceKnowledgeMedia($("#know-content"));
 
     const practiceBox = $("#know-practice");
     const practiceBody = $("#know-practice-body");
@@ -2477,7 +2657,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2111";
+  const DATA_V = "r2113";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

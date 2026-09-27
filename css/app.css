@@ -2126,3 +2126,181 @@ img[src*="art/knowledge/chart_"] {
   padding: 0.05rem 0.35rem;
   white-space: nowrap;
 }
+
+/* ===== R2.12 — content lightbox + knowledge media DOM text ===== */
+.img-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-bottom: calc(1rem + var(--safe-bottom));
+}
+.img-lightbox.hidden,
+.img-lightbox[hidden] {
+  display: none !important;
+}
+.img-lightbox-mask {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: rgba(20, 18, 14, 0.72);
+  cursor: pointer;
+}
+.img-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 26rem);
+  max-height: min(88dvh, 40rem);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.65rem;
+  padding: 0.75rem 0.75rem 0.9rem;
+  border-radius: 16px;
+  background: #FFFEFA;
+  border: 1px solid #E8E4DA;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+}
+.img-lightbox-panel img {
+  display: block;
+  width: 100%;
+  max-height: min(70dvh, 32rem);
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+}
+.img-lightbox-cap {
+  margin: 0;
+  font-size: 0.875rem; /* rem → follows html[data-font] */
+  line-height: 1.45;
+  font-weight: 600;
+  color: #4A4A4A;
+  text-align: center;
+}
+.img-lightbox-close {
+  align-self: center;
+  min-height: 2.5rem;
+  padding: 0.45rem 1.35rem;
+  border-radius: 999px;
+  border: 1px solid #E0D8C8;
+  background: #F5F2EA;
+  color: #2A2A2A;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+img.content-zoomable,
+.teach-media-frame img.content-zoomable,
+.know-hero-art img.content-zoomable {
+  cursor: zoom-in;
+}
+img.content-zoomable:focus-visible {
+  outline: 2px solid #C45C7A;
+  outline-offset: 2px;
+}
+
+.reader .teach-media-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+.reader .teach-media-frame > img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 240px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.reader .teach-art-wide .teach-media-frame > img { max-height: 300px; }
+
+.reader .teach-sys-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.4rem 0.65rem 0.55rem;
+  background: linear-gradient(
+    to top,
+    rgba(255, 254, 250, 0.97) 0%,
+    rgba(255, 254, 250, 0.88) 45%,
+    rgba(255, 254, 250, 0) 100%
+  );
+  pointer-events: none;
+  text-align: center;
+}
+.reader .teach-sys-title {
+  display: inline-block;
+  font-size: 0.9375rem; /* scales with App 字級 */
+  line-height: 1.35;
+  font-weight: 800;
+  color: #2A2A2A;
+  padding: 0.2rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(255, 248, 238, 0.92);
+  border: 1px solid #E8E0D0;
+}
+.reader .teach-sys-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #8A6A3A;
+}
+.reader .teach-art.media-broken,
+.reader .know-hero.media-broken .know-hero-art {
+  outline: 2px dashed #E57373;
+  outline-offset: 2px;
+}
+.reader .teach-art.media-broken::after {
+  content: "圖片未能載入";
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: #E57373;
+}
+
+/* R2.12: hero 改為內容圖寬幅（舊 64×64 會把焗字卡壓成破圖） */
+.reader .know-hero {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+}
+.reader .know-hero-art {
+  width: 100%;
+  height: auto;
+  align-self: stretch;
+}
+.reader .know-hero-art img {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #E8E4DA;
+}
+.reader .know-hero-art .tap-hint-ring {
+  display: none; /* 寬圖唔再用細熱點環 */
+}
+.reader .know-hero-art .teach-sys-overlay {
+  border-radius: 0 0 14px 14px;
+}
+.reader .know-hero-cap {
+  font-size: 0.9375rem; /* system font; follows data-font */
+}
+
+/* chart：焗字圖暫留可放大；系統字說明優先（色塊＋表） */
+.reader .know-chart-slot .teach-sys-note {
+  font-weight: 600;
+}

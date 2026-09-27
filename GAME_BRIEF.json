@@ -59,6 +59,14 @@
       ],
       "owner": "NOA",
       "revision": "R1.1_logo"
+    },
+    "knowledge_media": {
+      "revision": "R2.12",
+      "style": "可愛扁平卡通、清晰剪影、白底教育語彙",
+      "text_in_image": false,
+      "text_owner": "HTML_system_font",
+      "lightbox": "content_images_only",
+      "note": "teach/hero 無焗字；說明用系統字；非整 UI 換畫風"
     }
   },
   "ia": {
@@ -127,5 +135,12 @@
   "revision": "R2-P2",
   "pending_user_choice": {
     "jyutping": "A_offline"
+  },
+  "revisions": {
+    "R2.12": {
+      "approved_by_user": true,
+      "phrase": "照這個做：A …；設計太醜，重新繪畫卡通風格",
+      "status": "execute"
+    }
   }
 }

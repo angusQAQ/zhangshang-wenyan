@@ -12,8 +12,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="art/ui/favicon-32.png" />
   <link rel="apple-touch-icon" href="art/ui/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="css/app.css?v=r2112" />
-  <link rel="stylesheet" href="css/ui-motion.css?v=r2112" />
+  <link rel="stylesheet" href="css/app.css?v=r2113" />
+  <link rel="stylesheet" href="css/ui-motion.css?v=r2113" />
 </head>
 <body>
   <div id="app">
@@ -322,28 +322,38 @@
 
   <nav class="tabbar" id="tabbar" aria-label="主導航">
     <button type="button" class="tab active" data-tab="home">
-      <img src="art/ui/tab_home.png?v=r2111" alt="" />
+      <img src="art/ui/tab_home.png?v=r2113" alt="" />
       <span>首頁</span>
     </button>
     <button type="button" class="tab" data-tab="practice">
-      <img src="art/ui/tab_practice.png?v=r2111" alt="" />
+      <img src="art/ui/tab_practice.png?v=r2113" alt="" />
       <span>練習</span>
     </button>
     <button type="button" class="tab" data-tab="wrong">
-      <img src="art/ui/tab_wrong.png?v=r2111" alt="" />
+      <img src="art/ui/tab_wrong.png?v=r2113" alt="" />
       <span>錯題</span>
     </button>
     <button type="button" class="tab" data-tab="bookmark">
-      <img src="art/ui/tab_bookmark.png?v=r2111" alt="" />
+      <img src="art/ui/tab_bookmark.png?v=r2113" alt="" />
       <span>書籤</span>
     </button>
     <button type="button" class="tab" data-tab="me">
-      <img src="art/ui/tab_me.png?v=r2111" alt="" />
+      <img src="art/ui/tab_me.png?v=r2113" alt="" />
       <span>我的</span>
     </button>
   </nav>
 
+  
+  <div id="img-lightbox" class="img-lightbox hidden" hidden role="dialog" aria-modal="true" aria-label="放大圖片">
+    <button type="button" class="img-lightbox-mask" id="img-lightbox-mask" aria-label="關閉放大"></button>
+    <div class="img-lightbox-panel" role="document">
+      <img id="img-lightbox-img" alt="" />
+      <p id="img-lightbox-cap" class="img-lightbox-cap"></p>
+      <button type="button" class="img-lightbox-close" id="img-lightbox-close">關閉</button>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="js/app.js?v=r2111"></script>
+  <script src="js/app.js?v=r2113"></script>
 </body>
 </html>
