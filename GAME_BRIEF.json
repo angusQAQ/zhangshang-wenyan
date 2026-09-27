@@ -140,7 +140,9 @@
     "R2.12": {
       "approved_by_user": true,
       "phrase": "照這個做：A …；設計太醜，重新繪畫卡通風格",
-      "status": "execute"
+      "status": "shipped",
+      "version": "r2114",
+      "commit": "a4ddc19"
     }
   }
 }
