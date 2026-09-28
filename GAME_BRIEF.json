@@ -216,7 +216,21 @@
         "鄒忌諷齊王納諫",
         "自護其短"
       ],
-      "ship_version": "r2120"
+      "ship_version": "r2120",
+      "version": "r2120"
+    },
+    "R2.20": {
+      "approved_by_user": true,
+      "phrase": "一大段段落解釋…不需顯示每個答案選項再解釋",
+      "status": "shipped",
+      "ship_version": "r2121",
+      "version": "r2121",
+      "merged_questions": {
+        "passages": 186,
+        "knowledge": 69,
+        "vocab": 36,
+        "total": 291
+      }
     }
   }
 }

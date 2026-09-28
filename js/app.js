@@ -228,25 +228,10 @@
     return body;
   }
 
-  /** Build HTML for overall explain + per-option paragraphs (trusted JSON → escapeHtml). */
+  /** Build HTML for single overall explain paragraph (R2.20; trusted JSON → escapeHtml). */
   function buildExplainHtml(q) {
-    const letters = lettersFor((q.options || []).length || 4);
     const overall = enrichRationale(q.explain || "", q, q.answer);
-    let html = `<h4>解釋</h4><p>${escapeHtml(overall)}</p>`;
-    const oes = q.optionExplains;
-    if (Array.isArray(oes) && oes.length) {
-      html += `<div class="option-explains">`;
-      oes.forEach((text, i) => {
-        if (text == null || text === "") return;
-        const ok = i === q.answer;
-        const body = enrichRationale(text, q, i);
-        html += `<div class="opt-exp ${ok ? "is-correct" : "is-wrong"}">`;
-        html += `<span class="opt-exp-label">${letters[i] || i} · ${ok ? "正確" : "錯項"}</span>`;
-        html += `<p>${escapeHtml(body)}</p></div>`;
-      });
-      html += `</div>`;
-    }
-    return html;
+    return `<h4>解釋</h4><p>${escapeHtml(overall)}</p>`;
   }
 
   function fillExplainPanel(panel, q) {
@@ -1699,7 +1684,6 @@
       options: (q.options || []).slice(),
       answer: q.answer,
       explain: q.explain || "",
-      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
       tag: q.tag || "篇章練習",
       refLabel: "《" + p.title + "》",
       passageTitle: p.title,
@@ -1730,7 +1714,6 @@
       options: (q.options || []).slice(),
       answer: q.answer,
       explain: q.explain || "",
-      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
       tag: "知識小練",
       refLabel: topic.title,
       passageTitle: topic.title,
@@ -1752,7 +1735,6 @@
       options: (q.options || []).slice(),
       answer: q.answer,
       explain: q.explain || "",
-      optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
       tag: "字詞考核",
       refLabel: q.source || "",
       sentence: q.sentence || "",
@@ -1776,7 +1758,6 @@
       options: (item.options || []).slice(),
       answer: item.answer != null ? item.answer : item.correctAnswer,
       explain: item.explain || item.explanation || "",
-      optionExplains: Array.isArray(item.optionExplains) ? item.optionExplains.slice() : null,
       tag: item.tag || "書籤",
       refLabel: item.refLabel || item.sourceLabel || "",
       sentence: item.sentence || "",
@@ -1809,7 +1790,6 @@
       options: q.options.slice(),
       answer: q.answer,
       explain: q.explain,
-      optionExplains: q.optionExplains,
       tag: q.tag,
       refLabel: q.refLabel,
       sentence: q.sentence || "",
@@ -2124,7 +2104,6 @@
         userAnswer: oi,
         correctAnswer: q.answer,
         explanation: q.explain,
-        optionExplains: Array.isArray(q.optionExplains) ? q.optionExplains.slice() : null,
         tag: q.tag || "練習",
         passageTitle: q.passageTitle || "",
         passageFullText: q.passageFullText || "",
@@ -2455,7 +2434,6 @@
       explain: item.explanation || "",
       options: item.options || [],
       answer: item.correctAnswer,
-      optionExplains: item.optionExplains || null,
       passageFullText: item.passageFullText || "",
       passageTranslation: item.passageTranslation || "",
       sentence: item.sentence || "",
@@ -2879,7 +2857,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2120";
+  const DATA_V = "r2121";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),
