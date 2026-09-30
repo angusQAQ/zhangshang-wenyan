@@ -1464,30 +1464,7 @@
 
   function bindKnowledgeImmerse(root, topicId) {
     if (!root) return;
-    root.querySelectorAll(".color-hotspot").forEach((btn) => {
-      if (btn.dataset.boundImmerse) return;
-      btn.dataset.boundImmerse = "1";
-      const toggle = () => {
-        const open = btn.getAttribute("aria-expanded") === "true";
-        const next = !open;
-        btn.setAttribute("aria-expanded", next ? "true" : "false");
-        btn.classList.toggle("is-open", next);
-        btn.querySelectorAll(".immersive-panel").forEach((p) => {
-          if (next) p.removeAttribute("hidden");
-          else p.setAttribute("hidden", "");
-        });
-      };
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggle();
-      });
-      btn.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          toggle();
-        }
-      });
-    });
+    /* R2.21: know-color-board / color-hotspot boards removed */
     root.querySelectorAll(".note-hot").forEach((card) => {
       if (card.dataset.boundImmerse) return;
       card.dataset.boundImmerse = "1";
@@ -1548,26 +1525,7 @@
     bindKnowledgeImmerse($("#know-content"), topicId);
     enhanceKnowledgeMedia($("#know-content"), topicId);
 
-    const practiceBox = $("#know-practice");
-    const practiceBody = $("#know-practice-body");
-    if (practiceBody) {
-      practiceBody.innerHTML = "";
-      practiceBody.classList.add("hidden");
-    }
-    if (topic.practice && topic.practice.length) {
-      practiceBox.classList.remove("hidden");
-      const sub = $("#know-practice-sub");
-      if (sub) {
-        sub.textContent =
-          "共 " + topic.practice.length + " 題 · 局內不重複 · 可連續操練";
-      }
-      const startBtn = $("#btn-start-know-quiz");
-      if (startBtn) {
-        startBtn.onclick = () => startKnowledgeQuiz(topicId);
-      }
-    } else {
-      practiceBox.classList.add("hidden");
-    }
+    /* R2.21: knowledge is read-only — no practice quiz entry */
     show("knowledge");
   }
 
@@ -1703,25 +1661,6 @@
     };
   }
 
-  function normalizeKnowledgeQuestion(topicId, topic, qi, q) {
-    return {
-      kind: "knowledge",
-      grade: "",
-      passageId: "",
-      knowledgeId: topicId,
-      questionId: topicId + "_q" + qi,
-      stem: q.stem,
-      options: (q.options || []).slice(),
-      answer: q.answer,
-      explain: q.explain || "",
-      tag: "知識小練",
-      refLabel: topic.title,
-      passageTitle: topic.title,
-      passageFullText: "",
-      passageTranslation: q.explain || "",
-      sourceLabel: "文言知識 · " + topic.title,
-    };
-  }
 
   function normalizeVocabQuestion(q) {
     const word = q.targetWord || "";
@@ -1870,22 +1809,6 @@
     });
   }
 
-  function startKnowledgeQuiz(topicId) {
-    const topic = getUnifiedTopic(topicId);
-    if (!topic || !topic.practice || !topic.practice.length) {
-      toast("此主題暫無練習");
-      return;
-    }
-    state.knowledgeTopicId = topicId;
-    const pool = topic.practice.map((q, qi) =>
-      normalizeKnowledgeQuestion(topicId, topic, qi, q)
-    );
-    beginQuizSession("knowledge", pool, {
-      title: "知識小練",
-      back: "knowledge",
-      doneBack: "knowledge",
-    });
-  }
 
   function startVocabQuiz() {
     const raw =
@@ -2857,7 +2780,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2121";
+  const DATA_V = "r2122";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

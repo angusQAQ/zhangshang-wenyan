@@ -231,6 +231,12 @@
         "vocab": 36,
         "total": 291
       }
+    },
+    "R2.21": {
+      "approved_by_user": true,
+      "phrase": "知識無練習；删通讀等色點；字詞考核正解分散ABCD",
+      "status": "execute",
+      "ship_version": "r2122"
     }
   }
 }

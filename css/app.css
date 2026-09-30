@@ -1782,28 +1782,6 @@ img[src*="art/knowledge/chart_"] {
 }
 .reader .st-ans p { margin: 0.5rem 0 0; font-size: 0.875rem; }
 
-.reader .color-dots {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0.75rem 0;
-}
-.reader .color-dots .dot {
-  width: 0.85rem;
-  height: 0.85rem;
-  border-radius: 999px;
-  display: inline-block;
-}
-.reader .color-dots .dot.yi { background: #C45C7A; }
-.reader .color-dots .dot.shi { background: #4E8E95; }
-.reader .color-dots .dot.tip { background: #E0B878; }
-.reader .dot-cap {
-  flex: 1 1 100%;
-  margin: 0.25rem 0 0;
-  font-size: 0.75rem;
-  color: #8A8A8A;
-}
 
 .reader .know-visual-row {
   display: flex;
@@ -1930,52 +1908,6 @@ img[src*="art/knowledge/chart_"] {
   font-weight: 600;
 }
 
-.reader .know-color-board {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
-  margin: 0 0 1rem;
-}
-@media (min-width: 420px) {
-  .reader .know-color-board { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-.reader .color-hotspot {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  text-align: left;
-  padding: 0.7rem 0.65rem;
-  border-radius: 14px;
-  border: 1.5px solid rgba(0,0,0,0.06);
-  background: var(--chip, #F5F2EA);
-  cursor: pointer;
-  font: inherit;
-  color: inherit;
-  min-height: 3.2rem;
-  /* motion moved to ui-motion.css (transform/opacity only) */
-  transition: none;
-}
-.reader .color-hotspot:focus-visible {
-  outline: 2px solid #C45C7A;
-  outline-offset: 2px;
-}
-.reader .color-hotspot.is-open {
-  box-shadow: 0 0 0 2px rgba(196, 92, 122, 0.35);
-  transform: translateY(-1px);
-}
-.reader .hotspot-dot {
-  width: 0.7rem;
-  height: 0.7rem;
-  border-radius: 999px;
-  background: url("../art/ui/hotspot_dot.png") center / contain no-repeat;
-  background-color: transparent;
-}
-.reader .chip-lab {
-  font-weight: 800;
-  font-size: 0.9rem;
-}
 .reader .chip-panel,
 .reader .immersive-panel {
   font-size: 0.8125rem;
@@ -1989,7 +1921,6 @@ img[src*="art/knowledge/chart_"] {
   background-size: cover;
   border: 1px solid rgba(0,0,0,0.05);
 }
-.reader .color-hotspot .immersive-panel[hidden],
 .reader .compare-card .immersive-panel[hidden] {
   display: none !important;
 }
@@ -2034,12 +1965,6 @@ img[src*="art/knowledge/chart_"] {
   transform: scale(1.04);
 }
 
-.reader .compare-card.color-hotspot {
-  cursor: pointer;
-}
-.reader .compare-card.color-hotspot.is-open {
-  box-shadow: 0 0 0 2px rgba(196, 92, 122, 0.3);
-}
 
 .reader .know-chart-slot.chart-missing {
   display: none;
