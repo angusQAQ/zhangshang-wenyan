@@ -2780,7 +2780,7 @@
 
   /* ---------- Boot ---------- */
   initFontScale();
-  const DATA_V = "r2122";
+  const DATA_V = "r2123";
   Promise.all([
     fetch("data/passages.json?v=" + DATA_V).then((r) => r.json()),
     fetch("data/knowledge.json?v=" + DATA_V).then((r) => r.json()),

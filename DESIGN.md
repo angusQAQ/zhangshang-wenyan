@@ -210,4 +210,4 @@ btn_grade｜btn_knowledge｜btn_glossary｜card_option｜panel_explain｜btn_fon
 - 粵音：中大漢語多功能字庫標準（離線表＋標來源；舊方案 A 升級為此）
 
 # 狀態
-**R2.2–R2.21 DESIGN 已改**。R2.20 已上線 `?v=r2121`。**R2.21 已上線** `?v=r2122`／`eff2de0`：知識只讀；删色點方塊；字詞考核正解分散 A–D。
+**R2.2–R2.22 DESIGN 已改**。R2.20 已上線 `?v=r2121`。**R2.21 已上線** `?v=r2122`／`eff2de0`：知識只讀；删色點方塊；字詞考核正解分散 A–D。**R2.22** `?v=r2123`：修 iPhone 篇章列表右移（R2.21 多餘 `</div>` 提早關掉 `#app`）。
