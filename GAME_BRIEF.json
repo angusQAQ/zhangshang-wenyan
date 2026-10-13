@@ -235,8 +235,16 @@
     "R2.21": {
       "approved_by_user": true,
       "phrase": "知識無練習；删通讀等色點；字詞考核正解分散ABCD",
+      "status": "shipped",
+      "ship_version": "r2122",
+      "version": "r2122"
+    },
+    "R2.22": {
+      "approved_by_user": true,
+      "phrase": "iPhone 篇章列表左空白右裁切",
       "status": "execute",
-      "ship_version": "r2122"
+      "ship_version": "r2123",
+      "root_cause": "R2.21 leftover </div> closed #app early; body flex row split empty #app and passage-list"
     }
   }
 }

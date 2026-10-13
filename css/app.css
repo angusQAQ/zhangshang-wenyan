@@ -43,14 +43,17 @@ body {
   font-family: "PingFang HK", "Noto Sans TC", "Noto Sans CJK HK", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  /* R2.22: block + auto-margin, not row flex. A stray end-tag that
+     pops #app would otherwise put later .view next to an empty white
+     #app (iPhone: left void, list clipped on the right). Tabbar is
+     position:fixed so it stays full-width either way. */
 }
 
 #app {
   width: 100%;
   max-width: var(--max);
+  min-width: 0;
+  margin-inline: auto;
   min-height: 100dvh;
   height: auto;
   background: var(--bg);
@@ -61,12 +64,17 @@ body {
 
 .view {
   display: none;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: calc(0.875rem + var(--safe-top)) 1.25rem 1.5rem;
 }
 .view.active { display: block; }
 .view-quiz.active { padding-bottom: calc(4.5rem + var(--safe-bottom)); }
 #app.quiz-mode { padding-bottom: 0; }
-#app.quiz-mode .tabbar { display: none; }
+#app.quiz-mode .tabbar,
+#app.quiz-mode ~ .tabbar { display: none; }
 
 /* Brand */
 .brand-row {
